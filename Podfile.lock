@@ -1,0 +1,20 @@
+
+PODS:
+- AFNetworking (1.1.0)
+- Reachability (3.1.0)
+- SSToolkit (1.0.2)
+- SVProgressHUD (0.9)
+
+DEPENDENCIES:
+- AFNetworking
+- Reachability
+- SSToolkit (= 1.0.2)
+- SVProgressHUD
+
+SPEC CHECKSUMS:
+  AFNetworking: 761a418233d280c1e0580bcb76ff9cb4c3073d17
+  Reachability: 1c8584c5f26fa776695efef95caaa50402c94cfb
+  SSToolkit: 9751b7ec0d068dc1dc46c8121dfeff808f9e3d35
+  SVProgressHUD: 98935fbafaf0031df4a9cafca3c66eaf3da06967
+
+COCOAPODS: 0.16.0
