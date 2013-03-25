@@ -33,7 +33,7 @@
     currentPage = 1;
     [self initBackButton];
     [self initTitle];
-    [self initInfoButtonWithTarget:self];
+//    [self initInfoButtonWithTarget:self];
     [self initItems];
 }
 
@@ -61,6 +61,32 @@
         [view.imageView setImage:item.image];
         [view.titleLabel setText:item.title];
         [view.descLabel setText:item.detail];
+        [view.descLabel sizeToFit];
+        CGRect frame = view.imageView.frame;
+        frame.size = [self sizeForImage:item.image withMaxWidth:self.pageScroll.frame.size.width];
+        frame.origin.x = self.pageScroll.frame.size.width/2 - frame.size.width/2;
+        [view.imageView setFrame:frame];
+        CGRect borderFrame = frame;
+        borderFrame.origin.x -= 2;
+        borderFrame.origin.y -= 2;
+        borderFrame.size.width += 4;
+        borderFrame.size.height += 4;
+        [view.borderOne setFrame:borderFrame];
+        borderFrame.origin.x -= 1;
+        borderFrame.origin.y -= 1;
+        borderFrame.size.width += 2;
+        borderFrame.size.height += 2;
+        [view.borderTwo setFrame:borderFrame];
+        view.borderTwo.center = view.imageView.center;
+        view.borderOne.center = view.imageView.center;
+        CGRect titleFrame = view.titleLabel.frame;
+        titleFrame.origin.y = frame.origin.y + frame.size.height + 20;
+        [view.titleLabel setFrame:titleFrame];
+        CGRect descFrame = view.descLabel.frame;
+        descFrame.origin.y = titleFrame.origin.y + titleFrame.size.height + 10;
+        descFrame.origin.x = self.pageScroll.frame.size.width/2 - descFrame.size.width/2;
+        [view.descLabel setFrame:descFrame];
+        [view.scrollView setContentSize:CGSizeMake(view.scrollView.frame.size.width, descFrame.origin.y + descFrame.size.height + 10)];
         view.center = center;
         [demos addObject:view];
         [self.pageScroll addSubview:view];
@@ -69,6 +95,21 @@
     center.x -= self.pageScroll.bounds.size.width/2;
     CGSize size = CGSizeMake(center.x, 366);
     [self.pageScroll setContentSize:size];
+}
+
+-(CGSize)sizeForImage:(UIImage *)image withMaxWidth:(CGFloat)width{
+    CGSize size = image.size;
+    CGFloat newHeight = size.height;
+    CGFloat newWidth = size.width;
+    CGFloat optimalWidth = width - 30;
+    CGFloat factor = 1;
+    if (size.width > optimalWidth){
+        factor = optimalWidth/size.width;
+    }
+    CGSize newSize;
+    newSize.width = newWidth*factor;
+    newSize.height = newHeight*factor;
+    return newSize;
 }
 
 - (void)didReceiveMemoryWarning

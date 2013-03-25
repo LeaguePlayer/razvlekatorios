@@ -35,6 +35,10 @@
     [self initUI];
 }
 
+-(void)rightItemClick:(id)sender{
+    [self performSegueWithIdentifier:@"About" sender:self];
+}
+
 -(void)initContent{
     blocks = [MRBlock blocksMock];
 }
@@ -109,8 +113,10 @@
 }
 
 -(void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender{
-    WatchViewController *controller = (WatchViewController *)segue.destinationViewController;
-    controller.items = selected.items;
+    if ([segue.identifier isEqualToString:@"ToWatch"]){
+        WatchViewController *controller = (WatchViewController *)segue.destinationViewController;
+        controller.items = selected.items;
+    }
 }
 
 @end

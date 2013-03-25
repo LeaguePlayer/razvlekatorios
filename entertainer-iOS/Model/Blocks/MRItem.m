@@ -24,7 +24,7 @@
 +(NSArray *)itemsMock{
     MRItem *item0 = [[MRItem alloc] init];
     item0.id = 0;
-    item0.image = [UIImage imageNamed:@"1image.png"];
+    item0.image = [UIImage imageNamed:@"8image.jpg"];
     item0.title = @"Заголовок 1";
     item0.detail = @"Подзаголовок 1";
     MRItem *item1 = [[MRItem alloc] init];

@@ -21,6 +21,9 @@
         self.imageView = (UIImageView *)[view viewWithTag:1];
         self.titleLabel = (UILabel *)[view viewWithTag:2];
         self.descLabel = (UILabel *)[view viewWithTag:3];
+        self.scrollView = (UIScrollView *)[view viewWithTag:4];
+        self.borderOne = (UIView *)[view viewWithTag:5];
+        self.borderTwo = (UIView *)[view viewWithTag:6];
     }
     return self;
 }

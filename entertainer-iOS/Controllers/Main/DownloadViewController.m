@@ -36,6 +36,10 @@
     [self initUI];
 }
 
+-(void)rightItemClick:(id)sender{
+    [self performSegueWithIdentifier:@"About" sender:self];
+}
+
 -(void)initContent{
     blocks = [MRBlock blocksMock];
 }

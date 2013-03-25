@@ -13,6 +13,9 @@
 @property (nonatomic,retain) UIImageView *imageView;
 @property (nonatomic,retain) UILabel *titleLabel;
 @property (nonatomic,retain) UILabel *descLabel;
+@property (nonatomic,retain) UIScrollView *scrollView;
+@property (nonatomic,retain) UIView *borderOne;
+@property (nonatomic,retain) UIView *borderTwo;
 @property (retain,nonatomic) UIView *view;
 
 @end
