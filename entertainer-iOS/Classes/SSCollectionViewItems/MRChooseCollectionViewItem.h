@@ -12,6 +12,7 @@
 
 @property (nonatomic,retain) UILabel *nameLabel;
 @property (nonatomic,retain) UIImageView *icon;
+@property (nonatomic, retain) UIButton *removeButton;
 
 - (id)initWithReuseIdentifier:(NSString *)aReuseIdentifier;
 

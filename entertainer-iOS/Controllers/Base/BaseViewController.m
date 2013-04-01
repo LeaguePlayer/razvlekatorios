@@ -31,10 +31,12 @@
 
 -(void)initBackButton{
     UIImage *image = [UIImage imageNamed:@"back.png"];
+    UIImage *imageOn = [UIImage imageNamed:@"back_on.png"];
     UIButton *button = [UIButton buttonWithType:UIButtonTypeCustom];
     [button setFrame:CGRectMake(0, 0, image.size.width, image.size.height)];
     [button addTarget:self action:@selector(leftItemClick:) forControlEvents:UIControlEventTouchUpInside];
     [button setImage:image forState:UIControlStateNormal];
+    [button setImage:imageOn forState:UIControlStateHighlighted];
     UIBarButtonItem *item = [[UIBarButtonItem alloc] initWithCustomView:button];
     [self.navigationItem setLeftBarButtonItem:item];
 }

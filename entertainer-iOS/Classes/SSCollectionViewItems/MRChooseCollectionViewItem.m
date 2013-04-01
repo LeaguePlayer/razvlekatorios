@@ -45,13 +45,19 @@
         [self.icon setFrame:CGRectMake(0, 21, 125, 125)];
         [self addSubview:self.icon];
         UIImage *removeImg = [UIImage imageNamed:@"remove.png"];
-        UIButton *removeButton = [UIButton buttonWithType:UIButtonTypeCustom];
-        [removeButton setImage:removeImg forState:UIControlStateNormal];
+        self.removeButton = [UIButton buttonWithType:UIButtonTypeCustom];
+        [self.removeButton setImage:removeImg forState:UIControlStateNormal];
         CGRect frame = CGRectMake(126 - removeImg.size.width, self.icon.frame.origin.y, removeImg.size.width, removeImg.size.height);
-        [removeButton setFrame:frame];
-        [self addSubview:removeButton];
+        [self.removeButton setFrame:frame];
+        UILongPressGestureRecognizer *recognizer = [[UILongPressGestureRecognizer alloc] initWithTarget:self action:@selector(itemPressed:)];
+        [self addGestureRecognizer:recognizer];
     }
     return self;
+}
+
+-(void)itemPressed:(UILongPressGestureRecognizer *)sender{
+    [self addSubview:self.removeButton];
+    [self removeGestureRecognizer:sender];
 }
 
 @end

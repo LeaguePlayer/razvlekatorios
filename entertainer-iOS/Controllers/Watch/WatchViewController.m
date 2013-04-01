@@ -72,10 +72,10 @@
         borderFrame.size.width += 4;
         borderFrame.size.height += 4;
         [view.borderOne setFrame:borderFrame];
-        borderFrame.origin.x -= 1;
-        borderFrame.origin.y -= 1;
-        borderFrame.size.width += 2;
-        borderFrame.size.height += 2;
+        borderFrame.origin.x -= 2;
+        borderFrame.origin.y -= 2;
+        borderFrame.size.width += 4;
+        borderFrame.size.height += 4;
         [view.borderTwo setFrame:borderFrame];
         view.borderTwo.center = view.imageView.center;
         view.borderOne.center = view.imageView.center;
