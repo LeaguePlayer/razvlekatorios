@@ -68,6 +68,7 @@
     [label setBackgroundColor:[UIColor clearColor]];
     [label setTextAlignment:NSTextAlignmentCenter];
     [label setTextColor:[UIColor whiteColor]];
+    [label sizeToFit];
     [self.navigationItem setTitleView:label];
 }
 
