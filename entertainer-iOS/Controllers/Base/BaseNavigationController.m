@@ -30,6 +30,10 @@
     [self initBar];
 }
 
+-(void)hideNavigationBarAnimated:(BOOL)animated{
+    
+}
+
 -(void)initBar{
     [self.navigationBar setBackgroundImage:[UIImage imageNamed:@"topbar.png"] forBarMetrics:UIBarMetricsDefault];
 }

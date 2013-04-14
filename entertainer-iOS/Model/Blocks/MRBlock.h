@@ -7,13 +7,18 @@
 //
 
 #import <Foundation/Foundation.h>
+#import "MRJsoning.h"
 
-@interface MRBlock : NSObject
+@interface MRBlock : NSObject <MRJsoning>
 
 @property (nonatomic) int id;
 @property (nonatomic,retain) NSString *name;
 @property (nonatomic,retain) NSArray *items;
-@property (nonatomic,retain) UIImage *image;
+@property (nonatomic,retain) NSString *imagePath;
+@property (nonatomic,retain) NSNumber *price;
+
+-(BOOL)isStored;
+-(void)saveToDataBase;
 
 +(NSArray *)blocksMock;
 

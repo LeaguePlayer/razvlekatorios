@@ -9,6 +9,7 @@
 #import "ChooseViewController.h"
 #import "MRChooseCollectionViewItem.h"
 #import "WatchViewController.h"
+#import "UIImageView+AFNetworking.h"
 
 @interface ChooseViewController ()
 
@@ -96,7 +97,8 @@
     MRBlock *block = [blocks objectAtIndex:indexPath.row];
     
     [item.nameLabel setText:block.name];
-    [item.icon setImage:block.image];
+    NSURL *imageUrl = [NSURL URLWithString:block.imagePath];
+    [item.icon setImageWithURL:imageUrl placeholderImage:[[UIImage alloc] init]];
 
     return item;
 }

@@ -1,20 +1,23 @@
 
-PODS:
+SPEC CHECKSUMS: 
+  AFNetworking: 761a418233d280c1e0580bcb76ff9cb4c3073d17
+  Reachability: ba94ecd4eaa037be3d0588b38956672588530c5b
+  MagicalRecord: 64e7184c240087a45e9588a722eaf05b0ad837f7
+  SVProgressHUD: 03d4845ec8e64591726428a08236c6a5489d45f8
+  SSToolkit: eaa02ea1dce63eb9575292465e9939b83ffbabe0
+
+PODS: 
 - AFNetworking (1.1.0)
+- MagicalRecord (2.1)
 - Reachability (3.1.0)
 - SSToolkit (1.0.2)
 - SVProgressHUD (0.9)
 
-DEPENDENCIES:
+DEPENDENCIES: 
 - AFNetworking
+- MagicalRecord (= 2.1)
 - Reachability
 - SSToolkit (= 1.0.2)
 - SVProgressHUD
-
-SPEC CHECKSUMS:
-  AFNetworking: 761a418233d280c1e0580bcb76ff9cb4c3073d17
-  Reachability: 1c8584c5f26fa776695efef95caaa50402c94cfb
-  SSToolkit: 9751b7ec0d068dc1dc46c8121dfeff808f9e3d35
-  SVProgressHUD: 98935fbafaf0031df4a9cafca3c66eaf3da06967
 
 COCOAPODS: 0.16.0

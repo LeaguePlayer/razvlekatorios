@@ -7,11 +7,12 @@
 //
 
 #import <Foundation/Foundation.h>
+#import "MRJsoning.h"
 
-@interface MRItem : NSObject
+@interface MRItem : NSObject <MRJsoning>
 
 @property (nonatomic) int id;
-@property (nonatomic,retain) UIImage *image;
+@property (nonatomic,retain) NSString *imagePath;
 @property (nonatomic,retain) NSString *title;
 @property (nonatomic,retain) NSString *detail;
 

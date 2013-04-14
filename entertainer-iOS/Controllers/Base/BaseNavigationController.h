@@ -10,4 +10,6 @@
 
 @interface BaseNavigationController : UINavigationController
 
+-(void)hideNavigationBarAnimated:(BOOL)animated;
+
 @end

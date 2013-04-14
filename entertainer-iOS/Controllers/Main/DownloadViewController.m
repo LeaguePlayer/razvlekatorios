@@ -9,6 +9,8 @@
 #import "DownloadViewController.h"
 #import "MRDownloadCollectionViewItem.h"
 #import "MRBlock.h"
+#import "MRHTTPClient.h"
+#import "UIImageView+AFNetworking.h"
 
 @interface DownloadViewController ()
 
@@ -41,7 +43,14 @@
 }
 
 -(void)initContent{
-    blocks = [MRBlock blocksMock];
+    [SVProgressHUD showWithStatus:@"Загрузка" maskType:SVProgressHUDMaskTypeGradient];
+    [CurrentClient allBlocksWithSuccess:^(NSArray *results) {
+        [SVProgressHUD dismiss];
+        blocks = results;
+        [self.collectionView reloadData];
+    } failure:^(int statusCode, NSArray *errors, NSError *commonError) {
+        [SVProgressHUD dismiss];
+    }];
 }
 
 -(void)initCollectionView{
@@ -96,8 +105,9 @@
     MRBlock *block = [blocks objectAtIndex:indexPath.row];
     
     [item.nameLabel setText:block.name];
-    [item.icon setImage:block.image];
-    [item.priceLabel setText:@"Free"];
+    NSURL *imageUrl = [NSURL URLWithString:block.imagePath];
+    [item.icon setImageWithURL:imageUrl placeholderImage:[[UIImage alloc] init]];
+    [item.priceLabel setText:[NSString stringWithFormat:@"%@",block.price]];
     
     return item;
 }
@@ -110,7 +120,14 @@
 
 
 - (void)collectionView:(SSCollectionView *)aCollectionView didSelectItemAtIndexPath:(NSIndexPath *)indexPath{
-    
+    MRBlock *block = [blocks objectAtIndex:indexPath.row];
+    [SVProgressHUD showWithStatus:@"Загрузка" maskType:SVProgressHUDMaskTypeGradient];
+    [CurrentClient blockItemsWithId:block.id success:^(NSArray *results) {
+        [SVProgressHUD dismiss];
+        block.items = results;
+    } failure:^(int statusCode, NSArray *errors, NSError *commonError) {
+        [SVProgressHUD dismiss];
+    }];
 }
 
 @end

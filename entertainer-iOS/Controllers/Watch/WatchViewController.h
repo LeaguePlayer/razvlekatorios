@@ -19,5 +19,6 @@
 @property (nonatomic,retain) UILabel *topLabel;
 
 @property (nonatomic,retain) NSArray *items;
+- (IBAction)viewTaped:(UITapGestureRecognizer *)sender;
 
 @end

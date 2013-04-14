@@ -7,13 +7,16 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		308FF3A5171A9EA900BF1233 /* MRHTTPClient.m in Sources */ = {isa = PBXBuildFile; fileRef = 308FF3A4171A9EA900BF1233 /* MRHTTPClient.m */; };
+		308FF3B7171B05C000BF1233 /* MRUtils.m in Sources */ = {isa = PBXBuildFile; fileRef = 308FF3B6171B05C000BF1233 /* MRUtils.m */; };
+		308FF3BB171B10D300BF1233 /* CoreData.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 308FF3B9171B10BC00BF1233 /* CoreData.framework */; };
+		308FF3BE171B131F00BF1233 /* Entertainer.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 308FF3BC171B131F00BF1233 /* Entertainer.xcdatamodeld */; };
 		3095661B170A102C008767E7 /* icon_114.png in Resources */ = {isa = PBXBuildFile; fileRef = 3095661A170A102C008767E7 /* icon_114.png */; };
 		3095661D170A103B008767E7 /* Default-568h@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 3095661C170A103B008767E7 /* Default-568h@2x.png */; };
 		3095661F170A103D008767E7 /* Default.png in Resources */ = {isa = PBXBuildFile; fileRef = 3095661E170A103D008767E7 /* Default.png */; };
 		30956623170A105D008767E7 /* Default@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 30956622170A105D008767E7 /* Default@2x.png */; };
 		30956626170A10C1008767E7 /* back_on.png in Resources */ = {isa = PBXBuildFile; fileRef = 30956624170A10C1008767E7 /* back_on.png */; };
 		30956627170A10C1008767E7 /* back_on@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 30956625170A10C1008767E7 /* back_on@2x.png */; };
-		3095662A170A1A1B008767E7 /* SplashViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 30956629170A1A1B008767E7 /* SplashViewController.m */; };
 		30DEAA4F16FB4BFE00A0BDF3 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 30DEAA4E16FB4BFE00A0BDF3 /* UIKit.framework */; };
 		30DEAA5116FB4BFE00A0BDF3 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 30DEAA5016FB4BFE00A0BDF3 /* Foundation.framework */; };
 		30DEAA5316FB4BFE00A0BDF3 /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 30DEAA5216FB4BFE00A0BDF3 /* CoreGraphics.framework */; };
@@ -80,14 +83,21 @@
 
 /* Begin PBXFileReference section */
 		02DC3CAC932E4D00982A8BAA /* libPods.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libPods.a; sourceTree = BUILT_PRODUCTS_DIR; };
+		308FF3A3171A9EA900BF1233 /* MRHTTPClient.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MRHTTPClient.h; sourceTree = "<group>"; };
+		308FF3A4171A9EA900BF1233 /* MRHTTPClient.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MRHTTPClient.m; sourceTree = "<group>"; };
+		308FF3A6171A9F7900BF1233 /* Config.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Config.h; sourceTree = "<group>"; };
+		308FF3AA171AA53400BF1233 /* MRJsoning.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MRJsoning.h; sourceTree = "<group>"; };
+		308FF3B1171AA9B000BF1233 /* GeneralDefines.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GeneralDefines.h; sourceTree = "<group>"; };
+		308FF3B5171B05C000BF1233 /* MRUtils.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MRUtils.h; sourceTree = "<group>"; };
+		308FF3B6171B05C000BF1233 /* MRUtils.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MRUtils.m; sourceTree = "<group>"; };
+		308FF3B9171B10BC00BF1233 /* CoreData.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreData.framework; path = System/Library/Frameworks/CoreData.framework; sourceTree = SDKROOT; };
+		308FF3BD171B131F00BF1233 /* Entertainer.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = Entertainer.xcdatamodel; sourceTree = "<group>"; };
 		3095661A170A102C008767E7 /* icon_114.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = icon_114.png; sourceTree = "<group>"; };
 		3095661C170A103B008767E7 /* Default-568h@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Default-568h@2x.png"; sourceTree = "<group>"; };
 		3095661E170A103D008767E7 /* Default.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Default.png; sourceTree = "<group>"; };
 		30956622170A105D008767E7 /* Default@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Default@2x.png"; sourceTree = "<group>"; };
 		30956624170A10C1008767E7 /* back_on.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = back_on.png; sourceTree = "<group>"; };
 		30956625170A10C1008767E7 /* back_on@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "back_on@2x.png"; sourceTree = "<group>"; };
-		30956628170A1A1B008767E7 /* SplashViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SplashViewController.h; sourceTree = "<group>"; };
-		30956629170A1A1B008767E7 /* SplashViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SplashViewController.m; sourceTree = "<group>"; };
 		30DEAA4B16FB4BFE00A0BDF3 /* entertainer-iOS.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "entertainer-iOS.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		30DEAA4E16FB4BFE00A0BDF3 /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
 		30DEAA5016FB4BFE00A0BDF3 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
@@ -173,6 +183,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				308FF3BB171B10D300BF1233 /* CoreData.framework in Frameworks */,
 				30DEAA4F16FB4BFE00A0BDF3 /* UIKit.framework in Frameworks */,
 				30DEAA5116FB4BFE00A0BDF3 /* Foundation.framework in Frameworks */,
 				30DEAA5316FB4BFE00A0BDF3 /* CoreGraphics.framework in Frameworks */,
@@ -183,6 +194,41 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		308FF3A2171A9E7B00BF1233 /* Client */ = {
+			isa = PBXGroup;
+			children = (
+				308FF3A3171A9EA900BF1233 /* MRHTTPClient.h */,
+				308FF3A4171A9EA900BF1233 /* MRHTTPClient.m */,
+				308FF3A6171A9F7900BF1233 /* Config.h */,
+			);
+			path = Client;
+			sourceTree = "<group>";
+		};
+		308FF3A9171AA52700BF1233 /* Common */ = {
+			isa = PBXGroup;
+			children = (
+				308FF3AA171AA53400BF1233 /* MRJsoning.h */,
+			);
+			path = Common;
+			sourceTree = "<group>";
+		};
+		308FF3B4171B05C000BF1233 /* Helpers */ = {
+			isa = PBXGroup;
+			children = (
+				308FF3B5171B05C000BF1233 /* MRUtils.h */,
+				308FF3B6171B05C000BF1233 /* MRUtils.m */,
+			);
+			path = Helpers;
+			sourceTree = "<group>";
+		};
+		308FF3B8171B08B900BF1233 /* DataModel */ = {
+			isa = PBXGroup;
+			children = (
+				308FF3BC171B131F00BF1233 /* Entertainer.xcdatamodeld */,
+			);
+			path = DataModel;
+			sourceTree = "<group>";
+		};
 		30DEAA4216FB4BFE00A0BDF3 = {
 			isa = PBXGroup;
 			children = (
@@ -209,6 +255,7 @@
 		30DEAA4D16FB4BFE00A0BDF3 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				308FF3B9171B10BC00BF1233 /* CoreData.framework */,
 				30DEAA4E16FB4BFE00A0BDF3 /* UIKit.framework */,
 				30DEAA5016FB4BFE00A0BDF3 /* Foundation.framework */,
 				30DEAA5216FB4BFE00A0BDF3 /* CoreGraphics.framework */,
@@ -247,6 +294,7 @@
 				30DEAA7216FB4CBC00A0BDF3 /* MainStoryboard.storyboard */,
 				30DEAA7316FB4CBC00A0BDF3 /* MRAppDelegate.h */,
 				30DEAA7416FB4CBC00A0BDF3 /* MRAppDelegate.m */,
+				308FF3B1171AA9B000BF1233 /* GeneralDefines.h */,
 			);
 			path = Application;
 			sourceTree = "<group>";
@@ -272,8 +320,6 @@
 				30DEAAAF16FB723000A0BDF3 /* ChooseViewController.m */,
 				30DEAAB116FB724300A0BDF3 /* DownloadViewController.h */,
 				30DEAAB216FB724300A0BDF3 /* DownloadViewController.m */,
-				30956628170A1A1B008767E7 /* SplashViewController.h */,
-				30956629170A1A1B008767E7 /* SplashViewController.m */,
 			);
 			path = Main;
 			sourceTree = "<group>";
@@ -373,6 +419,8 @@
 		30DEAADD16FB89C200A0BDF3 /* Model */ = {
 			isa = PBXGroup;
 			children = (
+				308FF3B8171B08B900BF1233 /* DataModel */,
+				308FF3A9171AA52700BF1233 /* Common */,
 				30DEAADE16FB89C200A0BDF3 /* Blocks */,
 			);
 			path = Model;
@@ -411,6 +459,8 @@
 		8BF975B516FC5F2B00A3FB51 /* Classes */ = {
 			isa = PBXGroup;
 			children = (
+				308FF3B4171B05C000BF1233 /* Helpers */,
+				308FF3A2171A9E7B00BF1233 /* Client */,
 				30DEAAED16FC9F4B00A0BDF3 /* DemView */,
 				8BF975B616FC5F2B00A3FB51 /* SSCollectionViewItems */,
 			);
@@ -572,7 +622,9 @@
 				8B2E508B16FC6FC800CE8E20 /* WatchViewController.m in Sources */,
 				8B2E508E16FC74E500CE8E20 /* MRDownloadCollectionViewItem.m in Sources */,
 				30DEAAF016FC9F9500A0BDF3 /* MRDemView.m in Sources */,
-				3095662A170A1A1B008767E7 /* SplashViewController.m in Sources */,
+				308FF3A5171A9EA900BF1233 /* MRHTTPClient.m in Sources */,
+				308FF3B7171B05C000BF1233 /* MRUtils.m in Sources */,
+				308FF3BE171B131F00BF1233 /* Entertainer.xcdatamodeld in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -692,6 +744,19 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCVersionGroup section */
+		308FF3BC171B131F00BF1233 /* Entertainer.xcdatamodeld */ = {
+			isa = XCVersionGroup;
+			children = (
+				308FF3BD171B131F00BF1233 /* Entertainer.xcdatamodel */,
+			);
+			currentVersion = 308FF3BD171B131F00BF1233 /* Entertainer.xcdatamodel */;
+			path = Entertainer.xcdatamodeld;
+			sourceTree = "<group>";
+			versionGroupType = wrapper.xcdatamodel;
+		};
+/* End XCVersionGroup section */
 	};
 	rootObject = 30DEAA4316FB4BFE00A0BDF3 /* Project object */;
 }
