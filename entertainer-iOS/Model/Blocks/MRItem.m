@@ -18,6 +18,7 @@
         self.imagePath = @"";
         self.title = @"";
         self.detail = @"";
+        self.image = [[UIImage alloc] init];
     }
     return self;
 }

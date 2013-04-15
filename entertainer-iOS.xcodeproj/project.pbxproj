@@ -10,7 +10,7 @@
 		308FF3A5171A9EA900BF1233 /* MRHTTPClient.m in Sources */ = {isa = PBXBuildFile; fileRef = 308FF3A4171A9EA900BF1233 /* MRHTTPClient.m */; };
 		308FF3B7171B05C000BF1233 /* MRUtils.m in Sources */ = {isa = PBXBuildFile; fileRef = 308FF3B6171B05C000BF1233 /* MRUtils.m */; };
 		308FF3BB171B10D300BF1233 /* CoreData.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 308FF3B9171B10BC00BF1233 /* CoreData.framework */; };
-		308FF3BE171B131F00BF1233 /* Entertainer.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 308FF3BC171B131F00BF1233 /* Entertainer.xcdatamodeld */; };
+		308FF3C6171C644300BF1233 /* Model.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 308FF3C4171C644300BF1233 /* Model.xcdatamodeld */; };
 		3095661B170A102C008767E7 /* icon_114.png in Resources */ = {isa = PBXBuildFile; fileRef = 3095661A170A102C008767E7 /* icon_114.png */; };
 		3095661D170A103B008767E7 /* Default-568h@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 3095661C170A103B008767E7 /* Default-568h@2x.png */; };
 		3095661F170A103D008767E7 /* Default.png in Resources */ = {isa = PBXBuildFile; fileRef = 3095661E170A103D008767E7 /* Default.png */; };
@@ -91,7 +91,7 @@
 		308FF3B5171B05C000BF1233 /* MRUtils.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MRUtils.h; sourceTree = "<group>"; };
 		308FF3B6171B05C000BF1233 /* MRUtils.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MRUtils.m; sourceTree = "<group>"; };
 		308FF3B9171B10BC00BF1233 /* CoreData.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreData.framework; path = System/Library/Frameworks/CoreData.framework; sourceTree = SDKROOT; };
-		308FF3BD171B131F00BF1233 /* Entertainer.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = Entertainer.xcdatamodel; sourceTree = "<group>"; };
+		308FF3C5171C644300BF1233 /* Model.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = Model.xcdatamodel; sourceTree = "<group>"; };
 		3095661A170A102C008767E7 /* icon_114.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = icon_114.png; sourceTree = "<group>"; };
 		3095661C170A103B008767E7 /* Default-568h@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Default-568h@2x.png"; sourceTree = "<group>"; };
 		3095661E170A103D008767E7 /* Default.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Default.png; sourceTree = "<group>"; };
@@ -221,10 +221,10 @@
 			path = Helpers;
 			sourceTree = "<group>";
 		};
-		308FF3B8171B08B900BF1233 /* DataModel */ = {
+		308FF3C3171C643900BF1233 /* DataModel */ = {
 			isa = PBXGroup;
 			children = (
-				308FF3BC171B131F00BF1233 /* Entertainer.xcdatamodeld */,
+				308FF3C4171C644300BF1233 /* Model.xcdatamodeld */,
 			);
 			path = DataModel;
 			sourceTree = "<group>";
@@ -419,7 +419,7 @@
 		30DEAADD16FB89C200A0BDF3 /* Model */ = {
 			isa = PBXGroup;
 			children = (
-				308FF3B8171B08B900BF1233 /* DataModel */,
+				308FF3C3171C643900BF1233 /* DataModel */,
 				308FF3A9171AA52700BF1233 /* Common */,
 				30DEAADE16FB89C200A0BDF3 /* Blocks */,
 			);
@@ -624,7 +624,7 @@
 				30DEAAF016FC9F9500A0BDF3 /* MRDemView.m in Sources */,
 				308FF3A5171A9EA900BF1233 /* MRHTTPClient.m in Sources */,
 				308FF3B7171B05C000BF1233 /* MRUtils.m in Sources */,
-				308FF3BE171B131F00BF1233 /* Entertainer.xcdatamodeld in Sources */,
+				308FF3C6171C644300BF1233 /* Model.xcdatamodeld in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -746,13 +746,13 @@
 /* End XCConfigurationList section */
 
 /* Begin XCVersionGroup section */
-		308FF3BC171B131F00BF1233 /* Entertainer.xcdatamodeld */ = {
+		308FF3C4171C644300BF1233 /* Model.xcdatamodeld */ = {
 			isa = XCVersionGroup;
 			children = (
-				308FF3BD171B131F00BF1233 /* Entertainer.xcdatamodel */,
+				308FF3C5171C644300BF1233 /* Model.xcdatamodel */,
 			);
-			currentVersion = 308FF3BD171B131F00BF1233 /* Entertainer.xcdatamodel */;
-			path = Entertainer.xcdatamodeld;
+			currentVersion = 308FF3C5171C644300BF1233 /* Model.xcdatamodel */;
+			path = Model.xcdatamodeld;
 			sourceTree = "<group>";
 			versionGroupType = wrapper.xcdatamodel;
 		};

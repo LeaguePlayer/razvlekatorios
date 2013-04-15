@@ -19,8 +19,22 @@
     } else {
         imagePath = [NSString stringWithFormat:@"%@%@",MR_APIURL,[dict objectForKey:@"display"]];
     }
-    NSLog (imagePath);
     return imagePath;
+}
+
+//перевод UIIamge в NSData
++(NSData *)transformedValue:(UIImage *)value{
+    if (value == nil)
+        return nil;
+    // I pass in raw data when generating the image, save that directly to the database
+    if ([value isKindOfClass:[NSData class]])
+        return (NSData *)value;
+    return UIImagePNGRepresentation((UIImage *)value);
+}
+
+//перевод NSData в UIImage
++(UIImage *)reverseTransformedValue:(NSData *)value{
+    return [UIImage imageWithData:value];
 }
 
 @end

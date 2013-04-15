@@ -132,10 +132,9 @@
                                 <rect key="frame" x="0.0" y="0.0" width="320" height="416"/>
                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                 <subviews>
-                                    <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" lineBreakMode="wordWrap" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="GN8-LB-XPD">
+                                    <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" text="" lineBreakMode="wordWrap" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="GN8-LB-XPD">
                                         <rect key="frame" x="20" y="15" width="280" height="474"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                        <string key="text">Внутридискретное арпеджио, в том числе, заканчивает глубокий гипнотический рифф, однако сами песни забываются очень быстро. Гармонический интервал, по определению, выстраивает самодостаточный форшлаг, в таких условиях можно спокойно выпускать пластинки раз в три года. Поп-индустрия имеет соноропериод, не говоря уже о том, что рок-н-ролл мертв. Легато, следовательно, дает цикл, и здесь мы видим ту самую каноническую секвенцию с разнонаправленным шагом отдельных звеньев. Развивая эту тему, хорус диссонирует глубокий эффект "вау-вау", потому что современная музыка не запоминается. Кластерное вибрато трансформирует позиционный ревер, благодаря быстрой смене тембров (каждый инструмент играет минимум звуков).Внутридискретное арпеджио, в том числе, заканчивает глубокий гипнотический рифф, однако сами песни забываются очень быстро. Гармонический интервал, по определению, выстраивает самодостаточный форшлаг, в таких условиях можно спокойно выпускать пластинки раз в три года. Поп-индустрия имеет соноропериод, не говоря уже о том, что рок-н-ролл мертв. Легато, следовательно, дает цикл, и здесь мы видим ту самую каноническую секвенцию с разнонаправленным шагом отдельных звеньев. Развивая эту тему, хорус диссонирует глубокий эффект "вау-вау", потому что современная музыка не запоминается. Кластерное вибрато трансформирует позиционный ревер, благодаря быстрой смене тембров (каждый инструмент играет минимум звуков).</string>
                                         <fontDescription key="fontDescription" type="system" pointSize="15"/>
                                         <color key="textColor" red="0.0" green="0.50196081400000003" blue="1" alpha="1" colorSpace="calibratedRGB"/>
                                         <nil key="highlightedColor"/>
@@ -297,6 +296,38 @@
         <image name="main_icon.png" width="207" height="207"/>
         <image name="right_button.png" width="85" height="83"/>
     </resources>
+    <classes>
+        <class className="AboutViewController" superclassName="BaseViewController">
+            <source key="sourceIdentifier" type="project" relativePath="./Classes/AboutViewController.h"/>
+            <relationships>
+                <relationship kind="outlet" name="aboutLabel" candidateClass="UILabel"/>
+                <relationship kind="outlet" name="scroll" candidateClass="UIScrollView"/>
+            </relationships>
+        </class>
+        <class className="BaseNavigationController" superclassName="UINavigationController">
+            <source key="sourceIdentifier" type="project" relativePath="./Classes/BaseNavigationController.h"/>
+        </class>
+        <class className="BaseViewController" superclassName="UIViewController">
+            <source key="sourceIdentifier" type="project" relativePath="./Classes/BaseViewController.h"/>
+        </class>
+        <class className="ChooseViewController" superclassName="BaseViewController">
+            <source key="sourceIdentifier" type="project" relativePath="./Classes/ChooseViewController.h"/>
+        </class>
+        <class className="DownloadViewController" superclassName="BaseViewController">
+            <source key="sourceIdentifier" type="project" relativePath="./Classes/DownloadViewController.h"/>
+        </class>
+        <class className="MainViewController" superclassName="BaseViewController">
+            <source key="sourceIdentifier" type="project" relativePath="./Classes/MainViewController.h"/>
+        </class>
+        <class className="WatchViewController" superclassName="BaseViewController">
+            <source key="sourceIdentifier" type="project" relativePath="./Classes/WatchViewController.h"/>
+            <relationships>
+                <relationship kind="action" name="viewTaped:" candidateClass="UITapGestureRecognizer"/>
+                <relationship kind="outlet" name="bottomView" candidateClass="UIView"/>
+                <relationship kind="outlet" name="pageScroll" candidateClass="UIScrollView"/>
+            </relationships>
+        </class>
+    </classes>
     <simulatedMetricsContainer key="defaultSimulatedMetrics">
         <simulatedStatusBarMetrics key="statusBar"/>
         <simulatedOrientationMetrics key="orientation"/>

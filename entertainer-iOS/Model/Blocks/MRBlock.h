@@ -15,6 +15,7 @@
 @property (nonatomic,retain) NSString *name;
 @property (nonatomic,retain) NSArray *items;
 @property (nonatomic,retain) NSString *imagePath;
+@property (nonatomic,retain) UIImage *image;
 @property (nonatomic,retain) NSNumber *price;
 
 -(BOOL)isStored;

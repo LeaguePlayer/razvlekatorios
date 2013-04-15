@@ -8,7 +8,9 @@
 
 #import "BaseViewController.h"
 
-@interface AboutViewController : BaseViewController
+@interface AboutViewController : BaseViewController{
+    NSString *information;
+}
 @property (weak, nonatomic) IBOutlet UILabel *aboutLabel;
 @property (weak, nonatomic) IBOutlet UIScrollView *scroll;
 @end

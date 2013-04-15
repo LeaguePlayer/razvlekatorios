@@ -19,6 +19,8 @@
         self.name = @"";
         self.items = [NSArray array];
         self.price = @(0);
+        self.imagePath = @"";
+        self.image = [[UIImage alloc] init];
     }
     return self;
 }

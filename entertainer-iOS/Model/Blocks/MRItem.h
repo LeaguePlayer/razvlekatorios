@@ -13,6 +13,7 @@
 
 @property (nonatomic) int id;
 @property (nonatomic,retain) NSString *imagePath;
+@property (nonatomic,retain) UIImage *image;
 @property (nonatomic,retain) NSString *title;
 @property (nonatomic,retain) NSString *detail;
 

@@ -29,6 +29,7 @@ static MRHTTPClient *_sharedClient;
     if (self){
         [self registerHTTPOperationClass:[AFJSONRequestOperation class]];
         [self setDefaultHeader:@"Accept" value:@"application/json"];
+        self.downloader = [[SDWebImageDownloader alloc] init];
     }
     return self;
 }
@@ -44,7 +45,12 @@ static MRHTTPClient *_sharedClient;
             NSArray *blocksArray = (NSArray *)respDict[@"blocks"];
             NSMutableArray *results = [NSMutableArray array];
             for (NSDictionary *dict in blocksArray){
-                [results addObject:[MRBlock objectWithDict:dict]];
+                __block MRBlock *block = [MRBlock objectWithDict:dict];
+                NSURL *imageUrl = [NSURL URLWithString:block.imagePath];
+                [self.downloader downloadImageWithURL:imageUrl options:nil progress:nil completed:^(UIImage *image, NSData *data, NSError *error, BOOL finished) {
+                    block.image = image;
+                }];
+                [results addObject:block];
             }
             success(results);
         } else {
@@ -66,8 +72,20 @@ static MRHTTPClient *_sharedClient;
             NSDictionary *respDict = (NSDictionary *)JSON[@"response"];
             NSArray *imagesArray = (NSArray *)respDict[@"images"];
             NSMutableArray *results = [NSMutableArray array];
-            for (NSDictionary *dict in imagesArray){
-                [results addObject:[MRItem objectWithDict:dict]];
+            for (int i = 0; i < imagesArray.count; i++){
+                NSDictionary *dict = [imagesArray objectAtIndex:i];
+                __block MRItem *item = [MRItem objectWithDict:dict];
+                __block int count = 0;
+                __block int max = imagesArray.count;
+                item.id = i;
+                NSURL *imageUrl = [NSURL URLWithString:item.imagePath];
+                [self.downloader downloadImageWithURL:imageUrl options:nil progress:nil completed:^(UIImage *image, NSData *data, NSError *error, BOOL finished) {
+                    item.image = image;
+                    if (++count == max){
+                        
+                    }
+                }];
+                [results addObject:item];
             }
             success(results);
         } else {
@@ -75,6 +93,19 @@ static MRHTTPClient *_sharedClient;
         }
     } failure:^(NSURLRequest *request, NSHTTPURLResponse *response, NSError *error, id JSON) {
         
+    }];
+    [self enqueueHTTPRequestOperation:operation];
+}
+
+-(void)applicationInfoWithSuccess:(void(^)(NSString *info))success failure:(MRHTTPClientFailure)failure{
+    NSString *urlString = @"/api/info";
+    urlString = [urlString stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
+    NSURLRequest *request = [self requestWithMethod:@"GET" path:urlString parameters:nil];
+    AFJSONRequestOperation *operation = [AFJSONRequestOperation JSONRequestOperationWithRequest:request success:^(NSURLRequest *request, NSHTTPURLResponse *response, id JSON) {
+        NSString *result = JSON[@"response"];
+        success(result);
+    } failure:^(NSURLRequest *request, NSHTTPURLResponse *response, NSError *error, id JSON) {
+        failure(response.statusCode,@[],nil);
     }];
     [self enqueueHTTPRequestOperation:operation];
 }

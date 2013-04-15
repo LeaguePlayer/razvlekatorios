@@ -11,5 +11,7 @@
 @interface MRUtils : NSObject
 
 +(NSString *)imageFromJSONDictionary:(NSDictionary *)dict;
++(NSData *)transformedValue:(UIImage *)value;
++(UIImage *)reverseTransformedValue:(NSData *)value;
 
 @end

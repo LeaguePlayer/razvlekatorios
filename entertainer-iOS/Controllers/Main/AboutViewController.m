@@ -7,6 +7,7 @@
 //
 
 #import "AboutViewController.h"
+#import "MRHTTPClient.h"
 
 @interface AboutViewController ()
 
@@ -28,10 +29,22 @@
     [super viewDidLoad];
 	// Do any additional setup after loading the view.
     [self initBackButton];
-    [self initUI];
+    [self initContent];
+}
+
+-(void)initContent{
+    [SVProgressHUD showWithStatus:@"Загрузка" maskType:SVProgressHUDMaskTypeGradient];
+    [CurrentClient applicationInfoWithSuccess:^(NSString *info) {
+        [SVProgressHUD dismiss];
+        information = info;
+        [self initUI];
+    } failure:^(int statusCode, NSArray *errors, NSError *commonError) {
+        [SVProgressHUD dismiss];
+    }];
 }
 
 -(void)initUI{
+    [self.aboutLabel setText:information];
     [self.aboutLabel sizeToFit];
     [self.scroll setContentSize:CGSizeMake(self.scroll.bounds.size.width, self.aboutLabel.frame.size.height + 30)];
     [self initTitle];
