@@ -111,7 +111,6 @@
 		30DEAA5616FB4BFE00A0BDF3 /* entertainer-iOS-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "entertainer-iOS-Info.plist"; sourceTree = "<group>"; };
 		30DEAA5816FB4BFE00A0BDF3 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		30DEAA5A16FB4BFE00A0BDF3 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
-		30DEAA5C16FB4BFE00A0BDF3 /* entertainer-iOS-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "entertainer-iOS-Prefix.pch"; sourceTree = "<group>"; };
 		30DEAA7216FB4CBC00A0BDF3 /* MainStoryboard.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = MainStoryboard.storyboard; sourceTree = "<group>"; };
 		30DEAA7316FB4CBC00A0BDF3 /* MRAppDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MRAppDelegate.h; sourceTree = "<group>"; };
 		30DEAA7416FB4CBC00A0BDF3 /* MRAppDelegate.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MRAppDelegate.m; sourceTree = "<group>"; };
@@ -175,6 +174,7 @@
 		30DEAAEE16FC9F9500A0BDF3 /* MRDemView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MRDemView.h; sourceTree = "<group>"; };
 		30DEAAEF16FC9F9500A0BDF3 /* MRDemView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MRDemView.m; sourceTree = "<group>"; };
 		30DEAAF316FCA20D00A0BDF3 /* DemView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = DemView.xib; sourceTree = "<group>"; };
+		30FC49DA171DA62B00DA7121 /* entertainer-iOS-Prefix.pch */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "entertainer-iOS-Prefix.pch"; sourceTree = "<group>"; };
 		5F3FE5144D8B4F3887B19BB5 /* Pods.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = Pods.xcconfig; path = Pods/Pods.xcconfig; sourceTree = SOURCE_ROOT; };
 		8B2E508916FC6FC800CE8E20 /* WatchViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WatchViewController.h; sourceTree = "<group>"; };
 		8B2E508A16FC6FC800CE8E20 /* WatchViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WatchViewController.m; sourceTree = "<group>"; };
@@ -290,10 +290,10 @@
 		30DEAA5516FB4BFE00A0BDF3 /* Supporting Files */ = {
 			isa = PBXGroup;
 			children = (
+				30FC49DA171DA62B00DA7121 /* entertainer-iOS-Prefix.pch */,
 				30DEAA5616FB4BFE00A0BDF3 /* entertainer-iOS-Info.plist */,
 				30DEAA5716FB4BFE00A0BDF3 /* InfoPlist.strings */,
 				30DEAA5A16FB4BFE00A0BDF3 /* main.m */,
-				30DEAA5C16FB4BFE00A0BDF3 /* entertainer-iOS-Prefix.pch */,
 			);
 			name = "Supporting Files";
 			sourceTree = "<group>";
