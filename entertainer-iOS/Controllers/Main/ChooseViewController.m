@@ -10,6 +10,7 @@
 #import "MRChooseCollectionViewItem.h"
 #import "WatchViewController.h"
 #import "UIImageView+AFNetworking.h"
+#import "MRItem.h"
 
 @interface ChooseViewController ()
 
@@ -99,7 +100,7 @@
     [item.nameLabel setText:block.name];
     NSURL *imageUrl = [NSURL URLWithString:block.imagePath];
     [item.icon setImageWithURL:imageUrl placeholderImage:[[UIImage alloc] init]];
-
+    [item.removeButton addTarget:self action:@selector(removeItem:) forControlEvents:UIControlEventTouchUpInside];
     return item;
 }
 
@@ -113,6 +114,15 @@
 -(void)collectionView:(SSCollectionView *)aCollectionView didSelectItemAtIndexPath:(NSIndexPath *)indexPath{
     selected = [blocks objectAtIndex:indexPath.row];
     [self performSegueWithIdentifier:@"ToWatch" sender:self];
+}
+
+-(void)removeItem:(UIButton *)sender{
+    MRChooseCollectionViewItem *item = (MRChooseCollectionViewItem *)[sender superview];
+    NSIndexPath *indexPath = [self.collectionView indexPathForItem:item];
+    MRBlock *block = [blocks objectAtIndex:indexPath.row];
+    [block removeFromDataBase];
+    blocks = [MRBlock allBlocks];
+    [self.collectionView reloadData];
 }
 
 -(void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender{

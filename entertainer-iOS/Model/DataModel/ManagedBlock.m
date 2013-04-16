@@ -10,6 +10,7 @@
 #import "ManagedItem.h"
 #import "MRBlock.h"
 #import "MRItem.h"
+#import "MRUtils.h"
 
 @implementation ManagedBlock
 
@@ -29,6 +30,7 @@
     item.id = @(block.id);
     item.name = block.name;
     item.imagePath = block.imagePath;
+    item.image = [MRUtils transformedValue:block.image];
     item.price = block.price;
     for (MRItem *lol in block.items){
         ManagedItem *new = [ManagedItem createFromItem:lol];

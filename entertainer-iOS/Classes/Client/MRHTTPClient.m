@@ -71,10 +71,10 @@ static MRHTTPClient *_sharedClient;
         if ([status isEqualToNumber:@(1)]){
             NSDictionary *respDict = (NSDictionary *)JSON[@"response"];
             NSArray *imagesArray = (NSArray *)respDict[@"images"];
-            NSMutableArray *results = [NSMutableArray array];
+            __block NSMutableArray *results = [NSMutableArray array];
             __block NSInteger count = 0;
             int max = imagesArray.count;
-            dispatch_queue_t queue = dispatch_queue_create("imageDownloader",NULL);
+            dispatch_queue_t queue = dispatch_get_main_queue();
             for (int i = 0; i < imagesArray.count; i++){
                 NSDictionary *dict = [imagesArray objectAtIndex:i];
                 __block MRItem *item = [MRItem objectWithDict:dict];
@@ -82,18 +82,18 @@ static MRHTTPClient *_sharedClient;
                 NSURL *imageUrl = [NSURL URLWithString:item.imagePath];
                 [self.downloader downloadImageWithURL:imageUrl options:nil progress:nil completed:^(UIImage *image, NSData *data, NSError *error, BOOL finished) {
                     item.image = image;
+                    [results addObject:item];
                     dispatch_async(queue, ^{
                         count++;
                         NSLog (@"%d",count);
                         if (count == max){
+                            block.items = results;
+                            success(results);
                             [block saveToDataBase];
                         }
                     });
                 }];
-                [results addObject:item];
             }
-            block.items = results;
-            success(results);
         } else {
             failure(response.statusCode,@[],nil);
         }

@@ -66,6 +66,8 @@
     if (item){
         item.id = block.id.intValue;
         item.name = block.name;
+        item.imagePath = block.imagePath;
+        item.image = [MRUtils reverseTransformedValue:block.image];
         NSMutableArray *items = [NSMutableArray array];
         for (ManagedItem *lol in block.items){
             MRItem *new = [[MRItem alloc] initWithManagedObject:lol];

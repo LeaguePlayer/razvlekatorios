@@ -58,13 +58,12 @@
     for (int i = 0; i < self.items.count; i++){
         MRDemView *view = [[MRDemView alloc] initWithFrame:CGRectMake(0, 0, self.pageScroll.frame.size.width, self.pageScroll.frame.size.height)];
         MRItem *item = [self.items objectAtIndex:i];
-        UIImage *image = [UIImage imageNamed:item.imagePath];
-        [view.imageView setImage:image];
+        [view.imageView setImage:item.image];
         [view.titleLabel setText:item.title];
         [view.descLabel setText:item.detail];
         [view.descLabel sizeToFit];
         CGRect frame = view.imageView.frame;
-        frame.size = [self sizeForImage:image withMaxWidth:self.pageScroll.frame.size.width];
+        frame.size = [self sizeForImage:item.image withMaxWidth:self.pageScroll.frame.size.width];
         frame.origin.x = self.pageScroll.frame.size.width/2 - frame.size.width/2;
         [view.imageView setFrame:frame];
         CGRect borderFrame = frame;
