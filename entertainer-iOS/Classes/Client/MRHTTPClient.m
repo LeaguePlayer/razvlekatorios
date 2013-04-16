@@ -62,8 +62,8 @@ static MRHTTPClient *_sharedClient;
     [self enqueueHTTPRequestOperation:operation];
 }
 
--(void)blockItemsWithId:(int)blockId success:(MRHTTPClientSuccessResults)success failure:(MRHTTPClientFailure)failure{
-    NSString *urlString = [NSString stringWithFormat:@"/api/getblock/%d",blockId];
+-(void)blockItemsWithBlock:(MRBlock *)block success:(MRHTTPClientSuccessResults)success failure:(MRHTTPClientFailure)failure{
+    NSString *urlString = [NSString stringWithFormat:@"/api/getblock/%d",block.id];
     urlString = [urlString stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
     NSURLRequest *request = [self requestWithMethod:@"GET" path:urlString parameters:nil];
     AFJSONRequestOperation *operation = [AFJSONRequestOperation JSONRequestOperationWithRequest:request success:^(NSURLRequest *request, NSHTTPURLResponse *response, id JSON){
@@ -82,11 +82,12 @@ static MRHTTPClient *_sharedClient;
                 [self.downloader downloadImageWithURL:imageUrl options:nil progress:nil completed:^(UIImage *image, NSData *data, NSError *error, BOOL finished) {
                     item.image = image;
                     if (++count == max){
-                        
+                        [block saveToDataBase];
                     }
                 }];
                 [results addObject:item];
             }
+            block.items = results;
             success(results);
         } else {
             failure(response.statusCode,@[],nil);

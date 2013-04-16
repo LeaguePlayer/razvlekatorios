@@ -8,6 +8,7 @@
 
 #import <Foundation/Foundation.h>
 #import "MRJsoning.h"
+#import "ManagedItem.h"
 
 @interface MRItem : NSObject <MRJsoning>
 
@@ -18,5 +19,6 @@
 @property (nonatomic,retain) NSString *detail;
 
 +(NSArray *)itemsMock;
+-(id)initWithManagedObject:(ManagedItem *)object;
 
 @end

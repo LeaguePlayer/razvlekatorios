@@ -32,6 +32,18 @@
     return item;
 }
 
+-(id)initWithManagedObject:(ManagedItem *)object{
+    MRItem *item = [[MRItem alloc] init];
+    if (item){
+        item.id = object.id.intValue;
+        item.title = object.title;
+        item.detail = object.detail;
+        item.imagePath = object.imagePath;
+        item.image = [MRUtils reverseTransformedValue:object.image];
+    }
+    return item;
+}
+
 +(NSArray *)itemsMock{
     MRItem *item0 = [[MRItem alloc] init];
     item0.id = 0;

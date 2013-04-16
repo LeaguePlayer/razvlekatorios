@@ -16,8 +16,12 @@
         <attribute name="title" optional="YES" attributeType="String" syncable="YES"/>
         <relationship name="block" optional="YES" minCount="1" maxCount="1" deletionRule="Nullify" destinationEntity="ManagedBlock" inverseName="items" inverseEntity="ManagedBlock" syncable="YES"/>
     </entity>
+    <entity name="PurchasedBlocks" syncable="YES">
+        <attribute name="id" optional="YES" attributeType="Integer 16" defaultValueString="0" syncable="YES"/>
+    </entity>
     <elements>
         <element name="ManagedBlock" positionX="160" positionY="192" width="128" height="135"/>
         <element name="ManagedItem" positionX="160" positionY="192" width="128" height="135"/>
+        <element name="PurchasedBlocks" positionX="160" positionY="192" width="128" height="60"/>
     </elements>
 </model>

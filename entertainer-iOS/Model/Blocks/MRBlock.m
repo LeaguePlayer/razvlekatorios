@@ -37,7 +37,7 @@
 +(id)objectWithDict:(NSDictionary *)dict{
     MRBlock *item = [[MRBlock alloc] init];
     if (item){
-        item.id = 1;
+        item.id = ((NSString *)[dict objectForKey:@"id"]).intValue;
         item.name = [dict objectForKey:@"name"];
         item.price = (NSNumber *)[dict objectForKey:@"price"];
         NSDictionary *images = (NSDictionary *)[dict objectForKey:@"images"];
@@ -46,8 +46,43 @@
     return item;
 }
 
--(BOOL)isStored{
-    
+-(void)saveToDataBase{
+    [ManagedBlock createFromBlock:self];
+}
+
+-(void)removeFromDataBase{
+    NSArray *favourites = [ManagedBlock MR_findAll];
+    if (favourites.count > 0){
+        for (ManagedBlock *block in favourites){
+            [block MR_deleteEntity];
+        }
+        [DefaultContext MR_saveWithOptions:MRSaveSynchronously completion:nil];
+    }
+}
+
+-(id)initWithManagedBlock:(ManagedBlock *)block{
+    MRBlock *item = [[MRBlock alloc] init];
+    if (item){
+        item.id = block.id.intValue;
+        item.name = block.name;
+        NSMutableArray *items = [NSMutableArray array];
+        for (ManagedItem *lol in block.items){
+            MRItem *new = [[MRItem alloc] initWithManagedObject:lol];
+            [items addObject:new];
+        }
+        item.items = items;
+    }
+    return item;
+}
+
++(NSArray *)allBlocks{
+    NSArray *favourites = [ManagedBlock MR_findAll];
+    NSMutableArray *results = [NSMutableArray array];
+    for (ManagedBlock *block in favourites){
+        MRBlock *item = [[MRBlock alloc] initWithManagedBlock:block];
+        [results addObject:item];
+    }
+    return results;
 }
 
 +(NSArray *)blocksMock{

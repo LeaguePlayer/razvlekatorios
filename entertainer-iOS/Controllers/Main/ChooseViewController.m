@@ -41,7 +41,7 @@
 }
 
 -(void)initContent{
-    blocks = [MRBlock blocksMock];
+    blocks = [MRBlock allBlocks];
 }
 
 -(void)initUI{

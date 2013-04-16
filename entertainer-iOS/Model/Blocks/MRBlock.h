@@ -8,6 +8,7 @@
 
 #import <Foundation/Foundation.h>
 #import "MRJsoning.h"
+#import "ManagedBlock.h"
 
 @interface MRBlock : NSObject <MRJsoning>
 
@@ -18,8 +19,11 @@
 @property (nonatomic,retain) UIImage *image;
 @property (nonatomic,retain) NSNumber *price;
 
--(BOOL)isStored;
+-(id)initWithManagedBlock:(ManagedBlock *)block;
+
 -(void)saveToDataBase;
+-(void)removeFromDataBase;
++(NSArray *)allBlocks;
 
 +(NSArray *)blocksMock;
 
