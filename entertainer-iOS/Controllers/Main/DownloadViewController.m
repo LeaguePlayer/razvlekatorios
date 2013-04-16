@@ -107,7 +107,8 @@
     [item.nameLabel setText:block.name];
     NSURL *imageUrl = [NSURL URLWithString:block.imagePath];
     [item.icon setImageWithURL:imageUrl placeholderImage:[[UIImage alloc] init]];
-    [item.priceLabel setText:[NSString stringWithFormat:@"%@",block.price]];
+    NSString *price = block.price.floatValue == 0 ? @"Free" : [NSString stringWithFormat:@"%@",block.price];
+    [item.priceLabel setText:price];
     
     return item;
 }

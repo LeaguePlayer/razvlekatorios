@@ -40,7 +40,7 @@
     if (item){
         item.id = ((NSString *)[dict objectForKey:@"id"]).intValue;
         item.name = [dict objectForKey:@"name"];
-        item.price = @(((NSString *)[dict objectForKey:@"price"]).intValue);
+        item.price = @(((NSString *)[dict objectForKey:@"price"]).floatValue);
         NSDictionary *images = (NSDictionary *)[dict objectForKey:@"images"];
         item.imagePath = [MRUtils imageFromJSONDictionary:images];
     }
@@ -52,7 +52,7 @@
 }
 
 -(void)removeFromDataBase{
-    NSArray *favourites = [ManagedBlock MR_findAll];
+    NSArray *favourites = [ManagedBlock MR_findByAttribute:@"id" withValue:@(self.id)];
     if (favourites.count > 0){
         for (ManagedBlock *block in favourites){
             [block MR_deleteEntity];
