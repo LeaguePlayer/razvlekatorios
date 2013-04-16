@@ -21,7 +21,7 @@ typedef void (^MRHTTPClientFailure)(int statusCode, NSArray *errors, NSError *co
 +(id)sharedClient;
 
 -(void)allBlocksWithSuccess:(MRHTTPClientSuccessResults)success failure:(MRHTTPClientFailure)failure;
--(void)blockItemsWithId:(int)blockId success:(MRHTTPClientSuccessResults)success failure:(MRHTTPClientFailure)failure;
+-(void)blockItemsWithBlock:(MRBlock *)block success:(MRHTTPClientSuccessResults)success failure:(MRHTTPClientFailure)failure;
 -(void)applicationInfoWithSuccess:(void(^)(NSString *info))success failure:(MRHTTPClientFailure)failure;
 
 @end

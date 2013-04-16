@@ -7,4 +7,4 @@
 //
 
 #define CurrentClient [MRHTTPClient sharedClient]
-#define DefaultContext [NSManagedObjectContext defaultContext]
+#define DefaultContext [NSManagedObjectContext MR_defaultContext]

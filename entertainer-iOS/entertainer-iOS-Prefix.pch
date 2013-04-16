@@ -9,8 +9,8 @@
 #endif
 
 #ifdef __OBJC__
+#import "CoreData+MagicalRecord.h"
     #import <UIKit/UIKit.h>
     #import <Foundation/Foundation.h>
-    #import "CoreData+MagicalRecord.h"
     #import "GeneralDefines.h"
 #endif

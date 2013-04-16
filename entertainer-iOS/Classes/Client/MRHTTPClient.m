@@ -72,18 +72,23 @@ static MRHTTPClient *_sharedClient;
             NSDictionary *respDict = (NSDictionary *)JSON[@"response"];
             NSArray *imagesArray = (NSArray *)respDict[@"images"];
             NSMutableArray *results = [NSMutableArray array];
+            __block NSInteger count = 0;
+            int max = imagesArray.count;
+            dispatch_queue_t queue = dispatch_queue_create("imageDownloader",NULL);
             for (int i = 0; i < imagesArray.count; i++){
                 NSDictionary *dict = [imagesArray objectAtIndex:i];
                 __block MRItem *item = [MRItem objectWithDict:dict];
-                __block int count = 0;
-                __block int max = imagesArray.count;
                 item.id = i;
                 NSURL *imageUrl = [NSURL URLWithString:item.imagePath];
                 [self.downloader downloadImageWithURL:imageUrl options:nil progress:nil completed:^(UIImage *image, NSData *data, NSError *error, BOOL finished) {
                     item.image = image;
-                    if (++count == max){
-                        [block saveToDataBase];
-                    }
+                    dispatch_async(queue, ^{
+                        count++;
+                        NSLog (@"%d",count);
+                        if (count == max){
+                            [block saveToDataBase];
+                        }
+                    });
                 }];
                 [results addObject:item];
             }

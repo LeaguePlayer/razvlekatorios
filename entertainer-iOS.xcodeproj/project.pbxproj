@@ -7,9 +7,9 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		30492C2D171DAC6B000F16B4 /* CoreData.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 308FF3B9171B10BC00BF1233 /* CoreData.framework */; };
 		308FF3A5171A9EA900BF1233 /* MRHTTPClient.m in Sources */ = {isa = PBXBuildFile; fileRef = 308FF3A4171A9EA900BF1233 /* MRHTTPClient.m */; };
 		308FF3B7171B05C000BF1233 /* MRUtils.m in Sources */ = {isa = PBXBuildFile; fileRef = 308FF3B6171B05C000BF1233 /* MRUtils.m */; };
-		308FF3BB171B10D300BF1233 /* CoreData.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 308FF3B9171B10BC00BF1233 /* CoreData.framework */; };
 		308FF3C6171C644300BF1233 /* Model.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 308FF3C4171C644300BF1233 /* Model.xcdatamodeld */; };
 		308FF3C9171C6AC900BF1233 /* ManagedBlock.m in Sources */ = {isa = PBXBuildFile; fileRef = 308FF3C8171C6AC900BF1233 /* ManagedBlock.m */; };
 		308FF3CC171C6AD400BF1233 /* ManagedItem.m in Sources */ = {isa = PBXBuildFile; fileRef = 308FF3CB171C6AD400BF1233 /* ManagedItem.m */; };
@@ -189,7 +189,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				308FF3BB171B10D300BF1233 /* CoreData.framework in Frameworks */,
+				30492C2D171DAC6B000F16B4 /* CoreData.framework in Frameworks */,
 				30DEAA4F16FB4BFE00A0BDF3 /* UIKit.framework in Frameworks */,
 				30DEAA5116FB4BFE00A0BDF3 /* Foundation.framework in Frameworks */,
 				30DEAA5316FB4BFE00A0BDF3 /* CoreGraphics.framework in Frameworks */,

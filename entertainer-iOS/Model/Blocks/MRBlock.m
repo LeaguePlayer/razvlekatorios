@@ -9,6 +9,7 @@
 #import "MRBlock.h"
 #import "MRItem.h"
 #import "MRUtils.h"
+#import "CoreData+MagicalRecord.h"
 
 @implementation MRBlock
 
@@ -39,7 +40,7 @@
     if (item){
         item.id = ((NSString *)[dict objectForKey:@"id"]).intValue;
         item.name = [dict objectForKey:@"name"];
-        item.price = (NSNumber *)[dict objectForKey:@"price"];
+        item.price = @(((NSString *)[dict objectForKey:@"price"]).intValue);
         NSDictionary *images = (NSDictionary *)[dict objectForKey:@"images"];
         item.imagePath = [MRUtils imageFromJSONDictionary:images];
     }

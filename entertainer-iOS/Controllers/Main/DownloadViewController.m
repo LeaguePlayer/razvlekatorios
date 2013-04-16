@@ -122,7 +122,7 @@
 - (void)collectionView:(SSCollectionView *)aCollectionView didSelectItemAtIndexPath:(NSIndexPath *)indexPath{
     MRBlock *block = [blocks objectAtIndex:indexPath.row];
     [SVProgressHUD showWithStatus:@"Загрузка" maskType:SVProgressHUDMaskTypeGradient];
-    [CurrentClient blockItemsWithId:block.id success:^(NSArray *results) {
+    [CurrentClient blockItemsWithBlock:block success:^(NSArray *results) {
         [SVProgressHUD dismiss];
         block.items = results;
     } failure:^(int statusCode, NSArray *errors, NSError *commonError) {
