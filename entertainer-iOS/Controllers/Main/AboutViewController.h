@@ -11,6 +11,6 @@
 @interface AboutViewController : BaseViewController{
     NSString *information;
 }
-@property (weak, nonatomic) IBOutlet UILabel *aboutLabel;
-@property (weak, nonatomic) IBOutlet UIScrollView *scroll;
+@property (weak, nonatomic) IBOutlet UIWebView *webView;
+
 @end

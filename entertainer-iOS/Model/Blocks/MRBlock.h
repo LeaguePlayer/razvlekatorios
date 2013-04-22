@@ -23,6 +23,7 @@
 
 -(void)saveToDataBase;
 -(void)removeFromDataBase;
+-(BOOL)isStored;
 +(NSArray *)allBlocks;
 
 +(NSArray *)blocksMock;

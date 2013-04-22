@@ -9,7 +9,7 @@
             <objects>
                 <viewController id="2" customClass="MainViewController" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="3">
-                        <rect key="frame" x="0.0" y="64" width="320" height="416"/>
+                        <rect key="frame" x="0.0" y="64" width="320" height="504"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                         <subviews>
                             <imageView userInteractionEnabled="NO" contentMode="scaleToFill" image="bg.png" id="oJj-aZ-Obd">
@@ -107,7 +107,7 @@
             <objects>
                 <viewController id="5Yl-q9-fnP" customClass="DownloadViewController" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="Rb7-h0-EaQ">
-                        <rect key="frame" x="0.0" y="64" width="320" height="416"/>
+                        <rect key="frame" x="0.0" y="64" width="320" height="504"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
                     </view>
@@ -125,29 +125,20 @@
             <objects>
                 <viewController id="m1D-1M-iCP" customClass="AboutViewController" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="pee-ZU-FlZ">
-                        <rect key="frame" x="0.0" y="64" width="320" height="416"/>
+                        <rect key="frame" x="0.0" y="64" width="320" height="504"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                         <subviews>
-                            <scrollView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" id="1lP-B5-PbS">
-                                <rect key="frame" x="0.0" y="0.0" width="320" height="416"/>
+                            <webView contentMode="scaleToFill" id="ykz-Lv-Cwv">
+                                <rect key="frame" x="0.0" y="0.0" width="320" height="504"/>
                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                                <subviews>
-                                    <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" text="" lineBreakMode="wordWrap" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="GN8-LB-XPD">
-                                        <rect key="frame" x="20" y="15" width="280" height="474"/>
-                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                        <fontDescription key="fontDescription" type="system" pointSize="15"/>
-                                        <color key="textColor" red="0.0" green="0.50196081400000003" blue="1" alpha="1" colorSpace="calibratedRGB"/>
-                                        <nil key="highlightedColor"/>
-                                    </label>
-                                </subviews>
-                            </scrollView>
+                                <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
+                            </webView>
                         </subviews>
                         <color key="backgroundColor" red="0.92267219387755106" green="0.91787431310998646" blue="0.83072531232353941" alpha="1" colorSpace="calibratedRGB"/>
                     </view>
                     <navigationItem key="navigationItem" id="l2f-g4-YyJ"/>
                     <connections>
-                        <outlet property="aboutLabel" destination="GN8-LB-XPD" id="F0r-qU-HVy"/>
-                        <outlet property="scroll" destination="1lP-B5-PbS" id="UX5-8E-xy4"/>
+                        <outlet property="webView" destination="ykz-Lv-Cwv" id="PEe-Sk-UA5"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Hja-H7-njC" userLabel="First Responder" sceneMemberID="firstResponder"/>
@@ -159,11 +150,11 @@
             <objects>
                 <viewController id="CYi-fB-imP" customClass="ChooseViewController" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="yX0-R4-R0m">
-                        <rect key="frame" x="0.0" y="64" width="320" height="416"/>
+                        <rect key="frame" x="0.0" y="64" width="320" height="504"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                         <subviews>
                             <view contentMode="scaleToFill" id="et2-0M-RLB">
-                                <rect key="frame" x="0.0" y="365" width="320" height="51"/>
+                                <rect key="frame" x="0.0" y="453" width="320" height="51"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                 <subviews>
                                     <imageView userInteractionEnabled="NO" contentMode="scaleToFill" image="bottom_bar.png" id="ueq-TZ-Aew">
@@ -203,11 +194,11 @@
             <objects>
                 <viewController id="PnY-9c-Jhm" customClass="WatchViewController" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="o93-A5-eUp">
-                        <rect key="frame" x="0.0" y="64" width="320" height="416"/>
+                        <rect key="frame" x="0.0" y="64" width="320" height="504"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                         <subviews>
                             <view contentMode="scaleToFill" id="sYT-zK-JQj">
-                                <rect key="frame" x="0.0" y="365" width="320" height="51"/>
+                                <rect key="frame" x="0.0" y="453" width="320" height="51"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                 <subviews>
                                     <imageView userInteractionEnabled="NO" contentMode="scaleToFill" image="bottom_bar.png" id="vbF-FO-wgz">
@@ -242,7 +233,7 @@
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
                             </view>
                             <scrollView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" pagingEnabled="YES" showsHorizontalScrollIndicator="NO" showsVerticalScrollIndicator="NO" id="ud2-Ic-YYN">
-                                <rect key="frame" x="0.0" y="0.0" width="320" height="366"/>
+                                <rect key="frame" x="0.0" y="0.0" width="320" height="454"/>
                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                 <connections>
                                     <outlet property="delegate" destination="PnY-9c-Jhm" id="6hD-Kh-ROh"/>
@@ -296,44 +287,12 @@
         <image name="main_icon.png" width="207" height="207"/>
         <image name="right_button.png" width="85" height="83"/>
     </resources>
-    <classes>
-        <class className="AboutViewController" superclassName="BaseViewController">
-            <source key="sourceIdentifier" type="project" relativePath="./Classes/AboutViewController.h"/>
-            <relationships>
-                <relationship kind="outlet" name="aboutLabel" candidateClass="UILabel"/>
-                <relationship kind="outlet" name="scroll" candidateClass="UIScrollView"/>
-            </relationships>
-        </class>
-        <class className="BaseNavigationController" superclassName="UINavigationController">
-            <source key="sourceIdentifier" type="project" relativePath="./Classes/BaseNavigationController.h"/>
-        </class>
-        <class className="BaseViewController" superclassName="UIViewController">
-            <source key="sourceIdentifier" type="project" relativePath="./Classes/BaseViewController.h"/>
-        </class>
-        <class className="ChooseViewController" superclassName="BaseViewController">
-            <source key="sourceIdentifier" type="project" relativePath="./Classes/ChooseViewController.h"/>
-        </class>
-        <class className="DownloadViewController" superclassName="BaseViewController">
-            <source key="sourceIdentifier" type="project" relativePath="./Classes/DownloadViewController.h"/>
-        </class>
-        <class className="MainViewController" superclassName="BaseViewController">
-            <source key="sourceIdentifier" type="project" relativePath="./Classes/MainViewController.h"/>
-        </class>
-        <class className="WatchViewController" superclassName="BaseViewController">
-            <source key="sourceIdentifier" type="project" relativePath="./Classes/WatchViewController.h"/>
-            <relationships>
-                <relationship kind="action" name="viewTaped:" candidateClass="UITapGestureRecognizer"/>
-                <relationship kind="outlet" name="bottomView" candidateClass="UIView"/>
-                <relationship kind="outlet" name="pageScroll" candidateClass="UIScrollView"/>
-            </relationships>
-        </class>
-    </classes>
     <simulatedMetricsContainer key="defaultSimulatedMetrics">
         <simulatedStatusBarMetrics key="statusBar"/>
         <simulatedOrientationMetrics key="orientation"/>
-        <simulatedScreenMetrics key="destination"/>
+        <simulatedScreenMetrics key="destination" type="retina4"/>
     </simulatedMetricsContainer>
     <inferredMetricsTieBreakers>
-        <segue reference="TqR-VT-BZ9"/>
+        <segue reference="BfK-qV-hgJ"/>
     </inferredMetricsTieBreakers>
 </document>

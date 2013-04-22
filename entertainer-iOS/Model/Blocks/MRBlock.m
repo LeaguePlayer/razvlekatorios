@@ -35,6 +35,11 @@
     return self;
 }
 
+-(BOOL)isStored{
+    NSArray *array = [ManagedBlock MR_findByAttribute:@"id" withValue:@(self.id)];
+    return array.count > 0;
+}
+
 +(id)objectWithDict:(NSDictionary *)dict{
     MRBlock *item = [[MRBlock alloc] init];
     if (item){

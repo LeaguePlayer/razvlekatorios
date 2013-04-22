@@ -7,7 +7,6 @@
 //
 
 #import "BaseViewController.h"
-#import "MRDemView.h"
 
 @interface WatchViewController : BaseViewController <UIScrollViewDelegate>{
     NSMutableArray *demos;

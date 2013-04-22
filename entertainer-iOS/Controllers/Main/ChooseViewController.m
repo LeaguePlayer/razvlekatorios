@@ -54,7 +54,7 @@
 -(void)initCollectionView{
     self.collectionView = [[SSCollectionView alloc] init];
     self.collectionView.backgroundColor = [UIColor clearColor];
-    self.collectionView.frame = CGRectMake(0,10.0f,self.view.frame.size.width,self.view.frame.size.height - 50);
+    self.collectionView.frame = CGRectMake(0,5,self.view.frame.size.width,self.view.frame.size.height - 5);
     self.collectionView.delegate = self;
     self.collectionView.dataSource = self;
     self.collectionView.autoresizingMask = UIViewAutoresizingFlexibleHeight | UIViewAutoresizingFlexibleBottomMargin | UIViewAutoresizingFlexibleTopMargin;
@@ -81,6 +81,14 @@
 }
 
 #pragma mark - SSCollectionViewDataSource
+
+-(CGFloat)collectionView:(SSCollectionView *)aCollectionView heightForHeaderInSection:(NSUInteger)section{
+    return 10;
+}
+
+-(UIView *)collectionView:(SSCollectionView *)aCollectionView viewForHeaderInSection:(NSUInteger)section{
+    return [[UIView alloc] init];
+}
 
 - (NSUInteger)numberOfSectionsInCollectionView:(SSCollectionView *)aCollectionView {
     return 1;
@@ -113,7 +121,9 @@
 
 -(void)collectionView:(SSCollectionView *)aCollectionView didSelectItemAtIndexPath:(NSIndexPath *)indexPath{
     selected = [blocks objectAtIndex:indexPath.row];
-    [self performSegueWithIdentifier:@"ToWatch" sender:self];
+    FGalleryViewController *controller = [[FGalleryViewController alloc] initWithPhotoSource:self];
+    [self.navigationController pushViewController:controller animated:YES];
+//    [self performSegueWithIdentifier:@"ToWatch" sender:self];
 }
 
 -(void)removeItem:(UIButton *)sender{
@@ -124,6 +134,40 @@
     blocks = [MRBlock allBlocks];
     [self.collectionView reloadData];
 }
+
+#pragma mark - FGalleryViewControllerDelegate Methods
+
+
+- (int)numberOfPhotosForPhotoGallery:(FGalleryViewController *)gallery{
+	return selected.items.count;
+}
+
+- (FGalleryPhotoSourceType)photoGallery:(FGalleryViewController *)gallery sourceTypeForPhotoAtIndex:(NSUInteger)index{
+    return FGalleryPhotoSourceTypeImage;
+}
+
+- (NSString*)photoGallery:(FGalleryViewController *)gallery captionForPhotoAtIndex:(NSUInteger)index{
+	return @"";
+}
+
+-(UIImage *)photoGallery:(FGalleryViewController *)gallery imageForPhotoSize:(FGalleryPhotoSize)size atIndex:(NSUInteger)index{
+    MRItem *item = [selected.items objectAtIndex:index];
+    UIImage *image = item.image;
+    return image;
+}
+
+- (void)handleTrashButtonTouch:(id)sender {
+    // here we could remove images from our local array storage and tell the gallery to remove that image
+    // ex:
+    //[localGallery removeImageAtIndex:[localGallery currentIndex]];
+}
+
+
+- (void)handleEditCaptionButtonTouch:(id)sender {
+    // here we could implement some code to change the caption for a stored image
+}
+
+#pragma mark - segues routines
 
 -(void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender{
     if ([segue.identifier isEqualToString:@"ToWatch"]){

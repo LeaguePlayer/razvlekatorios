@@ -44,9 +44,7 @@
 }
 
 -(void)initUI{
-    [self.aboutLabel setText:information];
-    [self.aboutLabel sizeToFit];
-    [self.scroll setContentSize:CGSizeMake(self.scroll.bounds.size.width, self.aboutLabel.frame.size.height + 30)];
+    [self.webView loadHTMLString:information baseURL:nil];
     [self initTitle];
 }
 
@@ -67,4 +65,8 @@
     // Dispose of any resources that can be recreated.
 }
 
+- (void)viewDidUnload {
+    [self setWebView:nil];
+    [super viewDidUnload];
+}
 @end

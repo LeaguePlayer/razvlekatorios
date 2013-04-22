@@ -47,6 +47,7 @@
     [CurrentClient allBlocksWithSuccess:^(NSArray *results) {
         [SVProgressHUD dismiss];
         blocks = results;
+//        blocks = [MRBlock blocksMock];
         [self.collectionView reloadData];
     } failure:^(int statusCode, NSArray *errors, NSError *commonError) {
         [SVProgressHUD dismiss];
@@ -56,7 +57,7 @@
 -(void)initCollectionView{
     self.collectionView = [[SSCollectionView alloc] init];
     self.collectionView.backgroundColor = [UIColor clearColor];
-    self.collectionView.frame = CGRectMake(0,10.0f,self.view.frame.size.width,self.view.frame.size.height);
+    self.collectionView.frame = CGRectMake(0,5,self.view.frame.size.width,self.view.frame.size.height - 5);
     self.collectionView.delegate = self;
     self.collectionView.dataSource = self;
     self.collectionView.autoresizingMask = UIViewAutoresizingFlexibleHeight | UIViewAutoresizingFlexibleBottomMargin | UIViewAutoresizingFlexibleTopMargin;
@@ -88,6 +89,14 @@
 }
 
 #pragma mark - SSCollectionViewDataSource
+
+-(CGFloat)collectionView:(SSCollectionView *)aCollectionView heightForHeaderInSection:(NSUInteger)section{
+    return 10;
+}
+
+-(UIView *)collectionView:(SSCollectionView *)aCollectionView viewForHeaderInSection:(NSUInteger)section{
+    return [[UIView alloc] init];
+}
 
 - (NSUInteger)numberOfSectionsInCollectionView:(SSCollectionView *)aCollectionView {
     return 1;
@@ -122,6 +131,8 @@
 
 - (void)collectionView:(SSCollectionView *)aCollectionView didSelectItemAtIndexPath:(NSIndexPath *)indexPath{
     MRBlock *block = [blocks objectAtIndex:indexPath.row];
+    if ([block isStored])
+        return;
     [SVProgressHUD showWithStatus:@"Загрузка" maskType:SVProgressHUDMaskTypeGradient];
     [CurrentClient blockItemsWithBlock:block success:^(NSArray *results) {
         [SVProgressHUD dismiss];

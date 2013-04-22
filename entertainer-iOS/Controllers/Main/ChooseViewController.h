@@ -9,8 +9,9 @@
 #import "BaseViewController.h"
 #import <SSToolkit/SSCollectionView.h>
 #import "MRBlock.h"
+#import "FGalleryViewController.h"
 
-@interface ChooseViewController : BaseViewController <SSCollectionViewDataSource,SSCollectionViewDelegate>{
+@interface ChooseViewController : BaseViewController <SSCollectionViewDataSource,SSCollectionViewDelegate, FGalleryViewControllerDelegate>{
     NSArray *blocks;
     MRBlock *selected;
 }
