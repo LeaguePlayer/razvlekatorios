@@ -123,7 +123,7 @@
         <!--About View Controller-->
         <scene sceneID="kCO-js-KSA">
             <objects>
-                <viewController id="m1D-1M-iCP" customClass="AboutViewController" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="About" id="m1D-1M-iCP" customClass="AboutViewController" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="pee-ZU-FlZ">
                         <rect key="frame" x="0.0" y="64" width="320" height="504"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>

@@ -10,7 +10,7 @@
 #import <QuartzCore/QuartzCore.h>
 #import "FGalleryPhotoView.h"
 #import "FGalleryPhoto.h"
-
+#import "BaseViewController.h"
 
 typedef enum
 {
@@ -27,7 +27,7 @@ typedef enum
 
 @protocol FGalleryViewControllerDelegate;
 
-@interface FGalleryViewController : UIViewController <UIScrollViewDelegate,FGalleryPhotoDelegate,FGalleryPhotoViewDelegate> {
+@interface FGalleryViewController : BaseViewController <UIScrollViewDelegate,FGalleryPhotoDelegate,FGalleryPhotoViewDelegate> {
 	
 	BOOL _isActive;
 	BOOL _isFullscreen;
@@ -78,6 +78,7 @@ typedef enum
 @property (nonatomic) BOOL useThumbnailView;
 @property (nonatomic) BOOL beginsInThumbnailView;
 @property (nonatomic) BOOL hideTitle;
+@property (nonatomic, retain) UILabel *titleLbl;
 
 @end
 

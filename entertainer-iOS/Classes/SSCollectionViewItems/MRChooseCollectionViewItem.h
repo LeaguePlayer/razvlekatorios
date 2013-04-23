@@ -8,11 +8,24 @@
 
 #import "SSCollectionViewItem.h"
 
-@interface MRChooseCollectionViewItem : SSCollectionViewItem
+@class MRChooseCollectionViewItem;
+
+@protocol ChooseCollectionViewItemDelegate <NSObject>
+
+@optional
+-(void)itemLongPressed:(MRChooseCollectionViewItem *)item;
+
+@end
+
+@interface MRChooseCollectionViewItem : SSCollectionViewItem{
+    BOOL toTheLeft;
+}
 
 @property (nonatomic,retain) UILabel *nameLabel;
 @property (nonatomic,retain) UIImageView *icon;
 @property (nonatomic, retain) UIButton *removeButton;
+@property (nonatomic, retain) id<ChooseCollectionViewItemDelegate> delegate;
+@property (nonatomic) BOOL shaking;
 
 - (id)initWithReuseIdentifier:(NSString *)aReuseIdentifier;
 

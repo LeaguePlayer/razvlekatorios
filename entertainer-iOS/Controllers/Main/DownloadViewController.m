@@ -116,8 +116,14 @@
     [item.nameLabel setText:block.name];
     NSURL *imageUrl = [NSURL URLWithString:block.imagePath];
     [item.icon setImageWithURL:imageUrl placeholderImage:[[UIImage alloc] init]];
-    NSString *price = block.price.floatValue == 0 ? @"Free" : [NSString stringWithFormat:@"%@",block.price];
+    NSString *price;
+    if ([block isStored]){
+        price = @"Загружено";
+    } else {
+        price = block.price.floatValue == 0 ? @"Free" : [NSString stringWithFormat:@"%@",block.price];
+    }
     [item.priceLabel setText:price];
+    [item.priceLabel setAdjustsFontSizeToFitWidth:YES];
     
     return item;
 }
@@ -133,10 +139,12 @@
     MRBlock *block = [blocks objectAtIndex:indexPath.row];
     if ([block isStored])
         return;
+//    [SVProgressHUD showProgress:0 status:@"Загрузка" maskType:SVProgressHUDMaskTypeGradient];
     [SVProgressHUD showWithStatus:@"Загрузка" maskType:SVProgressHUDMaskTypeGradient];
     [CurrentClient blockItemsWithBlock:block success:^(NSArray *results) {
         [SVProgressHUD dismiss];
         block.items = results;
+        [self.collectionView reloadData];
     } failure:^(int statusCode, NSArray *errors, NSError *commonError) {
         [SVProgressHUD dismiss];
     }];

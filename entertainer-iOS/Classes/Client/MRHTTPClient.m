@@ -10,6 +10,7 @@
 #import "AFJSONRequestOperation.h"
 #import "MRBlock.h"
 #import "MRItem.h"
+#import "SVProgressHUD.h"
 
 static MRHTTPClient *_sharedClient;
 @implementation MRHTTPClient
@@ -74,7 +75,6 @@ static MRHTTPClient *_sharedClient;
             __block NSMutableArray *results = [NSMutableArray array];
             __block NSInteger count = 0;
             int max = imagesArray.count;
-            dispatch_queue_t queue = dispatch_get_main_queue();
             for (int i = 0; i < imagesArray.count; i++){
                 NSDictionary *dict = [imagesArray objectAtIndex:i];
                 __block MRItem *item = [MRItem objectWithDict:dict];
@@ -83,8 +83,11 @@ static MRHTTPClient *_sharedClient;
                 [self.downloader downloadImageWithURL:imageUrl options:nil progress:nil completed:^(UIImage *image, NSData *data, NSError *error, BOOL finished) {
                     item.image = image;
                     [results addObject:item];
+                    dispatch_queue_t queue = dispatch_get_main_queue();
                     dispatch_async(queue, ^{
                         count++;
+                        CGFloat prog = count/max;
+//                        [SVProgressHUD showProgress:prog status:@"Загрузка" maskType:SVProgressHUDMaskTypeGradient];
                         NSLog (@"%d",count);
                         if (count == max){
                             block.items = results;

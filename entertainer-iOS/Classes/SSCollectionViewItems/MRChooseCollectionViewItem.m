@@ -6,9 +6,14 @@
 //  Copyright (c) 2013 Danyar Salahutdinov. All rights reserved.
 //
 
+#define RADIANS(degrees) ((degrees * M_PI) / 180.0)
+
 #import "MRChooseCollectionViewItem.h"
+#import <QuartzCore/QuartzCore.h>
 
 @implementation MRChooseCollectionViewItem
+
+@synthesize shaking = _shaking;
 
 - (id)initWithFrame:(CGRect)frame
 {
@@ -49,6 +54,8 @@
         [self.removeButton setImage:removeImg forState:UIControlStateNormal];
         CGRect frame = CGRectMake(126 - removeImg.size.width, self.icon.frame.origin.y, removeImg.size.width, removeImg.size.height);
         [self.removeButton setFrame:frame];
+//        [self.removeButton setHidden:YES];
+        [self addSubview:self.removeButton];
         UILongPressGestureRecognizer *recognizer = [[UILongPressGestureRecognizer alloc] initWithTarget:self action:@selector(itemPressed:)];
         [self addGestureRecognizer:recognizer];
     }
@@ -56,8 +63,44 @@
 }
 
 -(void)itemPressed:(UILongPressGestureRecognizer *)sender{
-    [self addSubview:self.removeButton];
-    [self removeGestureRecognizer:sender];
+    if (self.delegate && [self.delegate respondsToSelector:@selector(itemLongPressed:)]){
+        [self.delegate itemLongPressed:self];
+    }
+//    [self.removeButton setHidden:YES];
+//    [self addSubview:self.removeButton];
+//    [self removeGestureRecognizer:sender];
+}
+
+#pragma mark - setters
+
+-(void)setShaking:(BOOL)shaking{
+    if (shaking == _shaking) return;
+    _shaking = shaking;
+    toTheLeft = YES;
+    if (shaking){
+        [UIView animateWithDuration:0.3 animations:^{
+            [self.removeButton setHidden:NO];
+        }];
+        [UIView animateWithDuration:0.2 delay:0 options:UIViewAnimationCurveEaseInOut | UIViewAnimationOptionRepeat | UIViewAnimationOptionAutoreverse animations:^{
+            int sign = toTheLeft ? -1 : 1;
+            CGFloat degrees = arc4random()%40;
+            self.icon.transform = CGAffineTransformMakeRotation(RADIANS(degrees)*sign);
+            toTheLeft = !toTheLeft;
+        } completion:^(BOOL finished) {
+            
+        }];
+    } else {
+        [self.icon.layer removeAllAnimations];
+        [UIView animateWithDuration:0.3 animations:^{
+            [self.removeButton setHidden:YES];
+        }];
+    }
+}
+
+#pragma mark - getters
+
+-(BOOL)shaking{
+    return _shaking;
 }
 
 @end

@@ -7,6 +7,7 @@
 //
 
 #import "FGalleryViewController.h"
+#import "AboutViewController.h"
 
 #define kThumbnailSize 75
 #define kThumbnailSpacing 4
@@ -222,24 +223,45 @@
 	
 	[_toolbar addSubview:_captionContainer];
 	[_captionContainer addSubview:_caption];
-	
+    
+	UILabel *label = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, 140, 48)];
+    label.numberOfLines = 2;
+    [label setFont:[UIFont systemFontOfSize:16.0f]];
+    [label setBackgroundColor:[UIColor clearColor]];
+    [label setTextAlignment:NSTextAlignmentCenter];
+    [label setTextColor:[UIColor whiteColor]];
+    [self.navigationItem setTitleView:label];
+    self.titleLbl = label;
+    
 	// create buttons for toolbar
-	UIImage *leftIcon = [UIImage imageNamed:@"photo-gallery-left.png"];
-	UIImage *rightIcon = [UIImage imageNamed:@"photo-gallery-right.png"];
-	_nextButton = [[UIBarButtonItem alloc] initWithImage:rightIcon style:UIBarButtonItemStylePlain target:self action:@selector(next)];
-	_prevButton = [[UIBarButtonItem alloc] initWithImage:leftIcon style:UIBarButtonItemStylePlain target:self action:@selector(previous)];
+//	UIImage *leftIcon = [UIImage imageNamed:@"photo-gallery-left.png"];
+//	UIImage *rightIcon = [UIImage imageNamed:@"photo-gallery-right.png"];
+//	_nextButton = [[UIBarButtonItem alloc] initWithImage:rightIcon style:UIBarButtonItemStylePlain target:self action:@selector(next)];
+//	_prevButton = [[UIBarButtonItem alloc] initWithImage:leftIcon style:UIBarButtonItemStylePlain target:self action:@selector(previous)];
+//	
+//	// add prev next to front of the array
+//	[_barItems insertObject:_nextButton atIndex:0];
+//	[_barItems insertObject:_prevButton atIndex:0];
 	
-	// add prev next to front of the array
-	[_barItems insertObject:_nextButton atIndex:0];
-	[_barItems insertObject:_prevButton atIndex:0];
-	
-	_prevNextButtonSize = leftIcon.size.width;
+//	_prevNextButtonSize = leftIcon.size.width;
 	
 	// set buttons on the toolbar.
 	[_toolbar setItems:_barItems animated:NO];
-    
+    [self initBackButton];
+    [self initInfoButtonWithTarget:self];
     // build stuff
     [self reloadGallery];
+}
+
+-(void)rightItemClick:(id)sender{
+    UIStoryboard *main = [UIStoryboard storyboardWithName:@"MainStoryboard" bundle:[NSBundle mainBundle]];
+    AboutViewController *controller = [main instantiateViewControllerWithIdentifier:@"About"];
+    [self.navigationController pushViewController:controller animated:YES];
+}
+
+-(void)viewDidAppear:(BOOL)animated{
+    [super viewDidAppear:animated];
+    [self enterFullscreen];
 }
 
 
@@ -294,7 +316,6 @@
     
     // remove the old
     [self destroyViews];
-    
     // build the new
     if ([_photoSource numberOfPhotosForPhotoGallery:self] > 0) {
         // create the image views for each photo
@@ -474,18 +495,18 @@
 - (void)setUseThumbnailView:(BOOL)useThumbnailView
 {
     
-    UIBarButtonItem *newBackButton = [[UIBarButtonItem alloc] initWithTitle: NSLocalizedString(@"Back", @"") style: UIBarButtonItemStyleBordered target: nil action: nil];
-    [[self navigationItem] setBackBarButtonItem: newBackButton];    
-    _useThumbnailView = useThumbnailView;
-    if( self.navigationController ) {
-        if (_useThumbnailView) {
-            UIBarButtonItem *btn = [[UIBarButtonItem alloc] initWithTitle:NSLocalizedString(@"See all", @"") style:UIBarButtonItemStylePlain target:self action:@selector(handleSeeAllTouch:)];
-            [self.navigationItem setRightBarButtonItem:btn animated:YES];
-        }
-        else {
-            [self.navigationItem setRightBarButtonItem:nil animated:NO];
-        }
-    }
+//    UIBarButtonItem *newBackButton = [[UIBarButtonItem alloc] initWithTitle: NSLocalizedString(@"Back", @"") style: UIBarButtonItemStyleBordered target: nil action: nil];
+//    [[self navigationItem] setBackBarButtonItem: newBackButton];    
+//    _useThumbnailView = useThumbnailView;
+//    if( self.navigationController ) {
+//        if (_useThumbnailView) {
+//            UIBarButtonItem *btn = [[UIBarButtonItem alloc] initWithTitle:NSLocalizedString(@"See all", @"") style:UIBarButtonItemStylePlain target:self action:@selector(handleSeeAllTouch:)];
+//            [self.navigationItem setRightBarButtonItem:btn animated:YES];
+//        }
+//        else {
+//            [self.navigationItem setRightBarButtonItem:nil animated:NO];
+//        }
+//    }
 }
 
 
@@ -647,7 +668,7 @@
 		{
 			NSString *caption = [_photoSource photoGallery:self captionForPhotoAtIndex:_currentIndex];
 			
-			if([caption length] > 0 )
+			if([caption length] > 0)
 			{
 				float captionWidth = _container.frame.size.width-kCaptionPadding*2;
 				CGSize textSize = [caption sizeWithFont:_caption.font];
@@ -684,9 +705,11 @@
 - (void)updateTitle
 {
     if (!_hideTitle){
-        [self setTitle:[NSString stringWithFormat:@"%i %@ %i", _currentIndex+1, NSLocalizedString(@"of", @"") , [_photoSource numberOfPhotosForPhotoGallery:self]]];
+//        [self setTitle:[NSString stringWithFormat:@"Страница %i из %i", _currentIndex+1 , [_photoSource numberOfPhotosForPhotoGallery:self]]];
+        [self.titleLbl setText:[NSString stringWithFormat:@"Страница %i из %i", _currentIndex+1 , [_photoSource numberOfPhotosForPhotoGallery:self]]];
     }else{
-        [self setTitle:@""];
+//        [self setTitle:@""];
+        [self.titleLbl setText:@""];
     }
 }
 
@@ -1013,7 +1036,7 @@
 		return;
 	
 	// clear previous
-	[self unloadFullsizeImageWithIndex:_currentIndex];
+//	[self unloadFullsizeImageWithIndex:_currentIndex];
 	
 	_currentIndex = newIndex;
 	[self updateCaption];

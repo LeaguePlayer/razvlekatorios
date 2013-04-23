@@ -7,7 +7,6 @@
 //
 
 #import "ChooseViewController.h"
-#import "MRChooseCollectionViewItem.h"
 #import "WatchViewController.h"
 #import "UIImageView+AFNetworking.h"
 #import "MRItem.h"
@@ -31,6 +30,7 @@
 {
     [super viewDidLoad];
 	// Do any additional setup after loading the view.
+    shaking = NO;
     [self initBackButton];
     [self initInfoButtonWithTarget:self];
     [self initContent];
@@ -103,6 +103,7 @@
     static NSString *const itemIdentifier = @"itemIdentifier";
 
     MRChooseCollectionViewItem *item = [[MRChooseCollectionViewItem alloc] initWithReuseIdentifier:itemIdentifier];
+    [item setDelegate:self];
     MRBlock *block = [blocks objectAtIndex:indexPath.row];
     
     [item.nameLabel setText:block.name];
@@ -173,6 +174,17 @@
     if ([segue.identifier isEqualToString:@"ToWatch"]){
         WatchViewController *controller = (WatchViewController *)segue.destinationViewController;
         controller.items = selected.items;
+    }
+}
+
+#pragma mark - Choose Collection view item delegate methods
+
+-(void)itemLongPressed:(MRChooseCollectionViewItem *)item{
+    shaking = !shaking;
+    for (int i = 0; i < blocks.count; i++){
+        NSIndexPath *path = [NSIndexPath indexPathForRow:i inSection:0];
+        MRChooseCollectionViewItem *item = [self collectionView:self.collectionView itemForIndexPath:path];
+        [item setShaking:shaking];
     }
 }
 
