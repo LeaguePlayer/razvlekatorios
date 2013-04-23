@@ -7,7 +7,6 @@
 //
 
 #import "ChooseViewController.h"
-#import "WatchViewController.h"
 #import "UIImageView+AFNetworking.h"
 #import "MRItem.h"
 
@@ -124,16 +123,29 @@
     selected = [blocks objectAtIndex:indexPath.row];
     FGalleryViewController *controller = [[FGalleryViewController alloc] initWithPhotoSource:self];
     [self.navigationController pushViewController:controller animated:YES];
-//    [self performSegueWithIdentifier:@"ToWatch" sender:self];
 }
 
 -(void)removeItem:(UIButton *)sender{
+    
     MRChooseCollectionViewItem *item = (MRChooseCollectionViewItem *)[sender superview];
     NSIndexPath *indexPath = [self.collectionView indexPathForItem:item];
-    MRBlock *block = [blocks objectAtIndex:indexPath.row];
-    [block removeFromDataBase];
-    blocks = [MRBlock allBlocks];
-    [self.collectionView reloadData];
+    removing = [blocks objectAtIndex:indexPath.row];
+    [self showAlert];
+}
+
+-(void)showAlert{
+    UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Удаление блока" message:@"Вы точно уверены, что хотите удалить блок?" delegate:self cancelButtonTitle:@"Отмена" otherButtonTitles:@"OK", nil];
+    [alert show];
+}
+
+#pragma mark - alert view delegate
+
+-(void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex{
+    if (buttonIndex == 1){
+        [removing removeFromDataBase];
+        blocks = [MRBlock allBlocks];
+        [self.collectionView reloadData];
+    }
 }
 
 #pragma mark - FGalleryViewControllerDelegate Methods
@@ -168,24 +180,14 @@
     // here we could implement some code to change the caption for a stored image
 }
 
-#pragma mark - segues routines
-
--(void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender{
-    if ([segue.identifier isEqualToString:@"ToWatch"]){
-        WatchViewController *controller = (WatchViewController *)segue.destinationViewController;
-        controller.items = selected.items;
-    }
-}
-
 #pragma mark - Choose Collection view item delegate methods
 
 -(void)itemLongPressed:(MRChooseCollectionViewItem *)item{
-    shaking = !shaking;
-    for (int i = 0; i < blocks.count; i++){
-        NSIndexPath *path = [NSIndexPath indexPathForRow:i inSection:0];
-        MRChooseCollectionViewItem *item = [self collectionView:self.collectionView itemForIndexPath:path];
-        [item setShaking:shaking];
-    }
+//    for (int i = 0; i < blocks.count; i++){
+//        NSIndexPath *path = [NSIndexPath indexPathForRow:i inSection:0];
+//        MRChooseCollectionViewItem *block = (MRChooseCollectionViewItem *)[self collectionView:self.collectionView itemForIndexPath:path];
+//        [block.removeButton setHidden:NO];
+//    }
 }
 
 @end

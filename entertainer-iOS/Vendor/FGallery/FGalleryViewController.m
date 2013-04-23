@@ -234,16 +234,16 @@
     self.titleLbl = label;
     
 	// create buttons for toolbar
-//	UIImage *leftIcon = [UIImage imageNamed:@"photo-gallery-left.png"];
-//	UIImage *rightIcon = [UIImage imageNamed:@"photo-gallery-right.png"];
-//	_nextButton = [[UIBarButtonItem alloc] initWithImage:rightIcon style:UIBarButtonItemStylePlain target:self action:@selector(next)];
-//	_prevButton = [[UIBarButtonItem alloc] initWithImage:leftIcon style:UIBarButtonItemStylePlain target:self action:@selector(previous)];
-//	
-//	// add prev next to front of the array
-//	[_barItems insertObject:_nextButton atIndex:0];
-//	[_barItems insertObject:_prevButton atIndex:0];
+	UIImage *leftIcon = [UIImage imageNamed:@"icon1.png"];
+	UIImage *rightIcon = [UIImage imageNamed:@"icon2.png"];
+	_nextButton = [[UIBarButtonItem alloc] initWithImage:rightIcon style:UIBarButtonItemStylePlain target:self action:@selector(shuffle)];
+	_prevButton = [[UIBarButtonItem alloc] initWithImage:leftIcon style:UIBarButtonItemStylePlain target:self action:@selector(documents)];
 	
-//	_prevNextButtonSize = leftIcon.size.width;
+	// add prev next to front of the array
+	[_barItems insertObject:_nextButton atIndex:0];
+	[_barItems insertObject:_prevButton atIndex:0];
+	
+	_prevNextButtonSize = leftIcon.size.width;
 	
 	// set buttons on the toolbar.
 	[_toolbar setItems:_barItems animated:NO];
@@ -251,6 +251,14 @@
     [self initInfoButtonWithTarget:self];
     // build stuff
     [self reloadGallery];
+}
+
+-(void)documents{
+    
+}
+
+-(void)shuffle{
+    
 }
 
 -(void)rightItemClick:(id)sender{
@@ -418,7 +426,7 @@
 	[_photoLoaders removeObjectForKey:[NSString stringWithFormat:@"%i",index]];
 	
 	[self layoutViews];
-	[self updateButtons];
+//	[self updateButtons];
     [self updateTitle];
 }
 
@@ -472,7 +480,7 @@
 			[self loadFullsizeImageWithIndex:index];
 		}
 	}
-	[self updateButtons];
+//	[self updateButtons];
 	[self updateCaption];
 }
 
@@ -1041,7 +1049,7 @@
 	_currentIndex = newIndex;
 	[self updateCaption];
 	[self updateTitle];
-	[self updateButtons];
+//	[self updateButtons];
 	[self loadFullsizeImageWithIndex:_currentIndex];
 	[self preloadThumbnailImages];
 }

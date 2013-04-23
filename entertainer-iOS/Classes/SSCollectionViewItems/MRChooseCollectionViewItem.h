@@ -25,7 +25,6 @@
 @property (nonatomic,retain) UIImageView *icon;
 @property (nonatomic, retain) UIButton *removeButton;
 @property (nonatomic, retain) id<ChooseCollectionViewItemDelegate> delegate;
-@property (nonatomic) BOOL shaking;
 
 - (id)initWithReuseIdentifier:(NSString *)aReuseIdentifier;
 

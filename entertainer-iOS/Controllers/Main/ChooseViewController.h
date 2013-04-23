@@ -12,10 +12,11 @@
 #import "FGalleryViewController.h"
 #import "MRChooseCollectionViewItem.h"
 
-@interface ChooseViewController : BaseViewController <SSCollectionViewDataSource,SSCollectionViewDelegate, FGalleryViewControllerDelegate, ChooseCollectionViewItemDelegate>{
+@interface ChooseViewController : BaseViewController <SSCollectionViewDataSource,SSCollectionViewDelegate, FGalleryViewControllerDelegate, ChooseCollectionViewItemDelegate, UIAlertViewDelegate>{
     NSArray *blocks;
     MRBlock *selected;
     BOOL shaking;
+    MRBlock *removing;
 }
 
 @property (nonatomic,retain) SSCollectionView *collectionView;

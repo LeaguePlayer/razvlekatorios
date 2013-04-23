@@ -84,7 +84,6 @@
 		30DEAAEA16FB91E900A0BDF3 /* 4image.gif in Resources */ = {isa = PBXBuildFile; fileRef = 30DEAAE616FB91E900A0BDF3 /* 4image.gif */; };
 		30DEAAEB16FB91E900A0BDF3 /* 5image.gif in Resources */ = {isa = PBXBuildFile; fileRef = 30DEAAE716FB91E900A0BDF3 /* 5image.gif */; };
 		30DEAAEC16FB91E900A0BDF3 /* 6image.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 30DEAAE816FB91E900A0BDF3 /* 6image.jpg */; };
-		8B2E508B16FC6FC800CE8E20 /* WatchViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 8B2E508A16FC6FC800CE8E20 /* WatchViewController.m */; };
 		8B2E508E16FC74E500CE8E20 /* MRDownloadCollectionViewItem.m in Sources */ = {isa = PBXBuildFile; fileRef = 8B2E508D16FC74E500CE8E20 /* MRDownloadCollectionViewItem.m */; };
 		8BF975B916FC5F5600A3FB51 /* MRChooseCollectionViewItem.m in Sources */ = {isa = PBXBuildFile; fileRef = 8BF975B816FC5F5600A3FB51 /* MRChooseCollectionViewItem.m */; };
 		AED12A0130D24AC2A3AD8EE0 /* libPods.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 02DC3CAC932E4D00982A8BAA /* libPods.a */; };
@@ -192,8 +191,6 @@
 		30DEAAE816FB91E900A0BDF3 /* 6image.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = 6image.jpg; sourceTree = "<group>"; };
 		30FC49DA171DA62B00DA7121 /* entertainer-iOS-Prefix.pch */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "entertainer-iOS-Prefix.pch"; sourceTree = "<group>"; };
 		5F3FE5144D8B4F3887B19BB5 /* Pods.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = Pods.xcconfig; path = Pods/Pods.xcconfig; sourceTree = SOURCE_ROOT; };
-		8B2E508916FC6FC800CE8E20 /* WatchViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WatchViewController.h; sourceTree = "<group>"; };
-		8B2E508A16FC6FC800CE8E20 /* WatchViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WatchViewController.m; sourceTree = "<group>"; };
 		8B2E508C16FC74E500CE8E20 /* MRDownloadCollectionViewItem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MRDownloadCollectionViewItem.h; sourceTree = "<group>"; };
 		8B2E508D16FC74E500CE8E20 /* MRDownloadCollectionViewItem.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MRDownloadCollectionViewItem.m; sourceTree = "<group>"; };
 		8BF975B716FC5F5600A3FB51 /* MRChooseCollectionViewItem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MRChooseCollectionViewItem.h; sourceTree = "<group>"; };
@@ -364,7 +361,6 @@
 			isa = PBXGroup;
 			children = (
 				30DEAA9F16FB5C8100A0BDF3 /* Base */,
-				8B2E508816FC6FAF00CE8E20 /* Watch */,
 				30DEAA7C16FB548B00A0BDF3 /* Main */,
 			);
 			path = Controllers;
@@ -497,15 +493,6 @@
 				30DEAAE316FB8AC900A0BDF3 /* MRItem.m */,
 			);
 			path = Blocks;
-			sourceTree = "<group>";
-		};
-		8B2E508816FC6FAF00CE8E20 /* Watch */ = {
-			isa = PBXGroup;
-			children = (
-				8B2E508916FC6FC800CE8E20 /* WatchViewController.h */,
-				8B2E508A16FC6FC800CE8E20 /* WatchViewController.m */,
-			);
-			path = Watch;
 			sourceTree = "<group>";
 		};
 		8BF975B516FC5F2B00A3FB51 /* Classes */ = {
@@ -675,7 +662,6 @@
 				30DEAAE116FB8A0800A0BDF3 /* MRBlock.m in Sources */,
 				30DEAAE416FB8AC900A0BDF3 /* MRItem.m in Sources */,
 				8BF975B916FC5F5600A3FB51 /* MRChooseCollectionViewItem.m in Sources */,
-				8B2E508B16FC6FC800CE8E20 /* WatchViewController.m in Sources */,
 				8B2E508E16FC74E500CE8E20 /* MRDownloadCollectionViewItem.m in Sources */,
 				308FF3A5171A9EA900BF1233 /* MRHTTPClient.m in Sources */,
 				308FF3B7171B05C000BF1233 /* MRUtils.m in Sources */,
