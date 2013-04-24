@@ -13,6 +13,7 @@
 @property (nonatomic,retain) UILabel *nameLabel;
 @property (nonatomic,retain) UIImageView *icon;
 @property (nonatomic,retain) UILabel *priceLabel;
+@property (nonatomic, retain) UIProgressView *progressView;
 
 - (id)initWithReuseIdentifier:(NSString *)aReuseIdentifier;
 

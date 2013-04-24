@@ -139,14 +139,20 @@
     MRBlock *block = [blocks objectAtIndex:indexPath.row];
     if ([block isStored])
         return;
-//    [SVProgressHUD showProgress:0 status:@"Загрузка" maskType:SVProgressHUDMaskTypeGradient];
-    [SVProgressHUD showWithStatus:@"Загрузка" maskType:SVProgressHUDMaskTypeGradient];
-    [CurrentClient blockItemsWithBlock:block success:^(NSArray *results) {
-        [SVProgressHUD dismiss];
+    MRDownloadCollectionViewItem *item = (MRDownloadCollectionViewItem *)[aCollectionView itemForIndexPath:indexPath];
+    [item.progressView setHidden:NO];
+    item.progressView.progress = 0;
+    [CurrentClient blockItemsWithBlock:block progress:^(CGFloat state){
+        item.progressView.progress = state;
+    }success:^(NSArray *results) {
         block.items = results;
-        [self.collectionView reloadData];
+        item.progressView.progress = 1.0f;
+        [item.priceLabel setText:@"Загружено"];
+        [UIView animateWithDuration:0.3 animations:^{
+            [item.progressView setHidden:YES];
+        }];
     } failure:^(int statusCode, NSArray *errors, NSError *commonError) {
-        [SVProgressHUD dismiss];
+        
     }];
 }
 

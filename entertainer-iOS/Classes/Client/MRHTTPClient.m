@@ -63,7 +63,7 @@ static MRHTTPClient *_sharedClient;
     [self enqueueHTTPRequestOperation:operation];
 }
 
--(void)blockItemsWithBlock:(MRBlock *)block success:(MRHTTPClientSuccessResults)success failure:(MRHTTPClientFailure)failure{
+-(void)blockItemsWithBlock:(MRBlock *)block progress:(void(^)(CGFloat state))progress success:(MRHTTPClientSuccessResults)success failure:(MRHTTPClientFailure)failure{
     NSString *urlString = [NSString stringWithFormat:@"/api/getblock/%d",block.id];
     urlString = [urlString stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
     NSURLRequest *request = [self requestWithMethod:@"GET" path:urlString parameters:nil];
@@ -86,13 +86,14 @@ static MRHTTPClient *_sharedClient;
                     dispatch_queue_t queue = dispatch_get_main_queue();
                     dispatch_async(queue, ^{
                         count++;
-                        CGFloat prog = count/max;
-//                        [SVProgressHUD showProgress:prog status:@"Загрузка" maskType:SVProgressHUDMaskTypeGradient];
                         NSLog (@"%d",count);
                         if (count == max){
                             block.items = results;
                             success(results);
                             [block saveToDataBase];
+                        } else {
+                            CGFloat prog = (float)count/(float)max;
+                            progress(prog);
                         }
                     });
                 }];

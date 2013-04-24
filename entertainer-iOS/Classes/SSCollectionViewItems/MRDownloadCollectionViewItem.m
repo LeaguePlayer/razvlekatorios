@@ -55,11 +55,17 @@
         [self.priceLabel setBackgroundColor:[UIColor clearColor]];
         [self.priceLabel setTextColor:[UIColor whiteColor]];
         
+        self.progressView = [[UIProgressView alloc] initWithProgressViewStyle:UIProgressViewStyleBar];
+        [self.progressView setProgressTintColor:[UIColor blueColor]];
+        [self.progressView setFrame:CGRectMake(12,65,100,15)];
+        self.progressView.center = self.icon.center;
+        [self.progressView setHidden:YES];
+        
         [self addSubview:self.nameLabel];
         [self addSubview:self.icon];
         [self addSubview:priceBackView];
         [self addSubview:self.priceLabel];
-        
+        [self addSubview:self.progressView];
     }
     return self;
 }

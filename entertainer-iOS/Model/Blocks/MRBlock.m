@@ -78,6 +78,8 @@
             MRItem *new = [[MRItem alloc] initWithManagedObject:lol];
             [items addObject:new];
         }
+        NSSortDescriptor *descriptor = [[NSSortDescriptor alloc] initWithKey:@"id" ascending:YES];
+        items =[NSArray arrayWithArray:[items sortedArrayUsingDescriptors:@[descriptor]]];
         item.items = items;
     }
     return item;
