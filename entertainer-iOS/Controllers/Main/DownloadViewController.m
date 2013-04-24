@@ -140,7 +140,9 @@
     if ([block isStored])
         return;
     MRDownloadCollectionViewItem *item = (MRDownloadCollectionViewItem *)[aCollectionView itemForIndexPath:indexPath];
-    [item.progressView setHidden:NO];
+    [UIView animateWithDuration:0.2 animations:^{
+       [item.progressView setAlpha:1];
+    }];
     item.progressView.progress = 0;
     [CurrentClient blockItemsWithBlock:block progress:^(CGFloat state){
         item.progressView.progress = state;
@@ -148,8 +150,8 @@
         block.items = results;
         item.progressView.progress = 1.0f;
         [item.priceLabel setText:@"Загружено"];
-        [UIView animateWithDuration:0.3 animations:^{
-            [item.progressView setHidden:YES];
+        [UIView animateWithDuration:0.2 animations:^{
+            [item.progressView setAlpha:0];
         }];
     } failure:^(int statusCode, NSArray *errors, NSError *commonError) {
         

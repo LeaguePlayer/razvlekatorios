@@ -59,7 +59,7 @@
         [self.progressView setProgressTintColor:[UIColor blueColor]];
         [self.progressView setFrame:CGRectMake(12,65,100,15)];
         self.progressView.center = self.icon.center;
-        [self.progressView setHidden:YES];
+        [self.progressView setAlpha:0];
         
         [self addSubview:self.nameLabel];
         [self addSubview:self.icon];
