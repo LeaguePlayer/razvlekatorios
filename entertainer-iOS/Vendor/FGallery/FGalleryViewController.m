@@ -299,7 +299,7 @@
 
 -(void)actionSheet:(UIActionSheet *)actionSheet clickedButtonAtIndex:(NSInteger)buttonIndex{
     UIImage *image = [self currentPhoto].fullsize;
-    SHKItem *item = [SHKItem image:image title:@"Ололо, мобильный развлекатор"];
+    SHKItem *item = [SHKItem image:image title:@"Картинка отправлена через приложение Мобильный развлекатор"];
     switch (buttonIndex) {
         case 0:
             [SHKVkontakte shareItem:item];
