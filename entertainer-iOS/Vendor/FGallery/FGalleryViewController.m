@@ -8,6 +8,10 @@
 
 #import "FGalleryViewController.h"
 #import "AboutViewController.h"
+#import "SHK.h"
+#import "SHKFacebook.h"
+#import "SHKVkontakte.h"
+#import "SHKTwitter.h"
 
 #define kThumbnailSize 75
 #define kThumbnailSpacing 4
@@ -236,10 +240,30 @@
 	// create buttons for toolbar
 	UIImage *leftIcon = [UIImage imageNamed:@"icon1.png"];
 	UIImage *rightIcon = [UIImage imageNamed:@"icon2.png"];
-	_nextButton = [[UIBarButtonItem alloc] initWithImage:rightIcon style:UIBarButtonItemStylePlain target:self action:@selector(shuffle)];
-	_prevButton = [[UIBarButtonItem alloc] initWithImage:leftIcon style:UIBarButtonItemStylePlain target:self action:@selector(documents)];
+    UIImage *shareIcon = [UIImage imageNamed:@"soc_net.png"];
+    UIImage *shareIconOn = [UIImage imageNamed:@"soc_net_on.png"];
+    
+    UIButton *nextView = [UIButton buttonWithType:UIButtonTypeCustom];
+    [nextView addTarget:self action:@selector(shuffle) forControlEvents:UIControlEventTouchUpInside];
+    [nextView setImage:leftIcon forState:UIControlStateNormal];
+//	_nextButton = [[UIBarButtonItem alloc] initWithCustomView:nextView];
+    _nextButton = [[UIBarButtonItem alloc] initWithImage:leftIcon style:UIBarButtonItemStylePlain target:self action:@selector(shuffle)];
+    
+    UIButton *rightView = [UIButton buttonWithType:UIButtonTypeCustom];
+    [rightView addTarget:self action:@selector(documents) forControlEvents:UIControlEventTouchUpInside];
+    [rightView setImage:rightIcon forState:UIControlStateNormal];
+//	_prevButton = [[UIBarButtonItem alloc] initWithCustomView:rightView];
+    _prevButton = [[UIBarButtonItem alloc] initWithImage:rightIcon style:UIBarButtonItemStylePlain target:self action:@selector(documents)];
 	
+    UIButton *shareView = [UIButton buttonWithType:UIButtonTypeCustom];
+    [shareView setImage:shareIcon forState:UIControlStateNormal];
+    [shareView setImage:shareIconOn forState:UIControlStateHighlighted];
+    [shareView addTarget:self action:@selector(share) forControlEvents:UIControlEventTouchUpInside];
+//    UIBarButtonItem *shareItem = [[UIBarButtonItem alloc] initWithCustomView:shareView];
+    UIBarButtonItem *shareItem = [[UIBarButtonItem alloc] initWithImage:shareIconOn style:UIBarButtonItemStylePlain target:self action:@selector(share)];
+    
 	// add prev next to front of the array
+    [_barItems insertObject:shareItem atIndex:0];
 	[_barItems insertObject:_nextButton atIndex:0];
 	[_barItems insertObject:_prevButton atIndex:0];
 	
@@ -253,6 +277,10 @@
     [self reloadGallery];
 }
 
+-(void)share{
+    [self initActionSheet];
+}
+
 -(void)documents{
     
 }
@@ -261,6 +289,29 @@
     if (_photoSource && [_photoSource respondsToSelector:@selector(photoGalleryShuffleItems)]){
         [self.photoSource photoGalleryShuffleItems];
         [self reloadGallery];
+    }
+}
+
+-(void)initActionSheet{
+    UIActionSheet *actionSheet = [[UIActionSheet alloc] initWithTitle:@"Поделиться" delegate:self cancelButtonTitle:@"Отмена" destructiveButtonTitle:nil otherButtonTitles:@"ВКонтакте",@"Facebook",@"Twitter",nil];
+    [actionSheet showInView:self.view];
+}
+
+-(void)actionSheet:(UIActionSheet *)actionSheet clickedButtonAtIndex:(NSInteger)buttonIndex{
+    UIImage *image = [self currentPhoto].fullsize;
+    SHKItem *item = [SHKItem image:image title:@"Ололо, мобильный развлекатор"];
+    switch (buttonIndex) {
+        case 0:
+            [SHKVkontakte shareItem:item];
+            break;
+        case 1:
+            [SHKFacebook shareItem:item];
+            break;
+        case 2:
+            [SHKTwitter shareItem:item];
+            break;
+        default:
+            break;
     }
 }
 

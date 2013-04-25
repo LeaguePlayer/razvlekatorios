@@ -22,6 +22,11 @@
 		308FF3C6171C644300BF1233 /* Model.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 308FF3C4171C644300BF1233 /* Model.xcdatamodeld */; };
 		308FF3C9171C6AC900BF1233 /* ManagedBlock.m in Sources */ = {isa = PBXBuildFile; fileRef = 308FF3C8171C6AC900BF1233 /* ManagedBlock.m */; };
 		308FF3CC171C6AD400BF1233 /* ManagedItem.m in Sources */ = {isa = PBXBuildFile; fileRef = 308FF3CB171C6AD400BF1233 /* ManagedItem.m */; };
+		3090D1A81729B72A000DEF8D /* soc_net_on.png in Resources */ = {isa = PBXBuildFile; fileRef = 3090D1A41729B72A000DEF8D /* soc_net_on.png */; };
+		3090D1A91729B72A000DEF8D /* soc_net_on@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 3090D1A51729B72A000DEF8D /* soc_net_on@2x.png */; };
+		3090D1AA1729B72A000DEF8D /* soc_net.png in Resources */ = {isa = PBXBuildFile; fileRef = 3090D1A61729B72A000DEF8D /* soc_net.png */; };
+		3090D1AB1729B72A000DEF8D /* soc_net@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 3090D1A71729B72A000DEF8D /* soc_net@2x.png */; };
+		3090D1AF1729B884000DEF8D /* MESHKConfiguration.m in Sources */ = {isa = PBXBuildFile; fileRef = 3090D1AE1729B884000DEF8D /* MESHKConfiguration.m */; };
 		3095661B170A102C008767E7 /* icon_114.png in Resources */ = {isa = PBXBuildFile; fileRef = 3095661A170A102C008767E7 /* icon_114.png */; };
 		3095661D170A103B008767E7 /* Default-568h@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 3095661C170A103B008767E7 /* Default-568h@2x.png */; };
 		3095661F170A103D008767E7 /* Default.png in Resources */ = {isa = PBXBuildFile; fileRef = 3095661E170A103D008767E7 /* Default.png */; };
@@ -116,6 +121,12 @@
 		308FF3C8171C6AC900BF1233 /* ManagedBlock.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ManagedBlock.m; sourceTree = "<group>"; };
 		308FF3CA171C6AD400BF1233 /* ManagedItem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ManagedItem.h; sourceTree = "<group>"; };
 		308FF3CB171C6AD400BF1233 /* ManagedItem.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ManagedItem.m; sourceTree = "<group>"; };
+		3090D1A41729B72A000DEF8D /* soc_net_on.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = soc_net_on.png; sourceTree = "<group>"; };
+		3090D1A51729B72A000DEF8D /* soc_net_on@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "soc_net_on@2x.png"; sourceTree = "<group>"; };
+		3090D1A61729B72A000DEF8D /* soc_net.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = soc_net.png; sourceTree = "<group>"; };
+		3090D1A71729B72A000DEF8D /* soc_net@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "soc_net@2x.png"; sourceTree = "<group>"; };
+		3090D1AD1729B884000DEF8D /* MESHKConfiguration.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MESHKConfiguration.h; sourceTree = "<group>"; };
+		3090D1AE1729B884000DEF8D /* MESHKConfiguration.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MESHKConfiguration.m; sourceTree = "<group>"; };
 		3095661A170A102C008767E7 /* icon_114.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = icon_114.png; sourceTree = "<group>"; };
 		3095661C170A103B008767E7 /* Default-568h@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Default-568h@2x.png"; sourceTree = "<group>"; };
 		3095661E170A103D008767E7 /* Default.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Default.png; sourceTree = "<group>"; };
@@ -237,6 +248,10 @@
 		30492C3A1725C7AC000F16B4 /* PhotoBrowser */ = {
 			isa = PBXGroup;
 			children = (
+				3090D1A41729B72A000DEF8D /* soc_net_on.png */,
+				3090D1A51729B72A000DEF8D /* soc_net_on@2x.png */,
+				3090D1A61729B72A000DEF8D /* soc_net.png */,
+				3090D1A71729B72A000DEF8D /* soc_net@2x.png */,
 				30492C3B1725C7AC000F16B4 /* photo-gallery-edit-caption.png */,
 				30492C3C1725C7AC000F16B4 /* photo-gallery-left.png */,
 				30492C3D1725C7AC000F16B4 /* photo-gallery-left@2x.png */,
@@ -284,6 +299,15 @@
 				308FF3CB171C6AD400BF1233 /* ManagedItem.m */,
 			);
 			path = DataModel;
+			sourceTree = "<group>";
+		};
+		3090D1AC1729B884000DEF8D /* SHKConfig */ = {
+			isa = PBXGroup;
+			children = (
+				3090D1AD1729B884000DEF8D /* MESHKConfiguration.h */,
+				3090D1AE1729B884000DEF8D /* MESHKConfiguration.m */,
+			);
+			path = SHKConfig;
 			sourceTree = "<group>";
 		};
 		30DEAA4216FB4BFE00A0BDF3 = {
@@ -498,6 +522,7 @@
 		8BF975B516FC5F2B00A3FB51 /* Classes */ = {
 			isa = PBXGroup;
 			children = (
+				3090D1AC1729B884000DEF8D /* SHKConfig */,
 				308FF3B4171B05C000BF1233 /* Helpers */,
 				308FF3A2171A9E7B00BF1233 /* Client */,
 				8BF975B616FC5F2B00A3FB51 /* SSCollectionViewItems */,
@@ -624,6 +649,10 @@
 				30492C441725C7AC000F16B4 /* photo-gallery-right.png in Resources */,
 				30492C451725C7AC000F16B4 /* photo-gallery-right@2x.png in Resources */,
 				30492C461725C7AC000F16B4 /* photo-gallery-trashcan.png in Resources */,
+				3090D1A81729B72A000DEF8D /* soc_net_on.png in Resources */,
+				3090D1A91729B72A000DEF8D /* soc_net_on@2x.png in Resources */,
+				3090D1AA1729B72A000DEF8D /* soc_net.png in Resources */,
+				3090D1AB1729B72A000DEF8D /* soc_net@2x.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -671,6 +700,7 @@
 				30492C36172599DB000F16B4 /* FGalleryPhoto.m in Sources */,
 				30492C37172599DB000F16B4 /* FGalleryPhotoView.m in Sources */,
 				30492C38172599DB000F16B4 /* FGalleryViewController.m in Sources */,
+				3090D1AF1729B884000DEF8D /* MESHKConfiguration.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

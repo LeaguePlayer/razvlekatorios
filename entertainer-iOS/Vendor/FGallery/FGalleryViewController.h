@@ -27,7 +27,7 @@ typedef enum
 
 @protocol FGalleryViewControllerDelegate;
 
-@interface FGalleryViewController : BaseViewController <UIScrollViewDelegate,FGalleryPhotoDelegate,FGalleryPhotoViewDelegate> {
+@interface FGalleryViewController : BaseViewController <UIScrollViewDelegate,FGalleryPhotoDelegate,FGalleryPhotoViewDelegate, UIActionSheetDelegate> {
 	
 	BOOL _isActive;
 	BOOL _isFullscreen;
