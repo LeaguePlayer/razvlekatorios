@@ -258,7 +258,10 @@
 }
 
 -(void)shuffle{
-    
+    if (_photoSource && [_photoSource respondsToSelector:@selector(photoGalleryShuffleItems)]){
+        [self.photoSource photoGalleryShuffleItems];
+        [self reloadGallery];
+    }
 }
 
 -(void)rightItemClick:(id)sender{

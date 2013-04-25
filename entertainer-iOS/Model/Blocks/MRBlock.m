@@ -13,6 +13,8 @@
 
 @implementation MRBlock
 
+@synthesize shuffled = _shuffled;
+
 -(id)init{
     self = [super init];
     if (self){
@@ -22,6 +24,7 @@
         self.price = @(0);
         self.imagePath = @"";
         self.image = [[UIImage alloc] init];
+        self.shuffled = NO;
     }
     return self;
 }
@@ -83,6 +86,37 @@
         item.items = items;
     }
     return item;
+}
+
+-(void)setShuffled:(BOOL)shuffled{
+    if (_shuffled == shuffled) return;
+    _shuffled = shuffled;
+    if (shuffled){
+        [self shuffleItems];
+    } else {
+        [self orderItems];
+    }
+}
+
+-(BOOL)shuffled{
+    return _shuffled;
+}
+
+-(void)shuffleItems{
+    NSMutableArray *result = [NSMutableArray arrayWithArray:self.items];
+    for (int i = 0; i < self.items.count; i++){
+        int nextPosition = (arc4random() % self.items.count);
+        MRItem *prevItem = [result objectAtIndex:i];
+        MRItem *nextItem = [result objectAtIndex:nextPosition];
+        [result replaceObjectAtIndex:i withObject:nextItem];
+        [result replaceObjectAtIndex:nextPosition withObject:prevItem];
+    }
+    self.items = result;
+}
+
+-(void)orderItems{
+    NSSortDescriptor *descriptor = [[NSSortDescriptor alloc] initWithKey:@"id" ascending:YES];
+    self.items = [self.items sortedArrayUsingDescriptors:@[descriptor]];
 }
 
 +(NSArray *)allBlocks{

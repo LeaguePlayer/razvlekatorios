@@ -18,6 +18,7 @@
 @property (nonatomic,retain) NSString *imagePath;
 @property (nonatomic,retain) UIImage *image;
 @property (nonatomic,retain) NSNumber *price;
+@property (nonatomic) BOOL shuffled;
 
 -(id)initWithManagedBlock:(ManagedBlock *)block;
 

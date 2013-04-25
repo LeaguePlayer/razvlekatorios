@@ -21,5 +21,9 @@ install_resource()
       ;;
   esac
 }
+install_resource 'Facebook-iOS-SDK/src/FacebookSDKResources.bundle'
 install_resource 'SVProgressHUD/SVProgressHUD/SVProgressHUD.bundle'
+install_resource 'ShareKit/Classes/ShareKit/ShareKit.bundle'
+install_resource 'ShareKit/Classes/ShareKit/Core/SHKSharers.plist'
+install_resource 'objectiveflickr/BridgeSupport'
 install_resource 'Resources/SSToolkitResources.bundle'

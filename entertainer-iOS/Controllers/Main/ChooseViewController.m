@@ -175,6 +175,9 @@
     //[localGallery removeImageAtIndex:[localGallery currentIndex]];
 }
 
+-(void)photoGalleryShuffleItems{
+    [selected setShuffled:!selected.shuffled];
+}
 
 - (void)handleEditCaptionButtonTouch:(id)sender {
     // here we could implement some code to change the caption for a stored image
