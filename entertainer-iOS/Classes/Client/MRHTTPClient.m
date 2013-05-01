@@ -113,6 +113,7 @@ static MRHTTPClient *_sharedClient;
     NSURLRequest *request = [self requestWithMethod:@"GET" path:urlString parameters:nil];
     AFJSONRequestOperation *operation = [AFJSONRequestOperation JSONRequestOperationWithRequest:request success:^(NSURLRequest *request, NSHTTPURLResponse *response, id JSON) {
         NSString *result = JSON[@"response"];
+        NSLog(result);
         success(result);
     } failure:^(NSURLRequest *request, NSHTTPURLResponse *response, NSError *error, id JSON) {
         failure(response.statusCode,@[],nil);

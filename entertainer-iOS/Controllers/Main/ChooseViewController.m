@@ -127,7 +127,6 @@
 }
 
 -(void)removeItem:(UIButton *)sender{
-    
     MRChooseCollectionViewItem *item = (MRChooseCollectionViewItem *)[sender superview];
     NSIndexPath *indexPath = [self.collectionView indexPathForItem:item];
     removing = [blocks objectAtIndex:indexPath.row];
@@ -187,11 +186,12 @@
 #pragma mark - Choose Collection view item delegate methods
 
 -(void)itemLongPressed:(MRChooseCollectionViewItem *)item{
-//    for (int i = 0; i < blocks.count; i++){
-//        NSIndexPath *path = [NSIndexPath indexPathForRow:i inSection:0];
-//        MRChooseCollectionViewItem *block = (MRChooseCollectionViewItem *)[self collectionView:self.collectionView itemForIndexPath:path];
-//        [block.removeButton setHidden:NO];
-//    }
+    for (int i = 0; i < blocks.count; i++){
+        NSIndexPath *path = [NSIndexPath indexPathForRow:i inSection:0];
+        MRChooseCollectionViewItem *colItem = (MRChooseCollectionViewItem *)[self.collectionView itemForIndexPath:path];
+        if (colItem == item) continue;
+        [colItem hideRemoveButton];
+    }
 }
 
 - (IBAction)shuffleButtonClicked:(id)sender {

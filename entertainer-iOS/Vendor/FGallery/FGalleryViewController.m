@@ -1094,7 +1094,8 @@
 	_isScrolling = NO;
 	
 	NSUInteger newIndex = floor( _scroller.contentOffset.x / _scroller.frame.size.width );
-	
+    NSInteger numPhotos = [_photoSource numberOfPhotosForPhotoGallery:self];
+	if (newIndex >= numPhotos) return;
 	// don't proceed if the user has been scrolling, but didn't really go anywhere.
 	if( newIndex == _currentIndex )
 		return;
