@@ -54,7 +54,7 @@
 -(void)initCollectionView{
     self.collectionView = [[SSCollectionView alloc] init];
     self.collectionView.backgroundColor = [UIColor clearColor];
-    self.collectionView.frame = CGRectMake(0,5,self.view.frame.size.width,self.view.frame.size.height - 5);
+    self.collectionView.frame = CGRectMake(0,5,self.view.frame.size.width,self.view.frame.size.height - 5 - self.bottomView.frame.size.height);
     self.collectionView.delegate = self;
     self.collectionView.dataSource = self;
     self.collectionView.autoresizingMask = UIViewAutoresizingFlexibleHeight | UIViewAutoresizingFlexibleBottomMargin | UIViewAutoresizingFlexibleTopMargin;
@@ -189,8 +189,7 @@
     for (int i = 0; i < blocks.count; i++){
         NSIndexPath *path = [NSIndexPath indexPathForRow:i inSection:0];
         MRChooseCollectionViewItem *colItem = (MRChooseCollectionViewItem *)[self.collectionView itemForIndexPath:path];
-        if (colItem == item) continue;
-        [colItem hideRemoveButton];
+        [colItem.removeButton setHidden:NO];
     }
 }
 
@@ -199,4 +198,8 @@
     [self.collectionView reloadData];
 }
 
+- (void)viewDidUnload {
+    [self setBottomView:nil];
+    [super viewDidUnload];
+}
 @end

@@ -64,11 +64,6 @@
     if (self.delegate && [self.delegate respondsToSelector:@selector(itemLongPressed:)]){
         [self.delegate itemLongPressed:self];
     }
-    [self.removeButton setHidden:NO];
-}
-
--(void)hideRemoveButton{
-    [self.removeButton setHidden:YES];
 }
 
 @end

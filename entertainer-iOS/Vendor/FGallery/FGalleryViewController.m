@@ -283,8 +283,9 @@
 }
 
 -(void)documents{
-    UIImage *image = [self currentPhoto].fullsize;
-    [MRUtils saveImageToSavedPhotos:image];
+//    UIImage *image = [self currentPhoto].fullsize;
+//    [MRUtils saveImageToSavedPhotos:image];
+    [self handleSeeAllTouch:nil];
 }
 
 -(void)shuffle{

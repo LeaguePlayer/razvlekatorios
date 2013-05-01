@@ -19,6 +19,7 @@
     MRBlock *removing;
 }
 
+@property (weak, nonatomic) IBOutlet UIView *bottomView;
 @property (nonatomic,retain) SSCollectionView *collectionView;
 - (IBAction)shuffleButtonClicked:(id)sender;
 
