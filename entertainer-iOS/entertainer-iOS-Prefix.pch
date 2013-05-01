@@ -13,4 +13,5 @@
     #import <UIKit/UIKit.h>
     #import <Foundation/Foundation.h>
     #import "GeneralDefines.h"
+    #import "MKStoreManager.h"
 #endif

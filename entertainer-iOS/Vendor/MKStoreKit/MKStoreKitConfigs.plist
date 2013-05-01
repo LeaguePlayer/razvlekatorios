@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>Consumables</key>
+	<dict>
+		<key>com.amobile.blocks</key>
+		<dict>
+			<key>Count</key>
+			<integer>100000</integer>
+			<key>Name</key>
+			<string>block</string>
+		</dict>
+	</dict>
+</dict>
+</plist>

@@ -47,7 +47,6 @@
     [CurrentClient allBlocksWithSuccess:^(NSArray *results) {
         [SVProgressHUD dismiss];
         blocks = results;
-//        blocks = [MRBlock blocksMock];
         [self.collectionView reloadData];
     } failure:^(int statusCode, NSArray *errors, NSError *commonError) {
         [SVProgressHUD dismiss];
