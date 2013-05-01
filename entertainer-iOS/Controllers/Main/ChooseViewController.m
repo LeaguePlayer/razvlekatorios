@@ -9,6 +9,7 @@
 #import "ChooseViewController.h"
 #import "UIImageView+AFNetworking.h"
 #import "MRItem.h"
+#import "NSArray+Shuffling.h"
 
 @interface ChooseViewController ()
 
@@ -191,6 +192,11 @@
 //        MRChooseCollectionViewItem *block = (MRChooseCollectionViewItem *)[self collectionView:self.collectionView itemForIndexPath:path];
 //        [block.removeButton setHidden:NO];
 //    }
+}
+
+- (IBAction)shuffleButtonClicked:(id)sender {
+    blocks = [NSArray arrayWithShuffledContentOfArray:blocks];
+    [self.collectionView reloadData];
 }
 
 @end

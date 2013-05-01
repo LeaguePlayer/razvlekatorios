@@ -13,5 +13,6 @@
 +(NSString *)imageFromJSONDictionary:(NSDictionary *)dict;
 +(NSData *)transformedValue:(UIImage *)value;
 +(UIImage *)reverseTransformedValue:(NSData *)value;
++(void)saveImageToSavedPhotos:(UIImage *)image;
 
 @end

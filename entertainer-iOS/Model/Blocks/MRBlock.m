@@ -10,6 +10,7 @@
 #import "MRItem.h"
 #import "MRUtils.h"
 #import "CoreData+MagicalRecord.h"
+#import "NSArray+Shuffling.h"
 
 @implementation MRBlock
 
@@ -103,15 +104,16 @@
 }
 
 -(void)shuffleItems{
-    NSMutableArray *result = [NSMutableArray arrayWithArray:self.items];
-    for (int i = 0; i < self.items.count; i++){
-        int nextPosition = (arc4random() % self.items.count);
-        MRItem *prevItem = [result objectAtIndex:i];
-        MRItem *nextItem = [result objectAtIndex:nextPosition];
-        [result replaceObjectAtIndex:i withObject:nextItem];
-        [result replaceObjectAtIndex:nextPosition withObject:prevItem];
-    }
-    self.items = result;
+    self.items = [NSArray arrayWithShuffledContentOfArray:self.items];
+//    NSMutableArray *result = [NSMutableArray arrayWithArray:self.items];
+//    for (int i = 0; i < self.items.count; i++){
+//        int nextPosition = (arc4random() % self.items.count);
+//        MRItem *prevItem = [result objectAtIndex:i];
+//        MRItem *nextItem = [result objectAtIndex:nextPosition];
+//        [result replaceObjectAtIndex:i withObject:nextItem];
+//        [result replaceObjectAtIndex:nextPosition withObject:prevItem];
+//    }
+//    self.items = result;
 }
 
 -(void)orderItems{

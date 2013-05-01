@@ -12,6 +12,7 @@
 #import "SHKFacebook.h"
 #import "SHKVkontakte.h"
 #import "SHKTwitter.h"
+#import "MRUtils.h"
 
 #define kThumbnailSize 75
 #define kThumbnailSpacing 4
@@ -238,8 +239,8 @@
     self.titleLbl = label;
     
 	// create buttons for toolbar
-	UIImage *leftIcon = [UIImage imageNamed:@"icon1.png"];
-	UIImage *rightIcon = [UIImage imageNamed:@"icon2.png"];
+	UIImage *leftIcon = [UIImage imageNamed:@"icon2.png"];
+	UIImage *rightIcon = [UIImage imageNamed:@"icon1.png"];
     UIImage *shareIcon = [UIImage imageNamed:@"soc_net.png"];
     UIImage *shareIconOn = [UIImage imageNamed:@"soc_net_on.png"];
     
@@ -282,7 +283,8 @@
 }
 
 -(void)documents{
-    
+    UIImage *image = [self currentPhoto].fullsize;
+    [MRUtils saveImageToSavedPhotos:image];
 }
 
 -(void)shuffle{

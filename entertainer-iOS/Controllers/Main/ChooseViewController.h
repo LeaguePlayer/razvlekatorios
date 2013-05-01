@@ -20,5 +20,6 @@
 }
 
 @property (nonatomic,retain) SSCollectionView *collectionView;
+- (IBAction)shuffleButtonClicked:(id)sender;
 
 @end
