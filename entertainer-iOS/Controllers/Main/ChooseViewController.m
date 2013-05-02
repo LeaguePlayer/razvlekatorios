@@ -183,6 +183,19 @@
     // here we could implement some code to change the caption for a stored image
 }
 
+-(void)startShakingView:(UIView *)view{
+    CGAffineTransform leftWobble = CGAffineTransformRotate(CGAffineTransformIdentity, RADIANS(-1.5));
+    CGAffineTransform rightWobble = CGAffineTransformRotate(CGAffineTransformIdentity, RADIANS(1.5));
+    
+    view.transform = leftWobble;  // starting point
+    
+    [UIView animateWithDuration:0.1 delay:0 options:UIViewAnimationOptionAutoreverse | UIViewAnimationOptionRepeat animations:^{
+        view.transform = rightWobble;
+    } completion:^(BOOL finished){
+        view.transform = CGAffineTransformIdentity;
+    }];
+}
+
 #pragma mark - Choose Collection view item delegate methods
 
 -(void)itemLongPressed:(MRChooseCollectionViewItem *)item{
@@ -190,6 +203,7 @@
         NSIndexPath *path = [NSIndexPath indexPathForRow:i inSection:0];
         MRChooseCollectionViewItem *colItem = (MRChooseCollectionViewItem *)[self.collectionView itemForIndexPath:path];
         [colItem.removeButton setHidden:NO];
+        [self startShakingView:colItem.icon];
     }
 }
 

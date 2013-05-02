@@ -9,3 +9,4 @@
 #define CurrentClient [MRHTTPClient sharedClient]
 #define DefaultContext [NSManagedObjectContext MR_defaultContext]
 #define DownloadManager [MRDownloadManager sharedManager]
+#define RADIANS(degrees) ((degrees * M_PI) / 180.0)
