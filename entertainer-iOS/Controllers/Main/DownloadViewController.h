@@ -8,8 +8,9 @@
 
 #import "BaseViewController.h"
 #import <SSToolkit/SSCollectionView.h>
+#import "MRDownloadManager.h"
 
-@interface DownloadViewController : BaseViewController <SSCollectionViewDataSource,SSCollectionViewDelegate>{
+@interface DownloadViewController : BaseViewController <SSCollectionViewDataSource,SSCollectionViewDelegate, MRDownloadManagerDelegate>{
     NSArray *blocks;
 }
 

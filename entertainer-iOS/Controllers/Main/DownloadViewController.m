@@ -38,6 +38,16 @@
     [self initUI];
 }
 
+-(void)viewDidAppear:(BOOL)animated{
+    [super viewDidAppear:animated];
+    [DownloadManager addDelegate:self];
+}
+
+-(void)viewWillDisappear:(BOOL)animated{
+    [super viewWillDisappear:animated];
+    [DownloadManager removeDelegate:self];
+}
+
 -(void)rightItemClick:(id)sender{
     [self performSegueWithIdentifier:@"About" sender:self];
 }
@@ -124,6 +134,12 @@
     [item.priceLabel setText:price];
     [item.priceLabel setAdjustsFontSizeToFitWidth:YES];
     
+    if ([DownloadManager loadsObjectWithId:block.id]){
+        CGFloat state = [DownloadManager loadingStateOfObjectWithId:block.id];
+        [item.progressView setAlpha:1];
+        [item.progressView setProgress:state];
+    }
+    
     return item;
 }
 
@@ -136,24 +152,58 @@
 
 - (void)collectionView:(SSCollectionView *)aCollectionView didSelectItemAtIndexPath:(NSIndexPath *)indexPath{
     MRBlock *block = [blocks objectAtIndex:indexPath.row];
-    if ([block isStored])
+    if ([block isStored] || [DownloadManager loadsObjectWithId:block.id])
         return;
     MRDownloadCollectionViewItem *item = (MRDownloadCollectionViewItem *)[aCollectionView itemForIndexPath:indexPath];
     [UIView animateWithDuration:0.2 animations:^{
        [item.progressView setAlpha:1];
     }];
     item.progressView.progress = 0;
-    [CurrentClient blockItemsWithBlock:block progress:^(CGFloat state){
-        item.progressView.progress = state;
-    }success:^(NSArray *results) {
-        block.items = results;
-        item.progressView.progress = 1.0f;
-        [item.priceLabel setText:@"Загружено"];
-        [UIView animateWithDuration:0.2 animations:^{
-            [item.progressView setAlpha:0];
-        }];
-    } failure:^(int statusCode, NSArray *errors, NSError *commonError) {
-        
+    [DownloadManager startLoadingBlock:block];
+}
+
+#pragma mark - download manager delegate methods
+
+-(void)downloadStateChangedWithObjectId:(int)id withState:(CGFloat)state{
+    NSIndexPath *path;
+    for (int i = 0; i < blocks.count; i++){
+        MRBlock *block = [blocks objectAtIndex:i];
+        if (block.id == id){
+            path = [NSIndexPath indexPathForRow:i inSection:0];
+        }
+    }
+    if (!path) return;
+    MRDownloadCollectionViewItem *item = (MRDownloadCollectionViewItem *)[self.collectionView itemForIndexPath:path];
+    [item.progressView setProgress:state];
+}
+
+-(void)downloadCompliteWithObjectId:(int)id{
+    NSIndexPath *path;
+    for (int i = 0; i < blocks.count; i++){
+        MRBlock *block = [blocks objectAtIndex:i];
+        if (block.id == id){
+            path = [NSIndexPath indexPathForRow:i inSection:0];
+        }
+    }
+    if (!path) return;
+    MRDownloadCollectionViewItem *item = (MRDownloadCollectionViewItem *)[self.collectionView itemForIndexPath:path];
+    [UIView animateWithDuration:0.2 animations:^{
+        [item.progressView setAlpha:0];
+    }];
+}
+
+-(void)downloadFailedWithObjectId:(int)id{
+    NSIndexPath *path;
+    for (int i = 0; i < blocks.count; i++){
+        MRBlock *block = [blocks objectAtIndex:i];
+        if (block.id == id){
+            path = [NSIndexPath indexPathForRow:i inSection:0];
+        }
+    }
+    if (!path) return;
+    MRDownloadCollectionViewItem *item = (MRDownloadCollectionViewItem *)[self.collectionView itemForIndexPath:path];
+    [UIView animateWithDuration:0.2 animations:^{
+        [item.progressView setAlpha:0];
     }];
 }
 

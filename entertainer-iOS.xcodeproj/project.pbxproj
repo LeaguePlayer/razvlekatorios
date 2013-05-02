@@ -34,6 +34,7 @@
 		30956626170A10C1008767E7 /* back_on.png in Resources */ = {isa = PBXBuildFile; fileRef = 30956624170A10C1008767E7 /* back_on.png */; };
 		30956627170A10C1008767E7 /* back_on@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 30956625170A10C1008767E7 /* back_on@2x.png */; };
 		30B3BEE4173162B800AE1ACE /* NSArray+Shuffling.m in Sources */ = {isa = PBXBuildFile; fileRef = 30B3BEE3173162B800AE1ACE /* NSArray+Shuffling.m */; };
+		30B3BEE71732126200AE1ACE /* MRDownloadManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 30B3BEE61732126200AE1ACE /* MRDownloadManager.m */; };
 		30DEAA4F16FB4BFE00A0BDF3 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 30DEAA4E16FB4BFE00A0BDF3 /* UIKit.framework */; };
 		30DEAA5116FB4BFE00A0BDF3 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 30DEAA5016FB4BFE00A0BDF3 /* Foundation.framework */; };
 		30DEAA5316FB4BFE00A0BDF3 /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 30DEAA5216FB4BFE00A0BDF3 /* CoreGraphics.framework */; };
@@ -145,6 +146,8 @@
 		30956625170A10C1008767E7 /* back_on@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "back_on@2x.png"; sourceTree = "<group>"; };
 		30B3BEE2173162B800AE1ACE /* NSArray+Shuffling.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSArray+Shuffling.h"; sourceTree = "<group>"; };
 		30B3BEE3173162B800AE1ACE /* NSArray+Shuffling.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSArray+Shuffling.m"; sourceTree = "<group>"; };
+		30B3BEE51732126200AE1ACE /* MRDownloadManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MRDownloadManager.h; sourceTree = "<group>"; };
+		30B3BEE61732126200AE1ACE /* MRDownloadManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MRDownloadManager.m; sourceTree = "<group>"; };
 		30DEAA4B16FB4BFE00A0BDF3 /* entertainer-iOS.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "entertainer-iOS.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		30DEAA4E16FB4BFE00A0BDF3 /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
 		30DEAA5016FB4BFE00A0BDF3 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
@@ -299,6 +302,8 @@
 				308FF3A3171A9EA900BF1233 /* MRHTTPClient.h */,
 				308FF3A4171A9EA900BF1233 /* MRHTTPClient.m */,
 				308FF3A6171A9F7900BF1233 /* Config.h */,
+				30B3BEE51732126200AE1ACE /* MRDownloadManager.h */,
+				30B3BEE61732126200AE1ACE /* MRDownloadManager.m */,
 			);
 			path = Client;
 			sourceTree = "<group>";
@@ -781,6 +786,7 @@
 				6A379BD21730FD710071A71A /* MKStoreManager.m in Sources */,
 				6A379BD31730FD710071A71A /* VerificationController.m in Sources */,
 				30B3BEE4173162B800AE1ACE /* NSArray+Shuffling.m in Sources */,
+				30B3BEE71732126200AE1ACE /* MRDownloadManager.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

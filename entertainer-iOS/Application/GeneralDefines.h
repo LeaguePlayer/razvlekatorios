@@ -8,3 +8,4 @@
 
 #define CurrentClient [MRHTTPClient sharedClient]
 #define DefaultContext [NSManagedObjectContext MR_defaultContext]
+#define DownloadManager [MRDownloadManager sharedManager]
