@@ -16,5 +16,7 @@
 @property (nonatomic, retain) UIProgressView *progressView;
 
 - (id)initWithReuseIdentifier:(NSString *)aReuseIdentifier;
+-(void)setRemoveButtonHidden:(BOOL)show;
+
 
 @end

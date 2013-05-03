@@ -66,4 +66,11 @@
     }
 }
 
+-(void)setRemoveButtonHidden:(BOOL)hide{
+    CGFloat alpha = hide ? 0 : 1;
+    [UIView animateWithDuration:0.3 animations:^{
+        [self.removeButton setAlpha:alpha];
+    }];
+}
+
 @end

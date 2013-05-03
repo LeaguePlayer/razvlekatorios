@@ -13,12 +13,13 @@
 #import "MRChooseCollectionViewItem.h"
 
 @interface ChooseViewController : BaseViewController <SSCollectionViewDataSource,SSCollectionViewDelegate, FGalleryViewControllerDelegate, ChooseCollectionViewItemDelegate, UIAlertViewDelegate>{
-    NSArray *blocks;
+    NSMutableArray *blocks;
     MRBlock *selected;
-    BOOL shaking;
-    MRBlock *removing;
+    NSIndexPath *removingPath;
+    UITapGestureRecognizer *recognizer;
 }
 
+@property (nonatomic) BOOL shaking;
 @property (weak, nonatomic) IBOutlet UIView *bottomView;
 @property (nonatomic,retain) SSCollectionView *collectionView;
 - (IBAction)shuffleButtonClicked:(id)sender;

@@ -94,13 +94,13 @@ static MRDownloadManager *_sharedManager;
                 [delegate downloadCompliteWithObjectId:block.id];
             }
         }
-     for (int i = 0; i < loadingObjects.count; i++){
-         MRBlock *object = [loadingObjects objectAtIndex:i];
-         if (object.id == block.id){
-             [loadingObjects removeObject:object];
-             [states removeObjectAtIndex:i];
-         }
-     }
+        for (int i = 0; i < loadingObjects.count; i++){
+            MRBlock *object = [loadingObjects objectAtIndex:i];
+            if (object.id == block.id){
+                [loadingObjects removeObject:object];
+                [states removeObjectAtIndex:i];
+            }
+        }
     } failure:^(int statusCode, NSArray *errors, NSError *commonError) {
         for (id<MRDownloadManagerDelegate> delegate in delegates){
             if ([delegate respondsToSelector:@selector(downloadFailedWithObjectId:)]){
