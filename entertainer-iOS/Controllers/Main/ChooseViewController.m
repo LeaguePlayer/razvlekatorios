@@ -133,6 +133,10 @@
 
 -(void)collectionView:(SSCollectionView *)aCollectionView didSelectItemAtIndexPath:(NSIndexPath *)indexPath{
     selected = [blocks objectAtIndex:indexPath.row];
+    [self openFGalleryViewController];
+}
+
+-(void)openFGalleryViewController{
     FGalleryViewController *controller = [[FGalleryViewController alloc] initWithPhotoSource:self];
     [self.navigationController pushViewController:controller animated:YES];
 }
@@ -216,8 +220,14 @@
 }
 
 - (IBAction)shuffleButtonClicked:(id)sender {
-    blocks = [NSMutableArray arrayWithArray:[NSArray arrayWithShuffledContentOfArray:blocks]];
-    [self.collectionView reloadData];
+    MRBlock *all = [[MRBlock alloc] init];
+    NSMutableArray *items = [NSMutableArray array];
+    for (MRBlock *block in blocks){
+        [items addObjectsFromArray:block.items];
+    }
+    all.items = [NSArray arrayWithShuffledContentOfArray:items];
+    selected = all;
+    [self openFGalleryViewController];
 }
 
 - (void)viewDidUnload {
