@@ -233,6 +233,7 @@
 		6A379BCC1730FD710071A71A /* VerificationController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = VerificationController.m; sourceTree = "<group>"; };
 		6A379BD41730FFE20071A71A /* StoreKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = StoreKit.framework; path = System/Library/Frameworks/StoreKit.framework; sourceTree = SDKROOT; };
 		6A379BD6173100110071A71A /* Security.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Security.framework; path = System/Library/Frameworks/Security.framework; sourceTree = SDKROOT; };
+		6AE37C731733AB0F009D4989 /* entertainer-iOS.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.xml; path = "entertainer-iOS.entitlements"; sourceTree = "<group>"; };
 		8B2E508C16FC74E500CE8E20 /* MRDownloadCollectionViewItem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MRDownloadCollectionViewItem.h; sourceTree = "<group>"; };
 		8B2E508D16FC74E500CE8E20 /* MRDownloadCollectionViewItem.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MRDownloadCollectionViewItem.m; sourceTree = "<group>"; };
 		8BF975B716FC5F5600A3FB51 /* MRChooseCollectionViewItem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MRChooseCollectionViewItem.h; sourceTree = "<group>"; };
@@ -395,6 +396,7 @@
 		30DEAA5416FB4BFE00A0BDF3 /* entertainer-iOS */ = {
 			isa = PBXGroup;
 			children = (
+				6AE37C731733AB0F009D4989 /* entertainer-iOS.entitlements */,
 				30492C2E172599DB000F16B4 /* Vendor */,
 				8BF975B516FC5F2B00A3FB51 /* Classes */,
 				30DEAADD16FB89C200A0BDF3 /* Model */,
@@ -864,10 +866,15 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 5F3FE5144D8B4F3887B19BB5 /* Pods.xcconfig */;
 			buildSettings = {
+				CODE_SIGN_ENTITLEMENTS = "entertainer-iOS/entertainer-iOS.entitlements";
+				CODE_SIGN_IDENTITY = "iPhone Developer: Leonid Minderov (7M9797CSFT)";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: Leonid Minderov (7M9797CSFT)";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "entertainer-iOS/entertainer-iOS-Prefix.pch";
 				INFOPLIST_FILE = "entertainer-iOS/entertainer-iOS-Info.plist";
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE = "10D797EC-C1DA-4DA1-84E1-26D6545C4DD6";
+				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "10D797EC-C1DA-4DA1-84E1-26D6545C4DD6";
 				WRAPPER_EXTENSION = app;
 			};
 			name = Debug;
@@ -876,6 +883,7 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 5F3FE5144D8B4F3887B19BB5 /* Pods.xcconfig */;
 			buildSettings = {
+				CODE_SIGN_ENTITLEMENTS = "entertainer-iOS/entertainer-iOS.entitlements";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "entertainer-iOS/entertainer-iOS-Prefix.pch";
 				INFOPLIST_FILE = "entertainer-iOS/entertainer-iOS-Info.plist";

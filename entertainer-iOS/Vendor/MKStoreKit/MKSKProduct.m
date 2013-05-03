@@ -149,13 +149,13 @@ static NSMutableData *sDataFromConnection;
                                                               cachePolicy:NSURLRequestReloadIgnoringCacheData 
                                                           timeoutInterval:60];
     
-    [theRequest setHTTPMethod:@"POST"];		
+    [theRequest setHTTPMethod:@"GET"];		
     [theRequest setValue:@"application/x-www-form-urlencoded" forHTTPHeaderField:@"Content-Type"];
     
     NSString *postData = [NSString stringWithFormat:@"productid=%@&udid=%@", productId, uniqueID];
     
-    NSString *length = [NSString stringWithFormat:@"%d", [postData length]];	
-    [theRequest setValue:length forHTTPHeaderField:@"Content-Length"];	
+//    NSString *length = [NSString stringWithFormat:@"%d", [postData length]];	
+//    [theRequest setValue:length forHTTPHeaderField:@"Content-Length"];	
     
     [theRequest setHTTPBody:[postData dataUsingEncoding:NSASCIIStringEncoding]];
     
@@ -243,7 +243,7 @@ didReceiveResponse:(NSURLResponse *)response
 - (void)connection:(NSURLConnection *)connection
   didFailWithError:(NSError *)error
 {
-  
+    NSLog(@"MKStoreKit Connection did fail with error: %@",error.description);
   self.dataFromConnection = nil;
   if(self.onReceiptVerificationFailed)
   {
@@ -296,6 +296,7 @@ didReceiveResponse:(NSURLResponse *)response
 + (void)connection:(NSURLConnection *)connection
   didFailWithError:(NSError *)error
 {
+    NSLog(@"MKStoreKit Connection did fail with error: %@",error.description);
   sDataFromConnection = nil;
   
   if(onReviewRequestVerificationFailed)

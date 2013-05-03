@@ -151,15 +151,23 @@
 
 
 - (void)collectionView:(SSCollectionView *)aCollectionView didSelectItemAtIndexPath:(NSIndexPath *)indexPath{
-    MRBlock *block = [blocks objectAtIndex:indexPath.row];
+    __block MRBlock *block = [blocks objectAtIndex:indexPath.row];
     if ([block isStored] || [DownloadManager loadsObjectWithId:block.id])
         return;
-    MRDownloadCollectionViewItem *item = (MRDownloadCollectionViewItem *)[aCollectionView itemForIndexPath:indexPath];
-    [UIView animateWithDuration:0.2 animations:^{
-       [item.progressView setAlpha:1];
+    
+    [SVProgressHUD showWithMaskType:SVProgressHUDMaskTypeGradient];
+    [[MKStoreManager sharedManager] buyFeature:block.productID onComplete:^(NSString *purchasedFeature, NSData *purchasedReceipt, NSArray *availableDownloads) {
+        [SVProgressHUD showSuccessWithStatus:@"Покупка произведена успешно"];
+        MRDownloadCollectionViewItem *item = (MRDownloadCollectionViewItem *)[aCollectionView itemForIndexPath:indexPath];
+        [UIView animateWithDuration:0.2 animations:^{
+            [item.progressView setAlpha:1];
+        }];
+        item.progressView.progress = 0;
+        [DownloadManager startLoadingBlock:block];
+    } onCancelled:^{
+        [SVProgressHUD showErrorWithStatus:@"Ошибка покупки"];
     }];
-    item.progressView.progress = 0;
-    [DownloadManager startLoadingBlock:block];
+    
 }
 
 #pragma mark - download manager delegate methods
