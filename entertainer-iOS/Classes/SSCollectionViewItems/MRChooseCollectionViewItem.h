@@ -27,5 +27,6 @@
 @property (nonatomic, retain) id<ChooseCollectionViewItemDelegate> delegate;
 
 - (id)initWithReuseIdentifier:(NSString *)aReuseIdentifier;
+- (void)setRemoveButtonHidden:(BOOL)show;
 
 @end

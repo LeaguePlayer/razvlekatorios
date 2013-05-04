@@ -17,6 +17,8 @@
 
 @implementation ChooseViewController
 
+@synthesize shaking = _shaking;
+
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
     self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
@@ -30,7 +32,7 @@
 {
     [super viewDidLoad];
 	// Do any additional setup after loading the view.
-    shaking = NO;
+    _shaking = NO;
     [self initBackButton];
     [self initInfoButtonWithTarget:self];
     [self initContent];
@@ -42,7 +44,7 @@
 }
 
 -(void)initContent{
-    blocks = [MRBlock allBlocks];
+    blocks = [NSMutableArray arrayWithArray:[MRBlock allBlocks]];
 }
 
 -(void)initUI{
@@ -59,7 +61,14 @@
     self.collectionView.dataSource = self;
     self.collectionView.autoresizingMask = UIViewAutoresizingFlexibleHeight | UIViewAutoresizingFlexibleBottomMargin | UIViewAutoresizingFlexibleTopMargin;
     [self.view insertSubview:self.collectionView atIndex:0];
+    recognizer = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(collectionViewTouched:)];
     self.collectionView.userInteractionEnabled = YES;
+}
+
+-(void)collectionViewTouched:(UITapGestureRecognizer *)sender{
+    if (self.shaking){
+        [self setShaking:NO];
+    }
 }
 
 -(void)initTitle{
@@ -94,7 +103,6 @@
     return 1;
 }
 
-
 - (NSUInteger)collectionView:(SSCollectionView *)aCollectionView numberOfItemsInSection:(NSUInteger)section {
     return blocks.count;
 }
@@ -110,6 +118,10 @@
     NSURL *imageUrl = [NSURL URLWithString:block.imagePath];
     [item.icon setImageWithURL:imageUrl placeholderImage:[[UIImage alloc] init]];
     [item.removeButton addTarget:self action:@selector(removeItem:) forControlEvents:UIControlEventTouchUpInside];
+    if (self.shaking){
+        [item.removeButton setHidden:NO];
+        [self startShakingView:item.icon];
+    }
     return item;
 }
 
@@ -119,9 +131,12 @@
     return CGSizeMake(125.0f, 145.0f);
 }
 
-
 -(void)collectionView:(SSCollectionView *)aCollectionView didSelectItemAtIndexPath:(NSIndexPath *)indexPath{
     selected = [blocks objectAtIndex:indexPath.row];
+    [self openFGalleryViewController];
+}
+
+-(void)openFGalleryViewController{
     FGalleryViewController *controller = [[FGalleryViewController alloc] initWithPhotoSource:self];
     [self.navigationController pushViewController:controller animated:YES];
 }
@@ -129,7 +144,7 @@
 -(void)removeItem:(UIButton *)sender{
     MRChooseCollectionViewItem *item = (MRChooseCollectionViewItem *)[sender superview];
     NSIndexPath *indexPath = [self.collectionView indexPathForItem:item];
-    removing = [blocks objectAtIndex:indexPath.row];
+    removingPath = indexPath;
     [self showAlert];
 }
 
@@ -142,8 +157,9 @@
 
 -(void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex{
     if (buttonIndex == 1){
+        MRBlock *removing = [blocks objectAtIndex:removingPath.row];
         [removing removeFromDataBase];
-        blocks = [MRBlock allBlocks];
+        [blocks removeObject:removing];
         [self.collectionView reloadData];
     }
 }
@@ -199,21 +215,52 @@
 #pragma mark - Choose Collection view item delegate methods
 
 -(void)itemLongPressed:(MRChooseCollectionViewItem *)item{
-    for (int i = 0; i < blocks.count; i++){
-        NSIndexPath *path = [NSIndexPath indexPathForRow:i inSection:0];
-        MRChooseCollectionViewItem *colItem = (MRChooseCollectionViewItem *)[self.collectionView itemForIndexPath:path];
-        [colItem.removeButton setHidden:NO];
-        [self startShakingView:colItem.icon];
-    }
+    if (self.shaking) return;
+    self.shaking = YES;
 }
 
 - (IBAction)shuffleButtonClicked:(id)sender {
-    blocks = [NSArray arrayWithShuffledContentOfArray:blocks];
-    [self.collectionView reloadData];
+    MRBlock *all = [[MRBlock alloc] init];
+    NSMutableArray *items = [NSMutableArray array];
+    for (MRBlock *block in blocks){
+        [items addObjectsFromArray:block.items];
+    }
+    all.items = [NSArray arrayWithShuffledContentOfArray:items];
+    selected = all;
+    [self openFGalleryViewController];
 }
 
 - (void)viewDidUnload {
     [self setBottomView:nil];
     [super viewDidUnload];
 }
+
+#pragma mark - setters
+
+-(void)setShaking:(BOOL)shaking{
+    if (_shaking == shaking) return;
+    _shaking = shaking;
+    if (shaking){
+        [self.collectionView addGestureRecognizer:recognizer];
+    } else {
+        [self.collectionView removeGestureRecognizer:recognizer];
+    }
+    for (int i = 0; i < blocks.count; i++){
+        NSIndexPath *path = [NSIndexPath indexPathForRow:i inSection:0];
+        MRChooseCollectionViewItem *colItem = (MRChooseCollectionViewItem *)[self.collectionView itemForIndexPath:path];
+        [colItem.removeButton setHidden:!shaking];
+        if (shaking){
+            [self startShakingView:colItem.icon];
+        } else {
+            [colItem.icon.layer removeAllAnimations];
+        }
+    }
+}
+
+#pragma mark - getters
+
+-(BOOL)shaking{
+    return _shaking;
+}
+
 @end
