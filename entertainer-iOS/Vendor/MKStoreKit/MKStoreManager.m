@@ -51,8 +51,6 @@
 #error "MKStoreKit uses features (NSJSONSerialization) only available in iOS SDK  and later."
 #endif
 
-#define SERVER_PRODUCT_MODEL 1
-
 @interface MKStoreManager () //private methods and properties
 
 @property (nonatomic, copy) void (^onTransactionCancelled)();
@@ -237,14 +235,20 @@ static MKStoreManager* _sharedStoreManager;
 
 -(void) requestProductData
 {
-    NSMutableArray *productsArray = [NSMutableArray array];
-    NSArray *consumables = [[[MKStoreManager storeKitItems] objectForKey:@"Consumables"] allKeys];
-    NSArray *nonConsumables = [[MKStoreManager storeKitItems] objectForKey:@"Non-Consumables"];
-    NSArray *subscriptions = [[[MKStoreManager storeKitItems] objectForKey:@"Subscriptions"] allKeys];
+    NSArray *blocks = [[MRHTTPClient sharedClient] allBlockSynchroniusly];
     
-    [productsArray addObjectsFromArray:consumables];
-    [productsArray addObjectsFromArray:nonConsumables];
-    [productsArray addObjectsFromArray:subscriptions];
+    NSMutableArray *productsArray = [NSMutableArray array];
+    for (MRBlock *block in blocks) {
+        [productsArray addObject:block.productID];
+    }
+//    NSMutableArray *productsArray = [NSMutableArray array];
+//    NSArray *consumables = [[[MKStoreManager storeKitItems] objectForKey:@"Consumables"] allKeys];
+//    NSArray *nonConsumables = [[MKStoreManager storeKitItems] objectForKey:@"Non-Consumables"];
+//    NSArray *subscriptions = [[[MKStoreManager storeKitItems] objectForKey:@"Subscriptions"] allKeys];
+//    
+//    [productsArray addObjectsFromArray:consumables];
+//    [productsArray addObjectsFromArray:nonConsumables];
+//    [productsArray addObjectsFromArray:subscriptions];
     
 	self.productsRequest = [[SKProductsRequest alloc] initWithProductIdentifiers:[NSSet setWithArray:productsArray]];
 	self.productsRequest.delegate = self;

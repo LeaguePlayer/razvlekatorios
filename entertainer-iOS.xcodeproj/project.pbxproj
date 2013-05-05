@@ -100,6 +100,7 @@
 		6A379BD31730FD710071A71A /* VerificationController.m in Sources */ = {isa = PBXBuildFile; fileRef = 6A379BCC1730FD710071A71A /* VerificationController.m */; };
 		6A379BD51730FFE20071A71A /* StoreKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6A379BD41730FFE20071A71A /* StoreKit.framework */; };
 		6A379BD7173100110071A71A /* Security.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6A379BD6173100110071A71A /* Security.framework */; };
+		6AEC0E17173549DE004BADA7 /* AFHTTPClient+Synchronous.m in Sources */ = {isa = PBXBuildFile; fileRef = 6AEC0E16173549DE004BADA7 /* AFHTTPClient+Synchronous.m */; };
 		8B2E508E16FC74E500CE8E20 /* MRDownloadCollectionViewItem.m in Sources */ = {isa = PBXBuildFile; fileRef = 8B2E508D16FC74E500CE8E20 /* MRDownloadCollectionViewItem.m */; };
 		8BF975B916FC5F5600A3FB51 /* MRChooseCollectionViewItem.m in Sources */ = {isa = PBXBuildFile; fileRef = 8BF975B816FC5F5600A3FB51 /* MRChooseCollectionViewItem.m */; };
 		AED12A0130D24AC2A3AD8EE0 /* libPods.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 02DC3CAC932E4D00982A8BAA /* libPods.a */; };
@@ -234,6 +235,8 @@
 		6A379BD41730FFE20071A71A /* StoreKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = StoreKit.framework; path = System/Library/Frameworks/StoreKit.framework; sourceTree = SDKROOT; };
 		6A379BD6173100110071A71A /* Security.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Security.framework; path = System/Library/Frameworks/Security.framework; sourceTree = SDKROOT; };
 		6AE37C731733AB0F009D4989 /* entertainer-iOS.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.xml; path = "entertainer-iOS.entitlements"; sourceTree = "<group>"; };
+		6AEC0E15173549DE004BADA7 /* AFHTTPClient+Synchronous.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "AFHTTPClient+Synchronous.h"; sourceTree = "<group>"; };
+		6AEC0E16173549DE004BADA7 /* AFHTTPClient+Synchronous.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "AFHTTPClient+Synchronous.m"; sourceTree = "<group>"; };
 		8B2E508C16FC74E500CE8E20 /* MRDownloadCollectionViewItem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MRDownloadCollectionViewItem.h; sourceTree = "<group>"; };
 		8B2E508D16FC74E500CE8E20 /* MRDownloadCollectionViewItem.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MRDownloadCollectionViewItem.m; sourceTree = "<group>"; };
 		8BF975B716FC5F5600A3FB51 /* MRChooseCollectionViewItem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MRChooseCollectionViewItem.h; sourceTree = "<group>"; };
@@ -261,6 +264,7 @@
 		30492C2E172599DB000F16B4 /* Vendor */ = {
 			isa = PBXGroup;
 			children = (
+				6AEC0E14173549DE004BADA7 /* AFNetworkingSync */,
 				6A379BBD1730FD710071A71A /* MKStoreKit */,
 				30492C2F172599DB000F16B4 /* FGallery */,
 			);
@@ -597,6 +601,15 @@
 			path = Externals;
 			sourceTree = "<group>";
 		};
+		6AEC0E14173549DE004BADA7 /* AFNetworkingSync */ = {
+			isa = PBXGroup;
+			children = (
+				6AEC0E15173549DE004BADA7 /* AFHTTPClient+Synchronous.h */,
+				6AEC0E16173549DE004BADA7 /* AFHTTPClient+Synchronous.m */,
+			);
+			path = AFNetworkingSync;
+			sourceTree = "<group>";
+		};
 		8BF975B516FC5F2B00A3FB51 /* Classes */ = {
 			isa = PBXGroup;
 			children = (
@@ -789,6 +802,7 @@
 				6A379BD31730FD710071A71A /* VerificationController.m in Sources */,
 				30B3BEE4173162B800AE1ACE /* NSArray+Shuffling.m in Sources */,
 				30B3BEE71732126200AE1ACE /* MRDownloadManager.m in Sources */,
+				6AEC0E17173549DE004BADA7 /* AFHTTPClient+Synchronous.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

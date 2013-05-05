@@ -54,6 +54,7 @@
         NSDictionary *images = (NSDictionary *)[dict objectForKey:@"images"];
         item.imagePath = [MRUtils imageFromJSONDictionary:images];
         item.productID = [@"com.amobile.blocks." stringByAppendingFormat:@"%d",item.id];
+        //item.productID = @"com.amobile.blocks";
     }
     return item;
 }

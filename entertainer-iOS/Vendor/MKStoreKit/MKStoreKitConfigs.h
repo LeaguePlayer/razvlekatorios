@@ -42,15 +42,15 @@
 // #define FishBasket @"FishBasket"
 
 #ifndef SERVER_PRODUCT_MODEL
-    #define SERVER_PRODUCT_MODEL 1
+#define SERVER_PRODUCT_MODEL 0
 #endif
 
 #ifndef OWN_SERVER
-    #define OWN_SERVER @"http://mr.amobile-studio.ru"
+#define OWN_SERVER nil
 #endif
 
 #ifndef REVIEW_ALLOWED
-    #define REVIEW_ALLOWED 0
+#define REVIEW_ALLOWED 0
 #endif
 
 #ifndef kSharedSecret
