@@ -20,6 +20,7 @@ typedef void (^MRHTTPClientFailure)(int statusCode, NSArray *errors, NSError *co
 @property (nonatomic,retain) SDWebImageDownloader *downloader;
 +(id)sharedClient;
 
+-(NSArray *)allBlockSynchroniusly;
 -(void)allBlocksWithSuccess:(MRHTTPClientSuccessResults)success failure:(MRHTTPClientFailure)failure;
 -(void)blockItemsWithBlock:(MRBlock *)block progress:(void(^)(CGFloat state))progress success:(MRHTTPClientSuccessResults)success failure:(MRHTTPClientFailure)failure;
 -(void)applicationInfoWithSuccess:(void(^)(NSString *info))success failure:(MRHTTPClientFailure)failure;

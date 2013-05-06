@@ -11,6 +11,7 @@
 #import "MRBlock.h"
 #import "MRItem.h"
 #import "SVProgressHUD.h"
+#import "AFHTTPClient+Synchronous.h"
 
 static MRHTTPClient *_sharedClient;
 @implementation MRHTTPClient
@@ -61,6 +62,28 @@ static MRHTTPClient *_sharedClient;
         failure(response.statusCode,@[],error);
     }];
     [self enqueueHTTPRequestOperation:operation];
+}
+
+-(NSArray *)allBlockSynchroniusly {
+    NSDictionary *response = (NSDictionary *)[self synchronouslyGetPath:@"/api/allblocks" parameters:nil operation:NULL error:nil];
+    if (response) {
+        NSNumber *status = response[@"result"];
+        if ([status isEqualToNumber:@(1)]){
+            NSDictionary *respDict = (NSDictionary *)response[@"response"];
+            NSArray *blocksArray = (NSArray *)respDict[@"blocks"];
+            NSMutableArray *results = [NSMutableArray array];
+            for (NSDictionary *dict in blocksArray){
+                __block MRBlock *block = [MRBlock objectWithDict:dict];
+                [results addObject:block];
+                
+            }
+            return results;
+        } else {
+            return nil;
+        }
+    } else {
+        return nil;
+    }
 }
 
 -(void)blockItemsWithBlock:(MRBlock *)block progress:(void(^)(CGFloat state))progress success:(MRHTTPClientSuccessResults)success failure:(MRHTTPClientFailure)failure{
