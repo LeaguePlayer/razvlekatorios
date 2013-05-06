@@ -9,9 +9,12 @@
 #import "BaseViewController.h"
 #import <SSToolkit/SSCollectionView.h>
 #import "MRDownloadManager.h"
+#import "SDWebImageDownloader.h"
 
 @interface DownloadViewController : BaseViewController <SSCollectionViewDataSource,SSCollectionViewDelegate, MRDownloadManagerDelegate>{
     NSArray *blocks;
+    NSMutableArray *images;
+    SDWebImageDownloader *imageDownloader;
 }
 
 @property (nonatomic,retain) SSCollectionView *collectionView;

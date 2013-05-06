@@ -10,7 +10,6 @@
 #import "MRDownloadCollectionViewItem.h"
 #import "MRBlock.h"
 #import "MRHTTPClient.h"
-#import "UIImageView+AFNetworking.h"
 
 @interface DownloadViewController ()
 
@@ -31,6 +30,7 @@
 {
     [super viewDidLoad];
 	// Do any additional setup after loading the view.
+    [self initDownloader];
     [self initBackButton];
     [self initInfoButtonWithTarget:self];
     [self initContent];
@@ -38,9 +38,14 @@
     [self initUI];
 }
 
+-(void)initDownloader{
+    imageDownloader = [[SDWebImageDownloader alloc] init];
+}
+
 -(void)viewDidAppear:(BOOL)animated{
     [super viewDidAppear:animated];
     [DownloadManager addDelegate:self];
+    [self.collectionView reloadData];
 }
 
 -(void)viewWillDisappear:(BOOL)animated{
@@ -57,6 +62,10 @@
     [CurrentClient allBlocksWithSuccess:^(NSArray *results) {
         [SVProgressHUD dismiss];
         blocks = results;
+        images = [NSMutableArray array];
+        for (int i = 0; i < blocks.count; i++){
+            [images addObject:@(NO)];
+        }
         [self.collectionView reloadData];
     } failure:^(int statusCode, NSArray *errors, NSError *commonError) {
         [SVProgressHUD dismiss];
@@ -124,7 +133,16 @@
     
     [item.nameLabel setText:block.name];
     NSURL *imageUrl = [NSURL URLWithString:block.imagePath];
-    [item.icon setImageWithURL:imageUrl placeholderImage:[[UIImage alloc] init]];
+    id probableImage = [images objectAtIndex:indexPath.row];
+    if (![probableImage isKindOfClass:[UIImage class]]){
+        [imageDownloader downloadImageWithURL:imageUrl options:nil progress:nil completed:^(UIImage *image, NSData *data, NSError *error, BOOL finished) {
+            [item.icon setImage:image];
+            [images replaceObjectAtIndex:indexPath.row withObject:image];
+            [item.activityView removeFromSuperview];
+        }];
+    } else {
+        [item.icon setImage:probableImage];
+    }
     NSString *price;
     if ([block isStored]){
         price = @"Загружено";

@@ -60,11 +60,19 @@
         [self.progressView setFrame:CGRectMake(12,125,100,15)];
         [self.progressView setAlpha:0];
         
+        self.activityView = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleGray];
+        [self.activityView setCenter:self.icon.center];
+        CGRect frame = self.activityView.frame;
+        frame.size = CGSizeMake(20, 20);
+        [self.activityView setFrame:frame];
+        [self.activityView startAnimating];
+        
         [self addSubview:self.nameLabel];
         [self addSubview:self.icon];
         [self addSubview:priceBackView];
         [self addSubview:self.priceLabel];
         [self addSubview:self.progressView];
+        [self addSubview:self.activityView];
     }
     return self;
 }
