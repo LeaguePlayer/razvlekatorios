@@ -220,6 +220,11 @@
 }
 
 - (IBAction)shuffleButtonClicked:(id)sender {
+    if (blocks.count == 0){
+        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Ошибка" message:@"У Вас нет загруженных развлекаторов" delegate:nil cancelButtonTitle:@"Ok" otherButtonTitles:nil];
+        [alert show];
+        return;
+    }
     MRBlock *all = [[MRBlock alloc] init];
     NSMutableArray *items = [NSMutableArray array];
     for (MRBlock *block in blocks){

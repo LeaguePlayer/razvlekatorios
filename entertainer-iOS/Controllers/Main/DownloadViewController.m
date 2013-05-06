@@ -45,7 +45,20 @@
 -(void)viewDidAppear:(BOOL)animated{
     [super viewDidAppear:animated];
     [DownloadManager addDelegate:self];
-    [self.collectionView reloadData];
+    [self updateProgressViews];
+}
+
+-(void)updateProgressViews{
+    for (int i = 0; i < blocks.count; i++){
+        MRBlock *block = [blocks objectAtIndex:i];
+        NSIndexPath *path = [NSIndexPath indexPathForRow:i inSection:0];
+        MRDownloadCollectionViewItem *item = (MRDownloadCollectionViewItem *)[self.collectionView itemForIndexPath:path];
+        if ([DownloadManager loadsObjectWithId:block.id]){
+            CGFloat state = [DownloadManager loadingStateOfObjectWithId:block.id];
+            [item.progressView setAlpha:1];
+            [item.progressView setProgress:state];
+        }
+    }
 }
 
 -(void)viewWillDisappear:(BOOL)animated{
@@ -62,10 +75,10 @@
     [CurrentClient allBlocksWithSuccess:^(NSArray *results) {
         [SVProgressHUD dismiss];
         blocks = results;
-        images = [NSMutableArray array];
-        for (int i = 0; i < blocks.count; i++){
-            [images addObject:@(NO)];
-        }
+//        images = [NSMutableArray array];
+//        for (int i = 0; i < blocks.count; i++){
+//            [images addObject:@(NO)];
+//        }
         [self.collectionView reloadData];
     } failure:^(int statusCode, NSArray *errors, NSError *commonError) {
         [SVProgressHUD dismiss];
@@ -126,23 +139,19 @@
 }
 
 - (SSCollectionViewItem *)collectionView:(SSCollectionView *)aCollectionView itemForIndexPath:(NSIndexPath *)indexPath {
-    static NSString *const itemIdentifier = @"itemIdentifier";
+    NSString *itemIdentifier = @"itemIdentifier";
     
     MRDownloadCollectionViewItem *item = [[MRDownloadCollectionViewItem alloc] initWithReuseIdentifier:itemIdentifier];
     MRBlock *block = [blocks objectAtIndex:indexPath.row];
     
     [item.nameLabel setText:block.name];
     NSURL *imageUrl = [NSURL URLWithString:block.imagePath];
-    id probableImage = [images objectAtIndex:indexPath.row];
-    if (![probableImage isKindOfClass:[UIImage class]]){
-        [imageDownloader downloadImageWithURL:imageUrl options:nil progress:nil completed:^(UIImage *image, NSData *data, NSError *error, BOOL finished) {
+    [imageDownloader downloadImageWithURL:imageUrl options:nil progress:nil completed:^(UIImage *image, NSData *data, NSError *error, BOOL finished) {
+        dispatch_async(dispatch_get_main_queue(), ^{
             [item.icon setImage:image];
-            [images replaceObjectAtIndex:indexPath.row withObject:image];
             [item.activityView removeFromSuperview];
-        }];
-    } else {
-        [item.icon setImage:probableImage];
-    }
+        });
+    }];
     NSString *price;
     if ([block isStored]){
         price = @"Загружено";
@@ -151,12 +160,6 @@
     }
     [item.priceLabel setText:price];
     [item.priceLabel setAdjustsFontSizeToFitWidth:YES];
-    
-    if ([DownloadManager loadsObjectWithId:block.id]){
-        CGFloat state = [DownloadManager loadingStateOfObjectWithId:block.id];
-        [item.progressView setAlpha:1];
-        [item.progressView setProgress:state];
-    }
     
     return item;
 }
