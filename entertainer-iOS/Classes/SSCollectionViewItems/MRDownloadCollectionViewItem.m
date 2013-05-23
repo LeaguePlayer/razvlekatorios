@@ -72,6 +72,7 @@
         [self addSubview:priceBackView];
         [self addSubview:self.priceLabel];
         [self addSubview:self.progressView];
+        [self addSubview:self.activityView];
     }
     return self;
 }
