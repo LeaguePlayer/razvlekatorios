@@ -173,21 +173,30 @@
 
 - (void)collectionView:(SSCollectionView *)aCollectionView didSelectItemAtIndexPath:(NSIndexPath *)indexPath{
     __block MRBlock *block = [blocks objectAtIndex:indexPath.row];
-    if ([block isStored] || [DownloadManager loadsObjectWithId:block.id])
-        return;
     
-    [SVProgressHUD showWithMaskType:SVProgressHUDMaskTypeGradient];
-    [[MKStoreManager sharedManager] buyFeature:block.productID onComplete:^(NSString *purchasedFeature, NSData *purchasedReceipt, NSArray *availableDownloads) {
-        [SVProgressHUD showSuccessWithStatus:@"Покупка произведена успешно"];
+    void(^downloadBLock)(void) = ^{
         MRDownloadCollectionViewItem *item = (MRDownloadCollectionViewItem *)[aCollectionView itemForIndexPath:indexPath];
         [UIView animateWithDuration:0.2 animations:^{
             [item.progressView setAlpha:1];
         }];
         item.progressView.progress = 0;
         [DownloadManager startLoadingBlock:block];
-    } onCancelled:^{
-        [SVProgressHUD showErrorWithStatus:@"Ошибка покупки"];
-    }];
+    };
+    
+    if ([block isStored] || [DownloadManager loadsObjectWithId:block.id])
+        return;
+    if ([block paid]) {
+        [SVProgressHUD showWithMaskType:SVProgressHUDMaskTypeGradient];
+        [[MKStoreManager sharedManager] buyFeature:block.productID onComplete:^(NSString *purchasedFeature, NSData *purchasedReceipt, NSArray *availableDownloads) {
+            [SVProgressHUD showSuccessWithStatus:@"Покупка произведена успешно"];
+            downloadBLock();
+        } onCancelled:^{
+            [SVProgressHUD showErrorWithStatus:@"Ошибка покупки"];
+        }];
+    } else {
+        downloadBLock();
+    }
+    
     
 }
 
@@ -216,6 +225,7 @@
     }
     if (!path) return;
     MRDownloadCollectionViewItem *item = (MRDownloadCollectionViewItem *)[self.collectionView itemForIndexPath:path];
+    item.priceLabel.text = @"Загружено";
     [UIView animateWithDuration:0.2 animations:^{
         [item.progressView setAlpha:0];
     }];
