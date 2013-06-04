@@ -18,9 +18,10 @@
         size = frame.size;
         itemsCount = 0;
         [self initGestures];
-        self.mainScroll = [[UIScrollView alloc] initWithFrame:frame];
+        self.mainScroll = [[UIScrollView alloc] initWithFrame:self.bounds];
         [self.mainScroll setDelegate:self];
         [self.mainScroll setPagingEnabled:YES];
+//        [self setBackgroundColor:[UIColor whiteColor]];
         [self addSubview:self.mainScroll];
     }
     return self;

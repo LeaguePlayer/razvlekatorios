@@ -38,7 +38,7 @@
 }
 
 -(void)initPhotoViewer{
-    MRPhotoViewer *photoViewer = [[MRPhotoViewer alloc] initWithFrame:self.view.frame];
+    MRPhotoViewer *photoViewer = [[MRPhotoViewer alloc] initWithFrame:self.view.bounds];
     [photoViewer setDataSource:self];
     [photoViewer setDelegate:self];
     [self.view addSubview:photoViewer];
