@@ -448,7 +448,10 @@
 	float dx = 0;
 	for (i = 0; i < count; i++) {
 		FGalleryPhotoView * photoView = [_photoViews objectAtIndex:i];
-		photoView.frame = CGRectMake(dx, 0, rect.size.width, rect.size.height );
+        CGFloat imageHeight = photoView.imageView.image.size.height;
+//        NSLog(@"Image at %d - %@ height - %f",i, photoView.imageView.image.description,imageHeight);
+        CGFloat height = MAX(rect.size.height, imageHeight);
+		photoView.frame = CGRectMake(dx, 0, rect.size.width, height );
 		dx += rect.size.width;
 	}
 }

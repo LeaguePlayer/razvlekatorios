@@ -50,7 +50,7 @@
         UIImage *removeImg = [UIImage imageNamed:@"remove.png"];
         self.removeButton = [UIButton buttonWithType:UIButtonTypeCustom];
         [self.removeButton setImage:removeImg forState:UIControlStateNormal];
-        CGRect frame = CGRectMake(126 - removeImg.size.width, self.icon.frame.origin.y, removeImg.size.width, removeImg.size.height);
+        CGRect frame = CGRectMake(126 - (removeImg.size.width+10), self.icon.frame.origin.y+10, removeImg.size.width+20, removeImg.size.height+20);
         [self.removeButton setFrame:frame];
         [self.removeButton setHidden:YES];
         [self addSubview:self.removeButton];
