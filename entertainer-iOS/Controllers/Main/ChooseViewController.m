@@ -10,6 +10,8 @@
 #import "UIImageView+AFNetworking.h"
 #import "MRItem.h"
 #import "NSArray+Shuffling.h"
+#import <QuartzCore/QuartzCore.h>
+#import "DisplayViewController.h"
 
 @interface ChooseViewController ()
 
@@ -133,12 +135,13 @@
 
 -(void)collectionView:(SSCollectionView *)aCollectionView didSelectItemAtIndexPath:(NSIndexPath *)indexPath{
     selected = [blocks objectAtIndex:indexPath.row];
-    [self openFGalleryViewController];
+    [self performSegueWithIdentifier:@"ToDisplay" sender:self];
+//    [self openFGalleryViewController];
 }
 
 -(void)openFGalleryViewController{
-    FGalleryViewController *controller = [[FGalleryViewController alloc] initWithPhotoSource:self];
-    [self.navigationController pushViewController:controller animated:YES];
+//    FGalleryViewController *controller = [[FGalleryViewController alloc] initWithPhotoSource:self];
+//    [self.navigationController pushViewController:controller animated:YES];
 }
 
 -(void)removeItem:(UIButton *)sender{
@@ -164,32 +167,32 @@
     }
 }
 
-#pragma mark - FGalleryViewControllerDelegate Methods
-
-
-- (int)numberOfPhotosForPhotoGallery:(FGalleryViewController *)gallery{
-	return selected.items.count;
-}
-
-- (FGalleryPhotoSourceType)photoGallery:(FGalleryViewController *)gallery sourceTypeForPhotoAtIndex:(NSUInteger)index{
-    return FGalleryPhotoSourceTypeImage;
-}
-
-- (NSString*)photoGallery:(FGalleryViewController *)gallery captionForPhotoAtIndex:(NSUInteger)index{
-	return @"";
-}
-
--(UIImage *)photoGallery:(FGalleryViewController *)gallery imageForPhotoSize:(FGalleryPhotoSize)size atIndex:(NSUInteger)index{
-    MRItem *item = [selected.items objectAtIndex:index];
-    UIImage *image = item.image;
-    return image;
-}
-
-- (void)handleTrashButtonTouch:(id)sender {
-    // here we could remove images from our local array storage and tell the gallery to remove that image
-    // ex:
-    //[localGallery removeImageAtIndex:[localGallery currentIndex]];
-}
+//#pragma mark - FGalleryViewControllerDelegate Methods
+//
+//
+//- (int)numberOfPhotosForPhotoGallery:(FGalleryViewController *)gallery{
+//	return selected.items.count;
+//}
+//
+//- (FGalleryPhotoSourceType)photoGallery:(FGalleryViewController *)gallery sourceTypeForPhotoAtIndex:(NSUInteger)index{
+//    return FGalleryPhotoSourceTypeImage;
+//}
+//
+//- (NSString*)photoGallery:(FGalleryViewController *)gallery captionForPhotoAtIndex:(NSUInteger)index{
+//	return @"";
+//}
+//
+//-(UIImage *)photoGallery:(FGalleryViewController *)gallery imageForPhotoSize:(FGalleryPhotoSize)size atIndex:(NSUInteger)index{
+//    MRItem *item = [selected.items objectAtIndex:index];
+//    UIImage *image = item.image;
+//    return image;
+//}
+//
+//- (void)handleTrashButtonTouch:(id)sender {
+//    // here we could remove images from our local array storage and tell the gallery to remove that image
+//    // ex:
+//    //[localGallery removeImageAtIndex:[localGallery currentIndex]];
+//}
 
 -(void)photoGalleryShuffleItems{
     [selected setShuffled:!selected.shuffled];
@@ -259,6 +262,15 @@
         } else {
             [colItem.icon.layer removeAllAnimations];
         }
+    }
+}
+
+#pragma mark - segue routines
+
+-(void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender{
+    if ([segue.identifier isEqualToString:@"ToDisplay"]){
+        DisplayViewController *controller = (DisplayViewController *)segue.destinationViewController;
+        controller.block = selected;
     }
 }
 

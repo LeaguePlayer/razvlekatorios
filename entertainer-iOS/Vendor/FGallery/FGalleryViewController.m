@@ -98,6 +98,7 @@
         _useThumbnailView                   = YES;
 		_prevStatusStyle					= [[UIApplication sharedApplication] statusBarStyle];
         _hideTitle                          = NO;
+        _isShuffled                         = NO;
 		
 		// create storage objects
 		_currentIndex						= 0;
@@ -290,6 +291,10 @@
 
 -(void)shuffle{
     if (_photoSource && [_photoSource respondsToSelector:@selector(photoGalleryShuffleItems)]){
+        _isShuffled = !_isShuffled;
+        if (_isShuffled){
+            
+        }
         [self.photoSource photoGalleryShuffleItems];
         [self reloadGallery];
     }

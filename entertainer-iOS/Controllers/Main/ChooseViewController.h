@@ -9,10 +9,10 @@
 #import "BaseViewController.h"
 #import <SSToolkit/SSCollectionView.h>
 #import "MRBlock.h"
-#import "FGalleryViewController.h"
+//#import "FGalleryViewController.h"
 #import "MRChooseCollectionViewItem.h"
 
-@interface ChooseViewController : BaseViewController <SSCollectionViewDataSource,SSCollectionViewDelegate, FGalleryViewControllerDelegate, ChooseCollectionViewItemDelegate, UIAlertViewDelegate>{
+@interface ChooseViewController : BaseViewController <SSCollectionViewDataSource,SSCollectionViewDelegate, ChooseCollectionViewItemDelegate, UIAlertViewDelegate>{
     NSMutableArray *blocks;
     MRBlock *selected;
     NSIndexPath *removingPath;

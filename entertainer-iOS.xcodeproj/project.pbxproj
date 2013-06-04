@@ -33,6 +33,10 @@
 		30956623170A105D008767E7 /* Default@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 30956622170A105D008767E7 /* Default@2x.png */; };
 		30956626170A10C1008767E7 /* back_on.png in Resources */ = {isa = PBXBuildFile; fileRef = 30956624170A10C1008767E7 /* back_on.png */; };
 		30956627170A10C1008767E7 /* back_on@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 30956625170A10C1008767E7 /* back_on@2x.png */; };
+		30A9C4BA175E5884009C506A /* DisplayViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 30A9C4B9175E5884009C506A /* DisplayViewController.m */; };
+		30A9C4BE175E5984009C506A /* MRPhotoViewer.m in Sources */ = {isa = PBXBuildFile; fileRef = 30A9C4BD175E5984009C506A /* MRPhotoViewer.m */; };
+		30A9C4C1175E5A3E009C506A /* MRPhoto.m in Sources */ = {isa = PBXBuildFile; fileRef = 30A9C4C0175E5A3D009C506A /* MRPhoto.m */; };
+		30A9C4C4175E5C71009C506A /* ThumbsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 30A9C4C3175E5C71009C506A /* ThumbsViewController.m */; };
 		30B3BEE4173162B800AE1ACE /* NSArray+Shuffling.m in Sources */ = {isa = PBXBuildFile; fileRef = 30B3BEE3173162B800AE1ACE /* NSArray+Shuffling.m */; };
 		30B3BEE71732126200AE1ACE /* MRDownloadManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 30B3BEE61732126200AE1ACE /* MRDownloadManager.m */; };
 		30DEAA4F16FB4BFE00A0BDF3 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 30DEAA4E16FB4BFE00A0BDF3 /* UIKit.framework */; };
@@ -145,6 +149,14 @@
 		30956622170A105D008767E7 /* Default@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Default@2x.png"; sourceTree = "<group>"; };
 		30956624170A10C1008767E7 /* back_on.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = back_on.png; sourceTree = "<group>"; };
 		30956625170A10C1008767E7 /* back_on@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "back_on@2x.png"; sourceTree = "<group>"; };
+		30A9C4B8175E5884009C506A /* DisplayViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DisplayViewController.h; sourceTree = "<group>"; };
+		30A9C4B9175E5884009C506A /* DisplayViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DisplayViewController.m; sourceTree = "<group>"; };
+		30A9C4BC175E5984009C506A /* MRPhotoViewer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MRPhotoViewer.h; sourceTree = "<group>"; };
+		30A9C4BD175E5984009C506A /* MRPhotoViewer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MRPhotoViewer.m; sourceTree = "<group>"; };
+		30A9C4BF175E5A3D009C506A /* MRPhoto.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MRPhoto.h; sourceTree = "<group>"; };
+		30A9C4C0175E5A3D009C506A /* MRPhoto.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MRPhoto.m; sourceTree = "<group>"; };
+		30A9C4C2175E5C71009C506A /* ThumbsViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ThumbsViewController.h; sourceTree = "<group>"; };
+		30A9C4C3175E5C71009C506A /* ThumbsViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ThumbsViewController.m; sourceTree = "<group>"; };
 		30B3BEE2173162B800AE1ACE /* NSArray+Shuffling.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSArray+Shuffling.h"; sourceTree = "<group>"; };
 		30B3BEE3173162B800AE1ACE /* NSArray+Shuffling.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSArray+Shuffling.m"; sourceTree = "<group>"; };
 		30B3BEE51732126200AE1ACE /* MRDownloadManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MRDownloadManager.h; sourceTree = "<group>"; };
@@ -351,6 +363,17 @@
 			path = SHKConfig;
 			sourceTree = "<group>";
 		};
+		30A9C4BB175E5941009C506A /* MRPhotoViewer */ = {
+			isa = PBXGroup;
+			children = (
+				30A9C4BC175E5984009C506A /* MRPhotoViewer.h */,
+				30A9C4BD175E5984009C506A /* MRPhotoViewer.m */,
+				30A9C4BF175E5A3D009C506A /* MRPhoto.h */,
+				30A9C4C0175E5A3D009C506A /* MRPhoto.m */,
+			);
+			path = MRPhotoViewer;
+			sourceTree = "<group>";
+		};
 		30B3BEE11731621B00AE1ACE /* Categories */ = {
 			isa = PBXGroup;
 			children = (
@@ -454,6 +477,10 @@
 				30DEAAAF16FB723000A0BDF3 /* ChooseViewController.m */,
 				30DEAAB116FB724300A0BDF3 /* DownloadViewController.h */,
 				30DEAAB216FB724300A0BDF3 /* DownloadViewController.m */,
+				30A9C4B8175E5884009C506A /* DisplayViewController.h */,
+				30A9C4B9175E5884009C506A /* DisplayViewController.m */,
+				30A9C4C2175E5C71009C506A /* ThumbsViewController.h */,
+				30A9C4C3175E5C71009C506A /* ThumbsViewController.m */,
 			);
 			path = Main;
 			sourceTree = "<group>";
@@ -613,6 +640,7 @@
 		8BF975B516FC5F2B00A3FB51 /* Classes */ = {
 			isa = PBXGroup;
 			children = (
+				30A9C4BB175E5941009C506A /* MRPhotoViewer */,
 				30B3BEE11731621B00AE1ACE /* Categories */,
 				3090D1AC1729B884000DEF8D /* SHKConfig */,
 				308FF3B4171B05C000BF1233 /* Helpers */,
@@ -803,6 +831,10 @@
 				30B3BEE4173162B800AE1ACE /* NSArray+Shuffling.m in Sources */,
 				30B3BEE71732126200AE1ACE /* MRDownloadManager.m in Sources */,
 				6AEC0E17173549DE004BADA7 /* AFHTTPClient+Synchronous.m in Sources */,
+				30A9C4BA175E5884009C506A /* DisplayViewController.m in Sources */,
+				30A9C4BE175E5984009C506A /* MRPhotoViewer.m in Sources */,
+				30A9C4C1175E5A3E009C506A /* MRPhoto.m in Sources */,
+				30A9C4C4175E5C71009C506A /* ThumbsViewController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

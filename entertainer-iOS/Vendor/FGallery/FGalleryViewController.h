@@ -33,6 +33,7 @@ typedef enum
 	BOOL _isFullscreen;
 	BOOL _isScrolling;
 	BOOL _isThumbViewShowing;
+    BOOL _isShuffled;
 	
 	UIStatusBarStyle _prevStatusStyle;
 	CGFloat _prevNextButtonSize;

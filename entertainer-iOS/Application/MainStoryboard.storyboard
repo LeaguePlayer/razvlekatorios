@@ -186,11 +186,57 @@
                     <connections>
                         <outlet property="bottomView" destination="et2-0M-RLB" id="EQD-tH-bl6"/>
                         <segue destination="m1D-1M-iCP" kind="push" identifier="About" id="e4j-kN-1fQ"/>
+                        <segue destination="jAX-66-Eg5" kind="push" identifier="ToDisplay" id="jv5-Z4-9EE"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="bg4-Ba-CLl" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="901" y="-702"/>
+        </scene>
+        <!--Display View Controller-->
+        <scene sceneID="oIk-mh-Mgz">
+            <objects>
+                <viewController id="jAX-66-Eg5" customClass="DisplayViewController" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="Y98-X2-Pxc">
+                        <rect key="frame" x="0.0" y="64" width="320" height="504"/>
+                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                        <subviews>
+                            <view contentMode="scaleToFill" id="weI-Vx-GnM">
+                                <rect key="frame" x="0.0" y="453" width="320" height="51"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <subviews>
+                                    <imageView userInteractionEnabled="NO" contentMode="scaleToFill" image="bottom_bar.png" id="JCP-Vw-DCd">
+                                        <rect key="frame" x="0.0" y="0.0" width="320" height="51"/>
+                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                    </imageView>
+                                </subviews>
+                                <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
+                            </view>
+                        </subviews>
+                        <color key="backgroundColor" white="0.0" alpha="1" colorSpace="calibratedWhite"/>
+                    </view>
+                    <navigationItem key="navigationItem" id="TTw-VM-DDo"/>
+                    <connections>
+                        <segue destination="m1D-1M-iCP" kind="push" identifier="ToAbout" id="JTR-MT-bNr"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="zJW-FS-bLh" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="1451" y="-702"/>
+        </scene>
+        <!--Thumbs View Controller-->
+        <scene sceneID="aYr-ht-mDk">
+            <objects>
+                <viewController storyboardIdentifier="ThumbsStoryboardID" id="v5L-v6-F2n" customClass="ThumbsViewController" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="cPj-Uo-QQg">
+                        <rect key="frame" x="0.0" y="20" width="320" height="548"/>
+                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
+                    </view>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="Ycc-a6-gqH" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="1907" y="-702"/>
         </scene>
         <!--Base Navigation Controller-->
         <scene sceneID="yYJ-M2-S9B">
@@ -223,6 +269,6 @@
         <simulatedScreenMetrics key="destination" type="retina4"/>
     </simulatedMetricsContainer>
     <inferredMetricsTieBreakers>
-        <segue reference="e4j-kN-1fQ"/>
+        <segue reference="JTR-MT-bNr"/>
     </inferredMetricsTieBreakers>
 </document>
