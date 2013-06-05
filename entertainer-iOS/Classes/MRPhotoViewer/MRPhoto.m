@@ -25,15 +25,13 @@
         [self addSubview:imageView];
         [self setDelegate:self];
         [self setUserInteractionEnabled:YES];
-//        UITapGestureRecognizer *singleTap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(handleSingleTap:)];
-//        UITapGestureRecognizer *doubleTap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(handleDoubleTap:)];
-//        UITapGestureRecognizer *twoFingerTap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(handleTwoFingerTap:)];
-//        [doubleTap setNumberOfTapsRequired:2];
-//        [twoFingerTap setNumberOfTouchesRequired:2];
-//        
-//        [imageView addGestureRecognizer:singleTap];
-//        [imageView addGestureRecognizer:doubleTap];
-//        [imageView addGestureRecognizer:twoFingerTap];
+        UITapGestureRecognizer *doubleTap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(handleDoubleTap:)];
+        UITapGestureRecognizer *twoFingerTap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(handleTwoFingerTap:)];
+        [doubleTap setNumberOfTapsRequired:2];
+        [twoFingerTap setNumberOfTouchesRequired:2];        
+        
+        [imageView addGestureRecognizer:doubleTap];
+        [imageView addGestureRecognizer:twoFingerTap];
     }
     return self;
 }
@@ -54,38 +52,33 @@
     } else if (image.size.width > size.width){
         frame.size = size;
     } else {
-        frame.origin.x = (size.width - image.size.width)/2;
-        frame.origin.y = (size.height - image.size.height)/2;
+//        frame.origin.x = (size.width - image.size.width)/2;
+//        frame.origin.y = (size.height - image.size.height)/2;
     }
+    frame.size.height = MAX(frame.size.height, size.height);
     [imageView setFrame:frame];
+    frame.size.height = MAX(frame.size.height, self.frame.size.height);
     [self setContentSize:CGSizeMake(size.width, frame.size.height)];
     CGFloat minimumScale = self.frame.size.width  / imageView.frame.size.width;
     [self setMinimumZoomScale:minimumScale];
-    [self setZoomScale:minimumScale];
+    [self setMaximumZoomScale:2.0];
+    [self setZoomScale:1];
 }
 
 -(void)dismissZommingAnimated:(BOOL)animated{
-    [self zoomToRect:self.frame animated:animated];
+    [self setZoomScale:1.0 animated:animated];
 }
 
 #pragma mark - scroll view delegate methods
-
--(void)scrollViewDidZoom:(UIScrollView *)scrollView{
-    NSLog(@"Did Zoom");
-}
-
--(void)scrollViewWillBeginZooming:(UIScrollView *)scrollView withView:(UIView *)view{
-    NSLog(@"Will begin zooming");
-}
 
 -(UIView *)viewForZoomingInScrollView:(UIScrollView *)scrollView{
     return imageView;
 }
 
 - (void)scrollViewDidEndZooming:(UIScrollView *)scrollView withView:(UIView *)view atScale:(float)scale {
-    NSLog(@"Did end zooming");
     [scrollView setZoomScale:scale+0.01 animated:NO];
     [scrollView setZoomScale:scale animated:NO];
+    
 }
 
 #pragma mark Utility methods
@@ -108,10 +101,6 @@
 }
 
 #pragma mark TapDetectingImageViewDelegate methods
-
-- (void)handleSingleTap:(UIGestureRecognizer *)gestureRecognizer {
-    // single tap does nothing for now
-}
 
 - (void)handleDoubleTap:(UIGestureRecognizer *)gestureRecognizer {
     // double tap zooms in

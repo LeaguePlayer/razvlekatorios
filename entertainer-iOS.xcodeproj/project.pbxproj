@@ -8,9 +8,6 @@
 
 /* Begin PBXBuildFile section */
 		30492C2D171DAC6B000F16B4 /* CoreData.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 308FF3B9171B10BC00BF1233 /* CoreData.framework */; };
-		30492C36172599DB000F16B4 /* FGalleryPhoto.m in Sources */ = {isa = PBXBuildFile; fileRef = 30492C31172599DB000F16B4 /* FGalleryPhoto.m */; };
-		30492C37172599DB000F16B4 /* FGalleryPhotoView.m in Sources */ = {isa = PBXBuildFile; fileRef = 30492C33172599DB000F16B4 /* FGalleryPhotoView.m */; };
-		30492C38172599DB000F16B4 /* FGalleryViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 30492C35172599DB000F16B4 /* FGalleryViewController.m */; };
 		30492C411725C7AC000F16B4 /* photo-gallery-edit-caption.png in Resources */ = {isa = PBXBuildFile; fileRef = 30492C3B1725C7AC000F16B4 /* photo-gallery-edit-caption.png */; };
 		30492C421725C7AC000F16B4 /* photo-gallery-left.png in Resources */ = {isa = PBXBuildFile; fileRef = 30492C3C1725C7AC000F16B4 /* photo-gallery-left.png */; };
 		30492C431725C7AC000F16B4 /* photo-gallery-left@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 30492C3D1725C7AC000F16B4 /* photo-gallery-left@2x.png */; };
@@ -115,12 +112,6 @@
 
 /* Begin PBXFileReference section */
 		02DC3CAC932E4D00982A8BAA /* libPods.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libPods.a; sourceTree = BUILT_PRODUCTS_DIR; };
-		30492C30172599DB000F16B4 /* FGalleryPhoto.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FGalleryPhoto.h; sourceTree = "<group>"; };
-		30492C31172599DB000F16B4 /* FGalleryPhoto.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FGalleryPhoto.m; sourceTree = "<group>"; };
-		30492C32172599DB000F16B4 /* FGalleryPhotoView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FGalleryPhotoView.h; sourceTree = "<group>"; };
-		30492C33172599DB000F16B4 /* FGalleryPhotoView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FGalleryPhotoView.m; sourceTree = "<group>"; };
-		30492C34172599DB000F16B4 /* FGalleryViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FGalleryViewController.h; sourceTree = "<group>"; };
-		30492C35172599DB000F16B4 /* FGalleryViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FGalleryViewController.m; sourceTree = "<group>"; };
 		30492C3B1725C7AC000F16B4 /* photo-gallery-edit-caption.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "photo-gallery-edit-caption.png"; sourceTree = "<group>"; };
 		30492C3C1725C7AC000F16B4 /* photo-gallery-left.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "photo-gallery-left.png"; sourceTree = "<group>"; };
 		30492C3D1725C7AC000F16B4 /* photo-gallery-left@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "photo-gallery-left@2x.png"; sourceTree = "<group>"; };
@@ -286,22 +277,8 @@
 				8BF19EF2175F03A500950763 /* REUIKitAdditions */,
 				6AEC0E14173549DE004BADA7 /* AFNetworkingSync */,
 				6A379BBD1730FD710071A71A /* MKStoreKit */,
-				30492C2F172599DB000F16B4 /* FGallery */,
 			);
 			path = Vendor;
-			sourceTree = "<group>";
-		};
-		30492C2F172599DB000F16B4 /* FGallery */ = {
-			isa = PBXGroup;
-			children = (
-				30492C30172599DB000F16B4 /* FGalleryPhoto.h */,
-				30492C31172599DB000F16B4 /* FGalleryPhoto.m */,
-				30492C32172599DB000F16B4 /* FGalleryPhotoView.h */,
-				30492C33172599DB000F16B4 /* FGalleryPhotoView.m */,
-				30492C34172599DB000F16B4 /* FGalleryViewController.h */,
-				30492C35172599DB000F16B4 /* FGalleryViewController.m */,
-			);
-			path = FGallery;
 			sourceTree = "<group>";
 		};
 		30492C3A1725C7AC000F16B4 /* PhotoBrowser */ = {
@@ -839,9 +816,6 @@
 				308FF3C6171C644300BF1233 /* Model.xcdatamodeld in Sources */,
 				308FF3C9171C6AC900BF1233 /* ManagedBlock.m in Sources */,
 				308FF3CC171C6AD400BF1233 /* ManagedItem.m in Sources */,
-				30492C36172599DB000F16B4 /* FGalleryPhoto.m in Sources */,
-				30492C37172599DB000F16B4 /* FGalleryPhotoView.m in Sources */,
-				30492C38172599DB000F16B4 /* FGalleryViewController.m in Sources */,
 				3090D1AF1729B884000DEF8D /* MESHKConfiguration.m in Sources */,
 				6A379BCD1730FD710071A71A /* NSData+MKBase64.m in Sources */,
 				6A379BCE1730FD710071A71A /* SFHFKeychainUtils.m in Sources */,

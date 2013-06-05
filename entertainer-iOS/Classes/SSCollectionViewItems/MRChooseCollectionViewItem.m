@@ -38,10 +38,10 @@
         self.imageView = nil;
         self.nameLabel = [[UILabel alloc] initWithFrame:CGRectMake(0,0,125,20)];
         self.nameLabel.backgroundColor = [UIColor clearColor];
-        self.nameLabel.textAlignment = NSTextAlignmentLeft;
+        self.nameLabel.textAlignment = NSTextAlignmentCenter;
         self.nameLabel.textColor = [UIColor blueColor];
-        self.nameLabel.font = [UIFont systemFontOfSize:16];
-        [self.nameLabel setAdjustsFontSizeToFitWidth:YES];
+        self.nameLabel.font = [UIFont systemFontOfSize:12];
+        [self.nameLabel setAdjustsFontSizeToFitWidth:NO];
         [self addSubview:self.nameLabel];
         self.icon = [[UIImageView alloc] init];
         [self.icon setContentMode:UIViewContentModeScaleAspectFit];

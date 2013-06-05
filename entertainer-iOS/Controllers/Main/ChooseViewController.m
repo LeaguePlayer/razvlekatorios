@@ -136,12 +136,6 @@
 -(void)collectionView:(SSCollectionView *)aCollectionView didSelectItemAtIndexPath:(NSIndexPath *)indexPath{
     selected = [blocks objectAtIndex:indexPath.row];
     [self performSegueWithIdentifier:@"ToDisplay" sender:self];
-//    [self openFGalleryViewController];
-}
-
--(void)openFGalleryViewController{
-//    FGalleryViewController *controller = [[FGalleryViewController alloc] initWithPhotoSource:self];
-//    [self.navigationController pushViewController:controller animated:YES];
 }
 
 -(void)removeItem:(UIButton *)sender{
@@ -166,33 +160,6 @@
         [self.collectionView reloadData];
     }
 }
-
-//#pragma mark - FGalleryViewControllerDelegate Methods
-//
-//
-//- (int)numberOfPhotosForPhotoGallery:(FGalleryViewController *)gallery{
-//	return selected.items.count;
-//}
-//
-//- (FGalleryPhotoSourceType)photoGallery:(FGalleryViewController *)gallery sourceTypeForPhotoAtIndex:(NSUInteger)index{
-//    return FGalleryPhotoSourceTypeImage;
-//}
-//
-//- (NSString*)photoGallery:(FGalleryViewController *)gallery captionForPhotoAtIndex:(NSUInteger)index{
-//	return @"";
-//}
-//
-//-(UIImage *)photoGallery:(FGalleryViewController *)gallery imageForPhotoSize:(FGalleryPhotoSize)size atIndex:(NSUInteger)index{
-//    MRItem *item = [selected.items objectAtIndex:index];
-//    UIImage *image = item.image;
-//    return image;
-//}
-//
-//- (void)handleTrashButtonTouch:(id)sender {
-//    // here we could remove images from our local array storage and tell the gallery to remove that image
-//    // ex:
-//    //[localGallery removeImageAtIndex:[localGallery currentIndex]];
-//}
 
 -(void)photoGalleryShuffleItems{
     [selected setShuffled:!selected.shuffled];
@@ -235,7 +202,7 @@
     }
     all.items = [NSArray arrayWithShuffledContentOfArray:items];
     selected = all;
-    [self openFGalleryViewController];
+    [self performSegueWithIdentifier:@"ToDisplay" sender:self];
 }
 
 - (void)viewDidUnload {
@@ -261,6 +228,7 @@
             [self startShakingView:colItem.icon];
         } else {
             [colItem.icon.layer removeAllAnimations];
+            
         }
     }
 }

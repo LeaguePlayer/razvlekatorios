@@ -31,6 +31,7 @@
 -(void)initGestures{
     UITapGestureRecognizer *recognizer = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(viewTaped:)];
     [recognizer setNumberOfTapsRequired:1];
+    [recognizer setNumberOfTouchesRequired:1];
     [recognizer setCancelsTouchesInView:NO];
     [self addGestureRecognizer:recognizer];
 }
@@ -79,6 +80,8 @@
     CGPoint point = scrollView.contentOffset;
     int index = floor((point.x - size.width / 2) / size.width) + 1;
     if (index == currentIndex) return;
+    MRPhoto *prevPhoto = [items objectAtIndex:currentIndex];
+    [prevPhoto dismissZommingAnimated:YES];
     currentIndex = index;
     [self sayDelegateIndexChanged];
 }
@@ -93,7 +96,10 @@
     } else {
         [self.mainScroll setContentOffset:point];
     }
-    
+    MRPhoto *prevPhoto = [items objectAtIndex:currentIndex];
+    [prevPhoto dismissZommingAnimated:NO];
+    currentIndex = index;
+    [self sayDelegateIndexChanged];
 }
 
 -(void)sayDelegateIndexChanged{
