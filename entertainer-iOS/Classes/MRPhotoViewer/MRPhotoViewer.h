@@ -30,17 +30,16 @@
 @end
 
 @interface MRPhotoViewer : UIView <UIScrollViewDelegate>{
-    NSArray *items;
-    NSArray *titles;
-    NSUInteger itemsCount;
-    NSInteger currentIndex;
-    CGSize size;
+        NSArray *items;
+        NSArray *titles;
+        NSUInteger itemsCount;
+        NSInteger currentIndex;
+        CGSize size;
 }
 
 @property (nonatomic, retain) id<MRPhotoViewerDelegate> delegate;
 @property (nonatomic, retain) id<MRPhotoViewerDataSource> dataSource;
 @property (nonatomic, retain) UIScrollView *mainScroll;
-
 -(void)reloadData;
 -(void)moveAtIndex:(NSUInteger)index animated:(BOOL)animated;
 

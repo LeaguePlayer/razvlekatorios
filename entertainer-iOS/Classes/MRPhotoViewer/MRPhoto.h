@@ -9,9 +9,9 @@
 #import <UIKit/UIKit.h>
 
 @interface MRPhoto : UIScrollView <UIScrollViewDelegate>{
-    UIImageView *imageView;
-    CGSize size;
-}
+        UIImageView *imageView;
+        CGSize size;
+    }
 
 -(void)setImage:(UIImage *)image;
 -(void)dismissZommingAnimated:(BOOL)animated;
