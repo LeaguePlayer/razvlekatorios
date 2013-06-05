@@ -51,6 +51,7 @@
     }
     itemsCount = 0;
     currentIndex = 0;
+    [self.mainScroll setContentOffset:CGPointZero];
     items = [NSArray array];
     if (self.dataSource && [self.dataSource respondsToSelector:@selector(numberOfPhotosInPhotoViewer:)]){
         itemsCount = [self.dataSource numberOfPhotosInPhotoViewer:self];
@@ -78,7 +79,6 @@
     int index = floor((point.x - size.width / 2) / size.width) + 1;
     if (index == currentIndex) return;
     currentIndex = index;
-    NSLog(@"Page changed at index %d",currentIndex);
     [self sayDelegateIndexChanged];
 }
 

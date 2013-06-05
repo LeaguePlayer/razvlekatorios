@@ -9,8 +9,17 @@
 #import "BaseViewController.h"
 #import "SSCollectionView.h"
 
+@protocol ThumbViewDelegate <NSObject>
+
+@optional
+
+-(void)thumbViewItemDidSelectAtIndex:(NSUInteger)index;
+
+@end
+
 @interface ThumbsViewController : BaseViewController <SSCollectionViewDataSource,SSCollectionViewDelegate>
 
 @property (nonatomic, retain) SSCollectionView *collectionView;
+@property (nonatomic, retain) id<ThumbViewDelegate> delegate;
 
 @end
