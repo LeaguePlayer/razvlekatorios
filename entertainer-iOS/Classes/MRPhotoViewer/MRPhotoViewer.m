@@ -21,7 +21,8 @@
         self.mainScroll = [[UIScrollView alloc] initWithFrame:self.bounds];
         [self.mainScroll setDelegate:self];
         [self.mainScroll setPagingEnabled:YES];
-//        [self setBackgroundColor:[UIColor whiteColor]];
+        [self.mainScroll setShowsHorizontalScrollIndicator:NO];
+        [self.mainScroll setShowsVerticalScrollIndicator:NO];
         [self addSubview:self.mainScroll];
     }
     return self;
