@@ -44,8 +44,7 @@
     [self.navigationController setNavigationBarHidden:NO animated:NO];
 }
 
-- (void)viewDidLoad
-{
+- (void)viewDidLoad{
     [super viewDidLoad];
 	// Do any additional setup after loading the view.
     isFullScreen = NO;
@@ -55,6 +54,13 @@
     [self initViewPositions];
     [self initPhotoViewer];
     [self initTopBar];
+    [self initBottomButtons];
+}
+
+-(void)initBottomButtons{
+    [self.shuffleButton setImage:[UIImage imageNamed:@"shuffle_off.png"] forState:UIControlStateNormal];
+    [self.shuffleButton setImage:[UIImage imageNamed:@"shuffle_on.png"] forState:UIControlStateSelected];
+    [self.shuffleButton setSelected:NO];
 }
 
 -(void)initTopBar{
@@ -177,6 +183,7 @@
 - (void)viewDidUnload {
     [self setBottomView:nil];
     [self setTopLabel:nil];
+    [self setShuffleButton:nil];
     [super viewDidUnload];
 }
 
@@ -225,6 +232,7 @@
 
 - (IBAction)onShuffleButtonClick:(id)sender {
     isShuffled = !isShuffled;
+    [self.shuffleButton setSelected:isShuffled];
     if (isShuffled)
         [self.topLabel setText:@"Случайный порядок"];
     [self.block setShuffled:!self.block.shuffled];

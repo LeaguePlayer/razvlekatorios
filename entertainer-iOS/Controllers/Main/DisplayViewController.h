@@ -23,6 +23,7 @@
 @property (nonatomic, retain) IBOutlet UIView *topView;
 @property (weak, nonatomic) IBOutlet UIView *bottomView;
 @property (weak, nonatomic) IBOutlet UILabel *topLabel;
+@property (weak, nonatomic) IBOutlet UIButton *shuffleButton;
 
 -(IBAction)onBackButtonClick:(id)sender;
 -(IBAction)onInfoButtonClick:(id)sender;
