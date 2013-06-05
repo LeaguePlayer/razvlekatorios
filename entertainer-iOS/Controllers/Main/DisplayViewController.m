@@ -200,6 +200,13 @@
     }
 }
 
+#pragma mark - thumb view delegate methods
+
+-(void)thumbViewItemDidSelectAtIndex:(NSUInteger)index{
+    [self dismissModalViewControllerAnimated:YES];
+    [self.photor moveAtIndex:index animated:NO];
+}
+
 #pragma mark - actions
 
 -(IBAction)onBackButtonClick:(id)sender{
@@ -224,7 +231,11 @@
 }
 
 - (IBAction)onDocumentsButtonClick:(id)sender {
-    
+    ThumbsViewController *controller = [[ThumbsViewController alloc] init];
+    controller.block = self.block;
+    [controller setDelegate:self];
+    [controller setModalTransitionStyle:UIModalTransitionStyleFlipHorizontal];
+    [self presentModalViewController:controller animated:YES];
 }
 
 @end

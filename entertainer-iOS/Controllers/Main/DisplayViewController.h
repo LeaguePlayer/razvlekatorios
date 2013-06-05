@@ -10,8 +10,9 @@
 #import "MRPhotoViewer.h"
 #import "MRBlock.h"
 #import "MRItem.h"
+#import "ThumbsViewController.h"
 
-@interface DisplayViewController : BaseViewController <MRPhotoViewerDelegate, MRPhotoViewerDataSource, UIActionSheetDelegate>{
+@interface DisplayViewController : BaseViewController <MRPhotoViewerDelegate, MRPhotoViewerDataSource, UIActionSheetDelegate, ThumbViewDelegate>{
     BOOL isFullScreen;
     BOOL isShuffled;
     int currentIndex;

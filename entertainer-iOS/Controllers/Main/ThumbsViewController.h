@@ -8,6 +8,7 @@
 
 #import "BaseViewController.h"
 #import "SSCollectionView.h"
+#import "MRBlock.h"
 
 @protocol ThumbViewDelegate <NSObject>
 
@@ -19,6 +20,7 @@
 
 @interface ThumbsViewController : BaseViewController <SSCollectionViewDataSource,SSCollectionViewDelegate>
 
+@property (nonatomic, retain) MRBlock *block;
 @property (nonatomic, retain) SSCollectionView *collectionView;
 @property (nonatomic, retain) id<ThumbViewDelegate> delegate;
 
