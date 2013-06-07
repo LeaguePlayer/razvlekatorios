@@ -41,6 +41,11 @@
     [self initUI];
 }
 
+-(void)viewWillAppear:(BOOL)animated{
+    [super viewWillAppear:animated];
+    [self.navigationController setNavigationBarHidden:NO animated:YES];
+}
+
 -(void)rightItemClick:(id)sender{
     [self performSegueWithIdentifier:@"About" sender:self];
 }
@@ -122,6 +127,7 @@
     [item.removeButton addTarget:self action:@selector(removeItem:) forControlEvents:UIControlEventTouchUpInside];
     if (self.shaking){
         [item.removeButton setHidden:NO];
+        [item.removeImage setHidden:NO];
         [self startShakingView:item.icon];
     }
     return item;
@@ -224,6 +230,7 @@
         NSIndexPath *path = [NSIndexPath indexPathForRow:i inSection:0];
         MRChooseCollectionViewItem *colItem = (MRChooseCollectionViewItem *)[self.collectionView itemForIndexPath:path];
         [colItem.removeButton setHidden:!shaking];
+        [colItem.removeImage setHidden:!shaking];
         if (shaking){
             [self startShakingView:colItem.icon];
         } else {

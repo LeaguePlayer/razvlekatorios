@@ -31,7 +31,7 @@
 -(void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
     [[UIApplication sharedApplication] setStatusBarStyle:UIStatusBarStyleBlackTranslucent];
-    [self.navigationController setNavigationBarHidden:YES animated:NO];
+    [self.navigationController setNavigationBarHidden:YES animated:YES];
 }
 
 -(void)viewDidAppear:(BOOL)animated{
@@ -75,7 +75,7 @@
     [self.navigationController.view setFrame:[[[UIApplication sharedApplication] keyWindow] bounds]];
     [self.view setFrame:[[[UIApplication sharedApplication] keyWindow] bounds]];
     self.bottomView.y = self.view.height - self.bottomView.height;
-    self.topView.y = self.view.frame.origin.y + 26;
+    self.topView.y = self.view.frame.origin.y + 21;
 }
 
 -(void)initPhotoViewer{
@@ -161,7 +161,7 @@
 	}
     [UIView animateWithDuration:0.3 animations:^{
         self.bottomView.y = self.view.height - self.bottomView.height;
-        self.topView.y = 26;
+        self.topView.y = 21;
         [self.bottomView setAlpha:1];
         [self.topView setAlpha:1];
     } completion:^(BOOL finished) {
