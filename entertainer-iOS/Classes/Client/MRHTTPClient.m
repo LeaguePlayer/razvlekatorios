@@ -49,6 +49,7 @@ static MRHTTPClient *_sharedClient;
             for (NSDictionary *dict in blocksArray){
                 __block MRBlock *block = [MRBlock objectWithDict:dict];
                 NSURL *imageUrl = [NSURL URLWithString:block.imagePath];
+                
                 [self.downloader downloadImageWithURL:imageUrl options:nil progress:nil completed:^(UIImage *image, NSData *data, NSError *error, BOOL finished) {
                     block.image = image;
                 }];

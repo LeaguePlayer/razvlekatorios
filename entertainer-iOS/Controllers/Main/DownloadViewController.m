@@ -174,6 +174,7 @@
 - (void)collectionView:(SSCollectionView *)aCollectionView didSelectItemAtIndexPath:(NSIndexPath *)indexPath{
     __block MRBlock *block = [blocks objectAtIndex:indexPath.row];
     
+    
     void(^downloadBLock)(void) = ^{
         MRDownloadCollectionViewItem *item = (MRDownloadCollectionViewItem *)[aCollectionView itemForIndexPath:indexPath];
         [UIView animateWithDuration:0.2 animations:^{

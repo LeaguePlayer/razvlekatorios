@@ -21,6 +21,7 @@
 @property (nonatomic,retain) NSString *productID;
 @property (nonatomic) BOOL paid;
 @property (nonatomic) BOOL shuffled;
+@property (nonatomic,retain) NSString *desc;
 
 -(id)initWithManagedBlock:(ManagedBlock *)block;
 

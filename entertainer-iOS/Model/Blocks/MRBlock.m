@@ -26,6 +26,7 @@
         self.imagePath = @"";
         self.image = [[UIImage alloc] init];
         self.shuffled = NO;
+        self.desc = @"";
     }
     return self;
 }
@@ -48,6 +49,7 @@
     MRBlock *item = [[MRBlock alloc] init];
     if (item){
         item.id = ((NSString *)[dict objectForKey:@"id"]).intValue;
+        item.desc = (NSString *)[dict objectForKey:@"desc"];
         item.name = [dict objectForKey:@"name"];
         item.price = @(((NSString *)[dict objectForKey:@"price"]).floatValue);
         item.paid = item.price.floatValue > 0;
