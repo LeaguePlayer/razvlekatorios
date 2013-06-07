@@ -19,6 +19,7 @@
 @property (nonatomic, retain) NSString * imagePath;
 @property (nonatomic, retain) id image;
 @property (nonatomic, retain) NSSet *items;
+@property (nonatomic,retain) NSString * desc;
 @end
 
 @interface ManagedBlock (CoreDataGeneratedAccessors)

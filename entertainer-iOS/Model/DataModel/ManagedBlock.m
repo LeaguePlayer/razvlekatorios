@@ -20,6 +20,7 @@
 @dynamic imagePath;
 @dynamic image;
 @dynamic items;
+@dynamic desc;
 
 @end
 
@@ -29,6 +30,7 @@
     ManagedBlock *item = [ManagedBlock MR_createInContext:DefaultContext];
     item.id = @(block.id);
     item.name = block.name;
+    item.desc = block.desc;
     item.imagePath = block.imagePath;
     item.image = [MRUtils transformedValue:block.image];
     item.price = block.price;
