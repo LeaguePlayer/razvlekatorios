@@ -172,11 +172,22 @@
 
 
 - (void)collectionView:(SSCollectionView *)aCollectionView didSelectItemAtIndexPath:(NSIndexPath *)indexPath{
-    __block MRBlock *block = [blocks objectAtIndex:indexPath.row];
+    MRBlock *block = [blocks objectAtIndex:indexPath.row];
+    NSString *information = block.desc;
+    selectedPath = indexPath;
+    UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:@"Информация о блоке" message:information delegate:self cancelButtonTitle:@"Отмена" otherButtonTitles:@"Мне нравится", nil];
+    [alertView show];
+}
+
+#pragma mark - alert view delegate methods
+
+-(void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex{
+    if (buttonIndex != 1) return;
     
+    __block MRBlock *block = [blocks objectAtIndex:selectedPath.row];
     
     void(^downloadBLock)(void) = ^{
-        MRDownloadCollectionViewItem *item = (MRDownloadCollectionViewItem *)[aCollectionView itemForIndexPath:indexPath];
+        MRDownloadCollectionViewItem *item = (MRDownloadCollectionViewItem *)[self.collectionView itemForIndexPath:selectedPath];
         [UIView animateWithDuration:0.2 animations:^{
             [item.progressView setAlpha:1];
         }];
@@ -197,8 +208,6 @@
     } else {
         downloadBLock();
     }
-    
-    
 }
 
 #pragma mark - download manager delegate methods
