@@ -10,6 +10,7 @@
 #import "MRDownloadCollectionViewItem.h"
 #import "MRBlock.h"
 #import "MRHTTPClient.h"
+#import "DisplayViewController.h"
 
 @interface DownloadViewController ()
 
@@ -36,6 +37,11 @@
     [self initContent];
     [self initCollectionView];
     [self initUI];
+}
+
+-(void)viewWillAppear:(BOOL)animated{
+    [super viewWillAppear:animated];
+    [self.navigationController setNavigationBarHidden:NO animated:YES];
 }
 
 -(void)initDownloader{
@@ -175,8 +181,12 @@
     MRBlock *block = [blocks objectAtIndex:indexPath.row];
     NSString *information = block.desc;
     selectedPath = indexPath;
-    if ([block isStored] || [DownloadManager loadsObjectWithId:block.id])
+    if ([DownloadManager loadsObjectWithId:block.id])
         return;
+    if ([block isStored]){
+        [self performSegueWithIdentifier:@"ToDisplay" sender:self];
+        return;
+    }
     if ([block.desc isEqualToString:@""]){
         [self downloadBlock:block];
     } else {
@@ -263,6 +273,24 @@
     [UIView animateWithDuration:0.2 animations:^{
         [item.progressView setAlpha:0];
     }];
+}
+
+#pragma mark - segues
+
+-(void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender{
+    if ([segue.identifier isEqualToString:@"ToDisplay"]){
+        DisplayViewController *controller = (DisplayViewController *)segue.destinationViewController;
+        MRBlock *empty = [blocks objectAtIndex:selectedPath.row];
+        NSArray *allDowned = [MRBlock allBlocks];
+        MRBlock *loaded;
+        for (MRBlock *block in allDowned){
+            if (block.id == empty.id){
+                loaded = block;
+                break;
+            }
+        }
+        controller.block = loaded;
+    }
 }
 
 @end
