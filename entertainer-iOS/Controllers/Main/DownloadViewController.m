@@ -175,8 +175,14 @@
     MRBlock *block = [blocks objectAtIndex:indexPath.row];
     NSString *information = block.desc;
     selectedPath = indexPath;
-    UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:@"Информация о блоке" message:information delegate:self cancelButtonTitle:@"Отмена" otherButtonTitles:@"Мне нравится", nil];
-    [alertView show];
+    if ([block isStored] || [DownloadManager loadsObjectWithId:block.id])
+        return;
+    if ([block.desc isEqualToString:@""]){
+        [self downloadBlock:block];
+    } else {
+        UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:@"Информация о блоке" message:information delegate:self cancelButtonTitle:@"Отмена" otherButtonTitles:@"Мне нравится", nil];
+        [alertView show];
+    }
 }
 
 #pragma mark - alert view delegate methods
@@ -184,8 +190,11 @@
 -(void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex{
     if (buttonIndex != 1) return;
     
-    __block MRBlock *block = [blocks objectAtIndex:selectedPath.row];
-    
+    MRBlock *block = [blocks objectAtIndex:selectedPath.row];
+    [self downloadBlock:block];
+}
+
+-(void)downloadBlock:(MRBlock *)block{
     void(^downloadBLock)(void) = ^{
         MRDownloadCollectionViewItem *item = (MRDownloadCollectionViewItem *)[self.collectionView itemForIndexPath:selectedPath];
         [UIView animateWithDuration:0.2 animations:^{
