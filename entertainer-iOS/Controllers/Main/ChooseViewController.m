@@ -117,13 +117,21 @@
 - (SSCollectionViewItem *)collectionView:(SSCollectionView *)aCollectionView itemForIndexPath:(NSIndexPath *)indexPath {
     static NSString *const itemIdentifier = @"itemIdentifier";
 
-    MRChooseCollectionViewItem *item = [[MRChooseCollectionViewItem alloc] initWithReuseIdentifier:itemIdentifier];
+    __block MRChooseCollectionViewItem *item = [[MRChooseCollectionViewItem alloc] initWithReuseIdentifier:itemIdentifier];
     [item setDelegate:self];
     MRBlock *block = [blocks objectAtIndex:indexPath.row];
     
     [item.nameLabel setText:block.name];
     NSURL *imageUrl = [NSURL URLWithString:block.imagePath];
-    [item.icon setImageWithURL:imageUrl placeholderImage:[[UIImage alloc] init]];
+    NSURLRequest *request = [NSURLRequest requestWithURL:imageUrl];
+    [item.icon setImageWithURLRequest:request placeholderImage:nil success:^(NSURLRequest *request, NSHTTPURLResponse *response, UIImage *image) {
+        dispatch_async(dispatch_get_main_queue(), ^{
+            [item.icon setImage:image];
+            [item.activityView removeFromSuperview];
+        });
+    } failure:^(NSURLRequest *request, NSHTTPURLResponse *response, NSError *error) {
+        
+    }];
     [item.removeButton addTarget:self action:@selector(removeItem:) forControlEvents:UIControlEventTouchUpInside];
     if (self.shaking){
         [item.removeButton setHidden:NO];

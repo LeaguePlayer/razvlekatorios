@@ -33,6 +33,7 @@
 }
 
 -(void)viewWillAppear:(BOOL)animated{
+    [self initTitle];
     [super viewWillAppear:animated];
     [self.navigationController setNavigationBarHidden:NO animated:YES];
 }
@@ -50,7 +51,7 @@
 
 -(void)initUI{
     [self.webView loadHTMLString:information baseURL:nil];
-    [self initTitle];
+
 }
 
 -(void)initTitle{

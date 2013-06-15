@@ -60,6 +60,14 @@
         [self addSubview:self.removeImage];
         UILongPressGestureRecognizer *recognizer = [[UILongPressGestureRecognizer alloc] initWithTarget:self action:@selector(itemPressed:)];
         [self addGestureRecognizer:recognizer];
+        
+        self.activityView = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleGray];
+        [self.activityView setCenter:self.icon.center];
+        frame = self.activityView.frame;
+        frame.size = CGSizeMake(20, 20);
+        [self.activityView setFrame:frame];
+        [self.activityView startAnimating];
+        [self addSubview:self.activityView];
     }
     return self;
 }
