@@ -25,7 +25,6 @@
 @property (nonatomic,retain) UIImageView *icon;
 @property (nonatomic, retain) UIButton *removeButton;
 @property (nonatomic, retain) UIImageView *removeImage;
-@property (nonatomic, retain) UIActivityIndicatorView *activityView;
 @property (nonatomic, retain) id<ChooseCollectionViewItemDelegate> delegate;
 
 - (id)initWithReuseIdentifier:(NSString *)aReuseIdentifier;

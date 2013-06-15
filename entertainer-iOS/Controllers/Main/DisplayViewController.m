@@ -211,7 +211,6 @@
 #pragma mark - thumb view delegate methods
 
 -(void)thumbViewItemDidSelectAtIndex:(NSUInteger)index{
-    [self dismissModalViewControllerAnimated:YES];
     [self.photor moveAtIndex:index animated:NO];
 }
 
@@ -243,8 +242,12 @@
     ThumbsViewController *controller = [[ThumbsViewController alloc] init];
     controller.block = self.block;
     [controller setDelegate:self];
-    [controller setModalTransitionStyle:UIModalTransitionStyleFlipHorizontal];
-    [self presentModalViewController:controller animated:YES];
+    [UIView  beginAnimations:nil context:NULL];
+    [UIView setAnimationCurve:UIViewAnimationCurveEaseInOut];
+    [UIView setAnimationDuration:0.75];
+    [self.navigationController pushViewController:controller animated:NO];
+    [UIView setAnimationTransition:UIViewAnimationTransitionFlipFromRight forView:self.navigationController.view cache:NO];
+    [UIView commitAnimations];
 }
 
 @end

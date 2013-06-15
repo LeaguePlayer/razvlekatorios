@@ -31,6 +31,22 @@
     [self initCollectionView];
 }
 
+-(void)viewWillAppear:(BOOL)animated{
+    [self initTopBar];
+    [super viewWillAppear:animated];
+    [self.navigationController setNavigationBarHidden:NO animated:YES];
+}
+
+-(void)initTopBar{
+    UIBarButtonItem *item = [[UIBarButtonItem alloc] initWithTitle:@"Отмена" style:UIBarButtonItemStyleDone target:self action:@selector(onCancelButtonClick:)];
+    [self.navigationItem setRightBarButtonItem:item];
+    [self.navigationItem setHidesBackButton:YES];
+}
+
+-(void)onCancelButtonClick:(id)sender{
+    [self dismissByFlipping];
+}
+
 -(void)initCollectionView{
     self.collectionView = [[SSCollectionView alloc] initWithFrame:self.view.bounds];
     [self.collectionView setDelegate:self];
@@ -75,6 +91,20 @@
     if (self.delegate && [self.delegate respondsToSelector:@selector(thumbViewItemDidSelectAtIndex:)]){
         [self.delegate thumbViewItemDidSelectAtIndex:indexPath.row];
     }
+    [self dismissByFlipping];
+}
+
+-(void)dismissByFlipping{
+    [UIView  beginAnimations:nil context:NULL];
+    [UIView setAnimationCurve:UIViewAnimationCurveEaseInOut];
+    [UIView setAnimationDuration:0.75];
+    [UIView setAnimationTransition:UIViewAnimationTransitionFlipFromLeft forView:self.navigationController.view cache:NO];
+    [UIView commitAnimations];
+    
+    [UIView beginAnimations:nil context:NULL];
+    [UIView setAnimationDelay:0.375];
+    [self.navigationController popViewControllerAnimated:NO];
+    [UIView commitAnimations];
 }
 
 - (void)didReceiveMemoryWarning
