@@ -37,8 +37,9 @@
         self.nameLabel.backgroundColor = [UIColor clearColor];
         self.nameLabel.textAlignment = NSTextAlignmentLeft;
         self.nameLabel.textColor = [UIColor blueColor];
-        self.nameLabel.font = [UIFont systemFontOfSize:16];
-//        [self.nameLabel setAdjustsFontSizeToFitWidth:YES];
+        self.nameLabel.font = [UIFont systemFontOfSize:12];
+        [self.nameLabel setAdjustsFontSizeToFitWidth:NO];
+        [self.nameLabel setNumberOfLines:2];
         
         self.icon = [[UIImageView alloc] init];
         [self.icon setContentMode:UIViewContentModeScaleAspectFit];

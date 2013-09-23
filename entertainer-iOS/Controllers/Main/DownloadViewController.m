@@ -151,6 +151,11 @@
     MRBlock *block = [blocks objectAtIndex:indexPath.row];
     
     [item.nameLabel setText:block.name];
+    [item.nameLabel sizeToFit];
+    CGRect frame = item.nameLabel.frame;
+    frame.origin.y = item.icon.frame.origin.y - frame.size.height;
+    [item.nameLabel setFrame:frame];
+    
     NSURL *imageUrl = [NSURL URLWithString:block.imagePath];
     [imageDownloader downloadImageWithURL:imageUrl options:nil progress:nil completed:^(UIImage *image, NSData *data, NSError *error, BOOL finished) {
         dispatch_async(dispatch_get_main_queue(), ^{

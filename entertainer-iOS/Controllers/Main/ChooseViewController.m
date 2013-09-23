@@ -122,6 +122,11 @@
     MRBlock *block = [blocks objectAtIndex:indexPath.row];
     
     [item.nameLabel setText:block.name];
+    [item.nameLabel sizeToFit];
+    CGRect frame = item.nameLabel.frame;
+    frame.origin.y = item.icon.frame.origin.y - frame.size.height;
+    [item.nameLabel setFrame:frame];
+    
     [item.icon setImage:block.image];
     [item.removeButton addTarget:self action:@selector(removeItem:) forControlEvents:UIControlEventTouchUpInside];
     if (self.shaking){
