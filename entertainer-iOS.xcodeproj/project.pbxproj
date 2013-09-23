@@ -637,6 +637,15 @@
 				CLASSPREFIX = MR;
 				LastUpgradeCheck = 0460;
 				ORGANIZATIONNAME = "Danyar Salahutdinov";
+				TargetAttributes = {
+					30DEAA4A16FB4BFE00A0BDF3 = {
+						SystemCapabilities = {
+							com.apple.Keychain = {
+								enabled = 0;
+							};
+						};
+					};
+				};
 			};
 			buildConfigurationList = 30DEAA4616FB4BFE00A0BDF3 /* Build configuration list for PBXProject "entertainer-iOS" */;
 			compatibilityVersion = "Xcode 3.2";
@@ -852,7 +861,6 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 5F3FE5144D8B4F3887B19BB5 /* Pods.xcconfig */;
 			buildSettings = {
-				CODE_SIGN_ENTITLEMENTS = "entertainer-iOS/entertainer-iOS.entitlements";
 				CODE_SIGN_IDENTITY = "iPhone Developer: Leonid Minderov (7M9797CSFT)";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: Leonid Minderov (7M9797CSFT)";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
@@ -869,7 +877,6 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 5F3FE5144D8B4F3887B19BB5 /* Pods.xcconfig */;
 			buildSettings = {
-				CODE_SIGN_ENTITLEMENTS = "entertainer-iOS/entertainer-iOS.entitlements";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "entertainer-iOS/entertainer-iOS-Prefix.pch";
 				INFOPLIST_FILE = "entertainer-iOS/entertainer-iOS-Info.plist";
