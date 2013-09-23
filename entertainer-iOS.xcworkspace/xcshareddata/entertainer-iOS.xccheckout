@@ -5,34 +5,34 @@
 	<key>IDESourceControlProjectFavoriteDictionaryKey</key>
 	<false/>
 	<key>IDESourceControlProjectIdentifier</key>
-	<string>F99DDA58-CC11-4837-8C1A-19832AB8C94E</string>
+	<string>59C5B3C0-346C-4FE3-A7DE-51E13B7A569A</string>
 	<key>IDESourceControlProjectName</key>
 	<string>entertainer-iOS</string>
 	<key>IDESourceControlProjectOriginsDictionary</key>
 	<dict>
-		<key>714B335E-D93F-4A4E-A55D-F6A21E057C2A</key>
-		<string>https://github.com/LeaguePlayer/razvlekatorios</string>
+		<key>323A352D-F69B-4CB0-9276-2FB5A052F772</key>
+		<string>https://github.com/LeaguePlayer/razvlekatorios.git</string>
 	</dict>
 	<key>IDESourceControlProjectPath</key>
 	<string>entertainer-iOS.xcworkspace</string>
 	<key>IDESourceControlProjectRelativeInstallPathDictionary</key>
 	<dict>
-		<key>714B335E-D93F-4A4E-A55D-F6A21E057C2A</key>
+		<key>323A352D-F69B-4CB0-9276-2FB5A052F772</key>
 		<string>..</string>
 	</dict>
 	<key>IDESourceControlProjectURL</key>
-	<string>https://github.com/LeaguePlayer/razvlekatorios</string>
+	<string>https://github.com/LeaguePlayer/razvlekatorios.git</string>
 	<key>IDESourceControlProjectVersion</key>
 	<integer>110</integer>
 	<key>IDESourceControlProjectWCCIdentifier</key>
-	<string>714B335E-D93F-4A4E-A55D-F6A21E057C2A</string>
+	<string>323A352D-F69B-4CB0-9276-2FB5A052F772</string>
 	<key>IDESourceControlProjectWCConfigurations</key>
 	<array>
 		<dict>
 			<key>IDESourceControlRepositoryExtensionIdentifierKey</key>
 			<string>public.vcs.git</string>
 			<key>IDESourceControlWCCIdentifierKey</key>
-			<string>714B335E-D93F-4A4E-A55D-F6A21E057C2A</string>
+			<string>323A352D-F69B-4CB0-9276-2FB5A052F772</string>
 			<key>IDESourceControlWCCName</key>
 			<string>razvlekatorios</string>
 		</dict>

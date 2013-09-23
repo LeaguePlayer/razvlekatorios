@@ -219,7 +219,6 @@
 		5F3FE5144D8B4F3887B19BB5 /* Pods.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = Pods.xcconfig; path = Pods/Pods.xcconfig; sourceTree = SOURCE_ROOT; };
 		6A379BD41730FFE20071A71A /* StoreKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = StoreKit.framework; path = System/Library/Frameworks/StoreKit.framework; sourceTree = SDKROOT; };
 		6A379BD6173100110071A71A /* Security.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Security.framework; path = System/Library/Frameworks/Security.framework; sourceTree = SDKROOT; };
-		6AE37C731733AB0F009D4989 /* entertainer-iOS.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.xml; path = "entertainer-iOS.entitlements"; sourceTree = "<group>"; };
 		6AEC0E15173549DE004BADA7 /* AFHTTPClient+Synchronous.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "AFHTTPClient+Synchronous.h"; sourceTree = "<group>"; };
 		6AEC0E16173549DE004BADA7 /* AFHTTPClient+Synchronous.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "AFHTTPClient+Synchronous.m"; sourceTree = "<group>"; };
 		8B2E508C16FC74E500CE8E20 /* MRDownloadCollectionViewItem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MRDownloadCollectionViewItem.h; sourceTree = "<group>"; };
@@ -392,7 +391,6 @@
 		30DEAA5416FB4BFE00A0BDF3 /* entertainer-iOS */ = {
 			isa = PBXGroup;
 			children = (
-				6AE37C731733AB0F009D4989 /* entertainer-iOS.entitlements */,
 				30492C2E172599DB000F16B4 /* Vendor */,
 				8BF975B516FC5F2B00A3FB51 /* Classes */,
 				30DEAADD16FB89C200A0BDF3 /* Model */,
@@ -639,6 +637,15 @@
 				CLASSPREFIX = MR;
 				LastUpgradeCheck = 0460;
 				ORGANIZATIONNAME = "Danyar Salahutdinov";
+				TargetAttributes = {
+					30DEAA4A16FB4BFE00A0BDF3 = {
+						SystemCapabilities = {
+							com.apple.Keychain = {
+								enabled = 0;
+							};
+						};
+					};
+				};
 			};
 			buildConfigurationList = 30DEAA4616FB4BFE00A0BDF3 /* Build configuration list for PBXProject "entertainer-iOS" */;
 			compatibilityVersion = "Xcode 3.2";
@@ -854,7 +861,6 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 5F3FE5144D8B4F3887B19BB5 /* Pods.xcconfig */;
 			buildSettings = {
-				CODE_SIGN_ENTITLEMENTS = "entertainer-iOS/entertainer-iOS.entitlements";
 				CODE_SIGN_IDENTITY = "iPhone Developer: Leonid Minderov (7M9797CSFT)";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: Leonid Minderov (7M9797CSFT)";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
@@ -871,7 +877,6 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 5F3FE5144D8B4F3887B19BB5 /* Pods.xcconfig */;
 			buildSettings = {
-				CODE_SIGN_ENTITLEMENTS = "entertainer-iOS/entertainer-iOS.entitlements";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "entertainer-iOS/entertainer-iOS-Prefix.pch";
 				INFOPLIST_FILE = "entertainer-iOS/entertainer-iOS-Info.plist";
