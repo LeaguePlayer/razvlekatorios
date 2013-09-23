@@ -49,6 +49,10 @@
 	return @"http://amobile-studio.ru/";
 }
 
+- (NSNumber *)isUsingCocoaPods{
+    return [NSNumber numberWithBool:YES];
+}
+
 /*
  API Keys
  --------
