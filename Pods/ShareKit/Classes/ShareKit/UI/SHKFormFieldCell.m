@@ -27,6 +27,7 @@
 
 #import "SHKConfiguration.h"
 #import "SHKFormFieldCell_PrivateProperties.h"
+#import "SHKFormFieldSettings.h"
 
 @implementation SHKFormFieldCell
 
@@ -51,7 +52,7 @@
 
 - (void)userSetValue:(NSString *)newValue {
     
-    self.settings.value = newValue;    
+    self.settings.displayValue = newValue;    
 }
 
 - (void)setSelected:(BOOL)selected animated:(BOOL)animated 

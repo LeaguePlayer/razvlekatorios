@@ -1,2 +1,3 @@
-#define FB_IOS_SDK_VERSION_STRING @"3.1.1"
-#define FB_IOS_SDK_MIGRATION_BUNDLE @"fbsdk:20121003"
+// Note the versioning string has moved to the public FacebookSDK.h
+#define FB_IOS_SDK_MIGRATION_BUNDLE @"fbsdk:20130912"
+

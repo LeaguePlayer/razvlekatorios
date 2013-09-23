@@ -1,5 +1,5 @@
 /*
- * Copyright 2012 Facebook
+ * Copyright 2010-present Facebook.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -19,6 +19,7 @@
 #import "FBGraphObjectPagingLoader.h"
 #import "FBGraphObjectTableDataSource.h"
 #import "FBGraphObjectTableSelection.h"
+#import "FBAppEvents+Internal.h"
 #import "FBLogger.h"
 #import "FBPlacePickerViewController.h"
 #import "FBRequest.h"
@@ -27,13 +28,13 @@
 #import "FBPlacePickerCacheDescriptor.h"
 #import "FBSession+Internal.h"
 #import "FBSettings.h"
+#import "FBPlacePickerViewGenericPlacePNG.h"
 
 NSString *const FBPlacePickerCacheIdentity = @"FBPlacePicker";
 
 static const NSInteger searchTextChangedTimerInterval = 2;
 const NSInteger defaultResultsLimit = 100;
 const NSInteger defaultRadius = 1000; // 1km
-static NSString *defaultImageName = @"FacebookSDKResources.bundle/FBPlacePickerView/images/fb_generic_place.png";
 
 @interface FBPlacePickerViewController () <FBGraphObjectSelectionChangedDelegate,
                                             FBGraphObjectViewControllerDelegate,
@@ -116,7 +117,7 @@ static NSString *defaultImageName = @"FacebookSDKResources.bundle/FBPlacePickerV
     FBGraphObjectTableDataSource *dataSource = [[[FBGraphObjectTableDataSource alloc]
                                                  init]
                                                 autorelease];
-    dataSource.defaultPicture = [UIImage imageNamed:defaultImageName];
+    dataSource.defaultPicture = [FBPlacePickerViewGenericPlacePNG image];
     dataSource.controllerDelegate = self;
     dataSource.itemSubtitleEnabled = YES;
 
@@ -322,13 +323,16 @@ static NSString *defaultImageName = @"FacebookSDKResources.bundle/FBPlacePickerV
                                                           resultsLimit:resultsLimit
                                                             searchText:searchText];
     [request setSession:session];
+
+    // Use field expansion to fetch a 100px wide picture if we're on a retina device.
+    NSString *pictureField = ([FBUtility isRetinaDisplay]) ? @"picture.width(100).height(100)" : @"picture";
     
     NSString *fields = [datasource fieldsForRequestIncluding:fieldsForRequest,
                         @"id",
                         @"name",
                         @"location",
                         @"category",
-                        @"picture",
+                        pictureField,
                         @"were_here_count",
                         nil];
     
@@ -416,6 +420,17 @@ static NSString *defaultImageName = @"FacebookSDKResources.bundle/FBPlacePickerV
     [self.loader reset];
 }
 
+- (void)logAppEvents:(BOOL)cancelled {
+    [FBAppEvents logImplicitEvent:FBAppEventNamePlacePickerUsage
+                      valueToSum:nil
+                      parameters:@{ FBAppEventParameterDialogOutcome : (cancelled
+                                            ? FBAppEventsDialogOutcomeValue_Cancelled
+                                            : FBAppEventsDialogOutcomeValue_Completed),
+                                    @"num_places_picked" : [NSNumber numberWithUnsignedInteger:self.selection.count]
+                                  }
+                         session:self.session];
+}
+
 #pragma mark - FBGraphObjectSelectionChangedDelegate
 
 - (void)graphObjectTableSelectionDidChange:
@@ -455,21 +470,21 @@ static NSString *defaultImageName = @"FacebookSDKResources.bundle/FBPlacePickerV
     NSString *category = [graphObject objectForKey:@"category"];
     NSNumber *wereHereCount = [graphObject objectForKey:@"were_here_count"];
     
+    NSMutableArray* parts = [NSMutableArray array];
+    
+    if (category) {
+        [parts addObject:[category capitalizedString]];
+    }
     if (wereHereCount) {
         NSNumberFormatter *numberFormatter = [[NSNumberFormatter alloc] init];
         [numberFormatter setNumberStyle:NSNumberFormatterDecimalStyle];
         NSString *wereHere = [numberFormatter stringFromNumber:wereHereCount];
         [numberFormatter release];
-        
-        if (category) {
-            return [NSString stringWithFormat:@"%@ • %@ were here", [category capitalizedString], wereHere];
-        }
-        return [NSString stringWithFormat:@"%@ were here", wereHere];
+
+        [parts addObject:[NSString stringWithFormat:[FBUtility localizedStringForKey:@"FBPPVC:NumWereHere"
+                                                                         withDefault:@"%@ were here"], wereHere]];
     }
-    if (category) {
-        return [category capitalizedString];
-    } 
-    return nil;
+    return [parts componentsJoinedByString:@" • "];
 }
 
 - (NSString *)graphObjectTableDataSource:(FBGraphObjectTableDataSource *)dataSource

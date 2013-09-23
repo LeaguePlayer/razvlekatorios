@@ -1,5 +1,5 @@
 /*
- * Copyright 2012 Facebook
+ * Copyright 2010-present Facebook.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,6 +15,8 @@
  */
 
 #import "FBGraphObject.h"
+#import "FBOpenGraphObject.h"
+#import "FBOpenGraphActionShareDialogParams.h"
 #import <objc/runtime.h>
 
 // Module Summary:
@@ -101,6 +103,18 @@ typedef enum _SelectorInferredImplType {
     return self;
 }
 
+- (BOOL)provisionedForPost {
+    return ((NSNumber *)_jsonObject[FBPostObject]).boolValue;
+}
+
+- (void)setProvisionedForPost:(BOOL)provisionedForPost {
+    if (provisionedForPost) {
+        _jsonObject[FBPostObject] = [NSNumber numberWithBool:YES];
+    } else {
+        [_jsonObject removeObjectForKey:FBPostObject];
+    }
+}
+
 - (void)dealloc {
     [_jsonObject release];
     [super dealloc];
@@ -115,6 +129,44 @@ typedef enum _SelectorInferredImplType {
 
 + (NSMutableDictionary<FBGraphObject>*)graphObjectWrappingDictionary:(NSDictionary*)jsonDictionary {
     return [FBGraphObject graphObjectWrappingObject:jsonDictionary];
+}
+
++ (NSMutableDictionary<FBOpenGraphAction>*)openGraphActionForPost {
+    return (NSMutableDictionary<FBOpenGraphAction>*)[FBGraphObject graphObject];
+}
+
++ (NSMutableDictionary<FBGraphObject>*)openGraphObjectForPost {
+    return [FBGraphObject openGraphObjectForPostWithType:nil
+                                                   title:nil
+                                                   image:nil
+                                                     url:nil
+                                             description:nil];
+}
+
++ (NSMutableDictionary<FBOpenGraphObject>*)openGraphObjectForPostWithType:(NSString *)type
+                                                                    title:(NSString *)title
+                                                                    image:(id)image
+                                                                      url:(id)url
+                                                              description:(NSString *)description {
+    NSMutableDictionary<FBOpenGraphObject> *ogo = (NSMutableDictionary<FBOpenGraphObject> *)[self graphObject];
+    ogo.provisionedForPost = YES;
+    ogo.data = [FBGraphObject graphObject];
+    if (type) {
+        ogo.type = type;
+    }
+    if (title) {
+        ogo.title = title;
+    }
+    if (image) {
+        ogo.image = image;
+    }
+    if (url) {
+        ogo.url = url;
+    }
+    if (description) {
+        ogo.description = description;
+    }
+    return ogo;
 }
 
 + (BOOL)isGraphObjectID:(id<FBGraphObject>)anObject sameAs:(id<FBGraphObject>)anotherObject {
@@ -276,7 +328,7 @@ typedef enum _SelectorInferredImplType {
     // processing, indexed by selector
     
     NSString *selectorName = NSStringFromSelector(sel);
-    int	parameterCount = [[selectorName componentsSeparatedByString:@":"] count]-1;
+    NSUInteger	parameterCount = [[selectorName componentsSeparatedByString:@":"] count]-1;
     // we will process a selector as a getter if paramCount == 0
     if (parameterCount == 0) {
         return SelectorInferredImplTypeGet;
@@ -406,8 +458,8 @@ typedef enum _SelectorInferredImplType {
 }
 
 - (void)graphObjectifyAll {
-    int count = [_jsonArray count];
-    for (int i = 0; i < count; ++i) {
+    NSUInteger count = [_jsonArray count];
+    for (NSUInteger i = 0; i < count; ++i) {
         [self graphObjectifyAtIndex:i];
     }
 }

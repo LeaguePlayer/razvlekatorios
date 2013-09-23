@@ -26,9 +26,13 @@
 //
 
 #import "SHKItem.h"
-#import "SHK.h"
-#import "SHKConfiguration.h"
 
+#import "SHKConfiguration.h"
+#import "NSData+SaveItemAttachment.h"
+#import <MobileCoreServices/MobileCoreServices.h>
+#import "SHKFormFieldSettings.h"
+
+NSString * const SHKAttachmentSaveDir = @"SHKAttachmentSaveDir";
 
 @interface SHKItem()
 
@@ -38,38 +42,27 @@
 
 @end
 
-
 @implementation SHKItem
-
-@synthesize shareType;
-@synthesize URL, URLContentType, image, title, text, tags, data, mimeType, filename;
-@synthesize custom;
-@synthesize printOutputType;
-@synthesize mailToRecipients, mailJPGQuality, isMailHTML, mailShareWithAppSignature, popOverSourceRect;
-@synthesize facebookURLSharePictureURI, facebookURLShareDescription;
-@synthesize textMessageToRecipients;
 
 - (void)dealloc
 {
-	[URL release];
+	[_URL release];
 	
-	[image release];
+	[_image release];
 	
-	[title release];
-	[text release];
-	[tags release];
+	[_title release];
+	[_text release];
+	[_tags release];
 	
-	[data release];
-	[mimeType release];
-	[filename release];
+    [_file release];
 	
-	[custom release];
+	[_custom release];
 
-	[mailToRecipients release];
-	[facebookURLSharePictureURI release];
-	[facebookURLShareDescription release];
+	[_mailToRecipients release];
+	[_facebookURLSharePictureURI release];
+	[_facebookURLShareDescription release];
   
-	[textMessageToRecipients release];
+	[_textMessageToRecipients release];
   
 	[super dealloc];
 }
@@ -87,18 +80,18 @@
 
 - (void)setExtensionPropertiesDefaultValues {
     
-    printOutputType = [SHKCONFIG(printOutputType) intValue];
+    _printOutputType = [SHKCONFIG(printOutputType) intValue];
     
-    mailToRecipients = [SHKCONFIG(mailToRecipients) retain];
-    mailJPGQuality = [SHKCONFIG(mailJPGQuality) floatValue];
-    isMailHTML = [SHKCONFIG(isMailHTML) boolValue];
-    mailShareWithAppSignature = [SHKCONFIG(sharedWithSignature) boolValue];
+    _mailToRecipients = [SHKCONFIG(mailToRecipients) retain];
+    _mailJPGQuality = [SHKCONFIG(mailJPGQuality) floatValue];
+    _isMailHTML = [SHKCONFIG(isMailHTML) boolValue];
+    _mailShareWithAppSignature = [SHKCONFIG(sharedWithSignature) boolValue];
     
-    facebookURLShareDescription = [SHKCONFIG(facebookURLShareDescription) retain];
-    facebookURLSharePictureURI = [SHKCONFIG(facebookURLSharePictureURI) retain];
+    _facebookURLShareDescription = [SHKCONFIG(facebookURLShareDescription) retain];
+    _facebookURLSharePictureURI = [SHKCONFIG(facebookURLSharePictureURI) retain];
     
-    textMessageToRecipients = [SHKCONFIG(textMessageToRecipients) retain];
-	popOverSourceRect = CGRectFromString(SHKCONFIG(popOverSourceRect));
+    _textMessageToRecipients = [SHKCONFIG(textMessageToRecipients) retain];
+	_popOverSourceRect = CGRectFromString(SHKCONFIG(popOverSourceRect));
 }
 
 + (id)URL:(NSURL *)url
@@ -147,166 +140,177 @@
 	return [item autorelease];
 }
 
-+ (id)file:(NSData *)data filename:(NSString *)filename mimeType:(NSString *)mimeType title:(NSString *)title
++ (id)filePath:(NSString *)path title:(NSString *)title;
 {
 	SHKItem *item = [[self alloc] init];
 	item.shareType = SHKShareTypeFile;
-	item.data = data;
-	item.filename = filename;
-	item.mimeType = mimeType;
+    
+    SHKFile *file = [[[SHKFile alloc] initWithFilePath:path] autorelease];
+    item.file = file;
 	item.title = title;
 	
 	return [item autorelease];
 }
 
++ (id)fileData:(NSData *)data filename:(NSString *)filename title:(NSString *)title
+{
+	SHKItem *item = [[self alloc] init];
+	item.shareType = SHKShareTypeFile;
+    
+    if (!filename) filename = title;
+    
+    SHKFile *file = [[[SHKFile alloc] initWithFileData:data filename:filename] autorelease];
+    item.file = file;
+	item.title = title;
+	
+	return [item autorelease];
+}
+
++ (id)file:(NSData *)data filename:(NSString *)filename mimeType:(NSString *)mimeType title:(NSString *)title {
+    
+    return [[self class] fileData:data filename:filename title:title];
+}
+
+- (void)convertImageShareToFileShareOfType:(SHKImageConversionType)conversionType quality:(CGFloat)quality {
+    
+    if (!self.image) return;
+    
+    self.shareType = SHKShareTypeFile;
+    
+    NSData *imageData = nil;
+    NSString *extension = nil;
+    
+    switch (conversionType) {
+        case SHKImageConversionTypeJPG:
+            imageData = UIImageJPEGRepresentation(self.image, quality);
+            extension = @"jpg";
+            break;
+        case SHKImageConversionTypePNG:
+            imageData = UIImagePNGRepresentation(self.image);
+            extension = @"png";
+            break;
+        default:
+            break;
+    }
+    
+    NSString *rawFileName = nil;
+    if (self.title.length > 0) {
+        rawFileName = self.title;
+    } else {
+        rawFileName = @"Image";
+    }
+    
+    NSString *filename = [NSString stringWithFormat:@"%@.%@", rawFileName, extension];
+    SHKFile *aFile = [[SHKFile alloc] initWithFileData:imageData filename:filename];
+    self.file = aFile;
+    [aFile release];
+    
+    self.image = nil;
+}
+
 #pragma mark -
 
-- (void)setCustomValue:(NSString *)value forKey:(NSString *)key
+- (void)setCustomValue:(id)value forKey:(NSString *)key
 {
-	if (custom == nil)
+	if (self.custom == nil)
 		self.custom = [NSMutableDictionary dictionaryWithCapacity:0];
 	
 	if (value == nil)
-		[custom removeObjectForKey:key];
+		[self.custom removeObjectForKey:key];
 		
 	else
-		[custom setObject:value forKey:key];
+		[self.custom setObject:value forKey:key];
 }
 
 - (NSString *)customValueForKey:(NSString *)key
 {
-	return [custom objectForKey:key];
+	return [self.custom objectForKey:key];
 }
 
 - (BOOL)customBoolForSwitchKey:(NSString *)key
 {
-	return [[custom objectForKey:key] isEqualToString:SHKFormFieldSwitchOn];
+	return [[self.custom objectForKey:key] isEqualToString:SHKFormFieldSwitchOn];
 }
 
+#pragma mark -
+#pragma mark NSCoding
+
+#pragma mark ---
+#pragma mark NSCoding
+
+static NSString *kSHKShareType = @"kSHKShareType";
+static NSString *kSHKURLContentType = @"kSHKURLContentType";
+static NSString *kSHKURL = @"kSHKURL";
+static NSString *kSHKTitle = @"kSHKTitle";
+static NSString *kSHKText = @"kSHKText";
+static NSString *kSHKTags = @"kSHKTags";
+static NSString *kSHKCustom = @"kSHKCustom";
+static NSString *kSHKFile = @"kSHKFile";
+static NSString *kSHKImage = @"kSHKImage";
+static NSString *kSHKPrintOutputType = @"kSHKPrintOutputType";
+static NSString *kSHKMailToRecipients = @"kSHKMailToRecipients";
+static NSString *kSHKIsMailHTML = @"kSHKIsMailHTML";
+static NSString *kSHKMailJPGQuality = @"kSHKMailJPGQuality";
+static NSString *kSHKMailShareWithAppSignature = @"kSHKMailShareWithAppSignature";
+static NSString *kSHKFacebookURLShareDescription = @"kSHKFacebookURLShareDescription";
+static NSString *kSHKFacebookURLSharePictureURI = @"kSHKFacebookURLSharePictureURI";
+static NSString *kSHKTextMessageToRecipients = @"kSHKTextMessageToRecipients";
+static NSString *kSHKPopOverSourceRect = @"kSHKPopOverSourceRect";
+
+- (id)initWithCoder:(NSCoder *)decoder {
+    
+    self = [super init];
+    
+    if (self) {
+        
+        _shareType = [decoder decodeIntForKey:kSHKShareType];
+        _URLContentType = [decoder decodeIntForKey:kSHKURLContentType];
+        _URL = [[decoder decodeObjectForKey:kSHKURL] retain];
+        _title = [[decoder decodeObjectForKey:kSHKTitle] retain];
+        _text = [[decoder decodeObjectForKey:kSHKText] retain];
+        _tags = [[decoder decodeObjectForKey:kSHKTags] retain];
+        _custom = [[decoder decodeObjectForKey:kSHKCustom] retain];
+        _file = [[decoder decodeObjectForKey:kSHKFile] retain];
+        _image = [[decoder decodeObjectForKey:kSHKImage] retain];
+        _printOutputType = [decoder decodeIntForKey:kSHKPrintOutputType];
+        _mailToRecipients = [[decoder decodeObjectForKey:kSHKMailToRecipients] retain];
+        _isMailHTML = [decoder decodeBoolForKey:kSHKIsMailHTML];
+        _mailJPGQuality = [decoder decodeFloatForKey:kSHKMailJPGQuality];
+        _mailShareWithAppSignature = [decoder decodeBoolForKey:kSHKMailShareWithAppSignature];
+        _facebookURLShareDescription = [[decoder decodeObjectForKey:kSHKFacebookURLShareDescription] retain];
+        _facebookURLSharePictureURI = [[decoder decodeObjectForKey:kSHKFacebookURLSharePictureURI] retain];
+        _textMessageToRecipients = [[decoder decodeObjectForKey:kSHKTextMessageToRecipients] retain];
+        _popOverSourceRect = CGRectFromString([decoder decodeObjectForKey:kSHKPopOverSourceRect]);
+    }
+    return self;
+}
+
+- (void)encodeWithCoder:(NSCoder *)encoder {
+
+    [encoder encodeInt:self.shareType forKey:kSHKShareType];
+    [encoder encodeInt:self.URLContentType forKey:kSHKURLContentType];
+    [encoder encodeObject:self.URL forKey:kSHKURL];
+    [encoder encodeObject:self.title forKey:kSHKTitle];
+    [encoder encodeObject:self.text forKey:kSHKText];
+    [encoder encodeObject:self.tags forKey:kSHKTags];
+    [encoder encodeObject:self.custom forKey:kSHKCustom];
+    [encoder encodeObject:self.file forKey:kSHKFile];
+    [encoder encodeObject:self.image forKey:kSHKImage];
+    [encoder encodeInt:self.printOutputType forKey:kSHKPrintOutputType];
+    [encoder encodeObject:self.mailToRecipients forKey:kSHKMailToRecipients];
+    [encoder encodeBool:self.isMailHTML forKey:kSHKIsMailHTML];
+    [encoder encodeFloat:self.mailJPGQuality forKey:kSHKMailJPGQuality];
+    [encoder encodeBool:self.mailShareWithAppSignature forKey:kSHKMailShareWithAppSignature];
+    [encoder encodeObject:self.facebookURLShareDescription forKey:kSHKFacebookURLShareDescription];
+    [encoder encodeObject:self.facebookURLSharePictureURI forKey:kSHKFacebookURLSharePictureURI];
+    [encoder encodeObject:self.textMessageToRecipients forKey:kSHKTextMessageToRecipients];
+    [encoder encodeObject:NSStringFromCGRect(self.popOverSourceRect) forKey:kSHKPopOverSourceRect];
+}
 
 #pragma mark -
 
-+ (id)itemFromDictionary:(NSDictionary *)dictionary
-{
-	SHKItem *item = [[self alloc] init];
-	item.shareType = [[dictionary objectForKey:@"shareType"] intValue];
-    
-	item.URLContentType = [[dictionary objectForKey:@"URLContentType"] intValue];
-	
-	if ([dictionary objectForKey:@"URL"] != nil)
-		item.URL = [NSURL URLWithString:[dictionary objectForKey:@"URL"]];
-	
-	item.title = [dictionary objectForKey:@"title"];
-	item.text = [dictionary objectForKey:@"text"];
-	item.tags = [dictionary objectForKey:@"tags"];
-	
-	if ([dictionary objectForKey:@"custom"] != nil)
-		item.custom = [[[dictionary objectForKey:@"custom"] mutableCopy] autorelease];
-	
-	if ([dictionary objectForKey:@"mimeType"] != nil)
-		item.mimeType = [dictionary objectForKey:@"mimeType"];
-    
-	if ([dictionary objectForKey:@"filename"] != nil)
-		item.filename = [dictionary objectForKey:@"filename"];
-    
-	if ([dictionary objectForKey:@"image"] != nil)
-		item.image = [UIImage imageWithData:[dictionary objectForKey:@"image"]];
-    
-    if ([dictionary objectForKey:@"printOutputType"] != nil)
-		item.printOutputType = [[dictionary objectForKey:@"printOutputType"] intValue];
-    
-	if ([dictionary objectForKey:@"mailToRecipients"] != nil)
-		item.mailToRecipients = [dictionary objectForKey:@"mailToRecipients"];
-	
-    if ([dictionary objectForKey:@"isMailHTML"] != nil)
-		item.isMailHTML = [[dictionary objectForKey:@"isMailHTML"] boolValue];
-    
-    if ([dictionary objectForKey:@"mailJPGQuality"] != nil)
-		item.mailJPGQuality = [[dictionary objectForKey:@"mailJPGQuality"] floatValue];
-    
-    if ([dictionary objectForKey:@"mailShareWithAppSignature"] != nil)
-		item.mailShareWithAppSignature = [[dictionary objectForKey:@"mailShareWithAppSignature"] boolValue];
-    
-    if ([dictionary objectForKey:@"facebookURLShareDescription"] != nil)
-		item.facebookURLShareDescription = [dictionary objectForKey:@"facebookURLShareDescription"];
-    
-    if ([dictionary objectForKey:@"facebookURLSharePictureURI"] != nil)
-		item.facebookURLSharePictureURI = [dictionary objectForKey:@"facebookURLSharePictureURI"];
-    
-    if ([dictionary objectForKey:@"textMessageToRecipients"] != nil)
-		item.textMessageToRecipients = [dictionary objectForKey:@"textMessageToRecipients"];
-    
-    if ([dictionary objectForKey:@"popOverSourceRect"] != nil)
-		item.popOverSourceRect = CGRectFromString([dictionary objectForKey:@"popOverSourceRect"]);
-    
-	return [item autorelease];
-}
-
-- (NSDictionary *)dictionaryRepresentation
-{
-	NSMutableDictionary *dictionary = [NSMutableDictionary dictionaryWithCapacity:0];
-		
-	[dictionary setObject:[NSNumber numberWithInt:shareType] forKey:@"shareType"];
-    [dictionary setObject:[NSNumber numberWithInt:URLContentType] forKey:@"URLContentType"];
-	
-	if (custom != nil)
-		[dictionary setObject:custom forKey:@"custom"];
-	
-	if (URL != nil)
-		[dictionary setObject:[URL.absoluteString stringByReplacingPercentEscapesUsingEncoding:NSUTF8StringEncoding] forKey:@"URL"];
-	 
-	 if (title != nil)
-		[dictionary setObject:title forKey:@"title"];
-	 
-	 if (text != nil)		 
-		 [dictionary setObject:text forKey:@"text"];
-	
-	if (tags != nil)
-		[dictionary setObject:tags forKey:@"tags"];
-	
-	if (mimeType != nil)
-		[dictionary setObject:mimeType forKey:@"mimeType"];
-	
-	if (filename != nil)
-		[dictionary setObject:filename forKey:@"filename"];
-	
-	if (data != nil)
-		[dictionary setObject:data forKey:@"data"];
-	
-	if (image != nil)
-		[dictionary setObject:UIImagePNGRepresentation(image) forKey:@"image"];
-    
-    [dictionary setObject:[NSNumber numberWithInt:printOutputType] forKey:@"printOutputType"];
-  
-	[dictionary setObject:[NSNumber numberWithBool:isMailHTML] forKey:@"mailToRecipients"];
-	
-	[dictionary setObject:[NSNumber numberWithBool:isMailHTML] forKey:@"isMailHTML"];
-  
-	[dictionary setObject:[NSNumber numberWithFloat:mailJPGQuality] forKey:@"mailJPGQuality"];
-  
-	[dictionary setObject:[NSNumber numberWithBool:mailShareWithAppSignature] forKey:@"mailShareWithAppSignature"];
-  
-	if (facebookURLSharePictureURI) {
-		[dictionary setObject:facebookURLSharePictureURI forKey:@"facebookURLSharePictureURI"];
-	}
-
-	if (facebookURLShareDescription) {
-		[dictionary setObject:facebookURLShareDescription forKey:@"facebookURLShareDescription"];
-	}
-
-	if (textMessageToRecipients) {
-		[dictionary setObject:textMessageToRecipients forKey:@"textMessageToRecipients"];
-	}
-
-	[dictionary setObject:NSStringFromCGRect(popOverSourceRect) forKey:@"popOverSourceRect"];
-	
-	// If you add anymore, make sure to add a method for retrieving them to the itemWithDictionary function too
-	
-	return dictionary;
-}
-
 - (NSString *)description {
-    
+
     NSString *result = [NSString stringWithFormat:@"Share type: %@\nURL:%@\n\
                                                     URLContentType: %i\n\
                                                     Image:%@\n\
@@ -340,8 +344,7 @@
                                                     self.facebookURLSharePictureURI,
                                                     self.facebookURLShareDescription,
                                                     self.textMessageToRecipients,
-													NSStringFromCGRect(self.popOverSourceRect)];
-    
+													NSStringFromCGRect(self.popOverSourceRect)];    
     return result;
 }
 

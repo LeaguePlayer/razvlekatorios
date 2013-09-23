@@ -90,13 +90,7 @@
 		30DEAAEA16FB91E900A0BDF3 /* 4image.gif in Resources */ = {isa = PBXBuildFile; fileRef = 30DEAAE616FB91E900A0BDF3 /* 4image.gif */; };
 		30DEAAEB16FB91E900A0BDF3 /* 5image.gif in Resources */ = {isa = PBXBuildFile; fileRef = 30DEAAE716FB91E900A0BDF3 /* 5image.gif */; };
 		30DEAAEC16FB91E900A0BDF3 /* 6image.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 30DEAAE816FB91E900A0BDF3 /* 6image.jpg */; };
-		6A379BCD1730FD710071A71A /* NSData+MKBase64.m in Sources */ = {isa = PBXBuildFile; fileRef = 6A379BC01730FD710071A71A /* NSData+MKBase64.m */; };
-		6A379BCE1730FD710071A71A /* SFHFKeychainUtils.m in Sources */ = {isa = PBXBuildFile; fileRef = 6A379BC21730FD710071A71A /* SFHFKeychainUtils.m */; };
-		6A379BCF1730FD710071A71A /* MKSKProduct.m in Sources */ = {isa = PBXBuildFile; fileRef = 6A379BC41730FD710071A71A /* MKSKProduct.m */; };
-		6A379BD01730FD710071A71A /* MKSKSubscriptionProduct.m in Sources */ = {isa = PBXBuildFile; fileRef = 6A379BC61730FD710071A71A /* MKSKSubscriptionProduct.m */; };
-		6A379BD11730FD710071A71A /* MKStoreKitConfigs.plist in Resources */ = {isa = PBXBuildFile; fileRef = 6A379BC81730FD710071A71A /* MKStoreKitConfigs.plist */; };
-		6A379BD21730FD710071A71A /* MKStoreManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 6A379BCA1730FD710071A71A /* MKStoreManager.m */; };
-		6A379BD31730FD710071A71A /* VerificationController.m in Sources */ = {isa = PBXBuildFile; fileRef = 6A379BCC1730FD710071A71A /* VerificationController.m */; };
+		30F5842917F06603004D0AC6 /* MKStoreKitConfigs.plist in Resources */ = {isa = PBXBuildFile; fileRef = 30F5842817F06603004D0AC6 /* MKStoreKitConfigs.plist */; };
 		6A379BD51730FFE20071A71A /* StoreKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6A379BD41730FFE20071A71A /* StoreKit.framework */; };
 		6A379BD7173100110071A71A /* Security.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6A379BD6173100110071A71A /* Security.framework */; };
 		6AEC0E17173549DE004BADA7 /* AFHTTPClient+Synchronous.m in Sources */ = {isa = PBXBuildFile; fileRef = 6AEC0E16173549DE004BADA7 /* AFHTTPClient+Synchronous.m */; };
@@ -220,22 +214,9 @@
 		30DEAAE616FB91E900A0BDF3 /* 4image.gif */ = {isa = PBXFileReference; lastKnownFileType = image.gif; path = 4image.gif; sourceTree = "<group>"; };
 		30DEAAE716FB91E900A0BDF3 /* 5image.gif */ = {isa = PBXFileReference; lastKnownFileType = image.gif; path = 5image.gif; sourceTree = "<group>"; };
 		30DEAAE816FB91E900A0BDF3 /* 6image.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = 6image.jpg; sourceTree = "<group>"; };
+		30F5842817F06603004D0AC6 /* MKStoreKitConfigs.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = MKStoreKitConfigs.plist; sourceTree = "<group>"; };
 		30FC49DA171DA62B00DA7121 /* entertainer-iOS-Prefix.pch */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "entertainer-iOS-Prefix.pch"; sourceTree = "<group>"; };
 		5F3FE5144D8B4F3887B19BB5 /* Pods.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = Pods.xcconfig; path = Pods/Pods.xcconfig; sourceTree = SOURCE_ROOT; };
-		6A379BBF1730FD710071A71A /* NSData+MKBase64.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSData+MKBase64.h"; sourceTree = "<group>"; };
-		6A379BC01730FD710071A71A /* NSData+MKBase64.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSData+MKBase64.m"; sourceTree = "<group>"; };
-		6A379BC11730FD710071A71A /* SFHFKeychainUtils.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SFHFKeychainUtils.h; sourceTree = "<group>"; };
-		6A379BC21730FD710071A71A /* SFHFKeychainUtils.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SFHFKeychainUtils.m; sourceTree = "<group>"; };
-		6A379BC31730FD710071A71A /* MKSKProduct.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MKSKProduct.h; sourceTree = "<group>"; };
-		6A379BC41730FD710071A71A /* MKSKProduct.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MKSKProduct.m; sourceTree = "<group>"; };
-		6A379BC51730FD710071A71A /* MKSKSubscriptionProduct.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MKSKSubscriptionProduct.h; sourceTree = "<group>"; };
-		6A379BC61730FD710071A71A /* MKSKSubscriptionProduct.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MKSKSubscriptionProduct.m; sourceTree = "<group>"; };
-		6A379BC71730FD710071A71A /* MKStoreKitConfigs.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MKStoreKitConfigs.h; sourceTree = "<group>"; };
-		6A379BC81730FD710071A71A /* MKStoreKitConfigs.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = MKStoreKitConfigs.plist; sourceTree = "<group>"; };
-		6A379BC91730FD710071A71A /* MKStoreManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MKStoreManager.h; sourceTree = "<group>"; };
-		6A379BCA1730FD710071A71A /* MKStoreManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MKStoreManager.m; sourceTree = "<group>"; };
-		6A379BCB1730FD710071A71A /* VerificationController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VerificationController.h; sourceTree = "<group>"; };
-		6A379BCC1730FD710071A71A /* VerificationController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = VerificationController.m; sourceTree = "<group>"; };
 		6A379BD41730FFE20071A71A /* StoreKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = StoreKit.framework; path = System/Library/Frameworks/StoreKit.framework; sourceTree = SDKROOT; };
 		6A379BD6173100110071A71A /* Security.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Security.framework; path = System/Library/Frameworks/Security.framework; sourceTree = SDKROOT; };
 		6AE37C731733AB0F009D4989 /* entertainer-iOS.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.xml; path = "entertainer-iOS.entitlements"; sourceTree = "<group>"; };
@@ -276,7 +257,6 @@
 			children = (
 				8BF19EF2175F03A500950763 /* REUIKitAdditions */,
 				6AEC0E14173549DE004BADA7 /* AFNetworkingSync */,
-				6A379BBD1730FD710071A71A /* MKStoreKit */,
 			);
 			path = Vendor;
 			sourceTree = "<group>";
@@ -438,6 +418,7 @@
 		30DEAA7116FB4CBC00A0BDF3 /* Application */ = {
 			isa = PBXGroup;
 			children = (
+				30F5842817F06603004D0AC6 /* MKStoreKitConfigs.plist */,
 				30DEAA7216FB4CBC00A0BDF3 /* MainStoryboard.storyboard */,
 				30DEAA7316FB4CBC00A0BDF3 /* MRAppDelegate.h */,
 				30DEAA7416FB4CBC00A0BDF3 /* MRAppDelegate.m */,
@@ -586,35 +567,6 @@
 			path = Blocks;
 			sourceTree = "<group>";
 		};
-		6A379BBD1730FD710071A71A /* MKStoreKit */ = {
-			isa = PBXGroup;
-			children = (
-				6A379BBE1730FD710071A71A /* Externals */,
-				6A379BC31730FD710071A71A /* MKSKProduct.h */,
-				6A379BC41730FD710071A71A /* MKSKProduct.m */,
-				6A379BC51730FD710071A71A /* MKSKSubscriptionProduct.h */,
-				6A379BC61730FD710071A71A /* MKSKSubscriptionProduct.m */,
-				6A379BC71730FD710071A71A /* MKStoreKitConfigs.h */,
-				6A379BC81730FD710071A71A /* MKStoreKitConfigs.plist */,
-				6A379BC91730FD710071A71A /* MKStoreManager.h */,
-				6A379BCA1730FD710071A71A /* MKStoreManager.m */,
-				6A379BCB1730FD710071A71A /* VerificationController.h */,
-				6A379BCC1730FD710071A71A /* VerificationController.m */,
-			);
-			path = MKStoreKit;
-			sourceTree = "<group>";
-		};
-		6A379BBE1730FD710071A71A /* Externals */ = {
-			isa = PBXGroup;
-			children = (
-				6A379BBF1730FD710071A71A /* NSData+MKBase64.h */,
-				6A379BC01730FD710071A71A /* NSData+MKBase64.m */,
-				6A379BC11730FD710071A71A /* SFHFKeychainUtils.h */,
-				6A379BC21730FD710071A71A /* SFHFKeychainUtils.m */,
-			);
-			path = Externals;
-			sourceTree = "<group>";
-		};
 		6AEC0E14173549DE004BADA7 /* AFNetworkingSync */ = {
 			isa = PBXGroup;
 			children = (
@@ -731,6 +683,7 @@
 				30DEAAAD16FB641200A0BDF3 /* v_bg@2x.png in Resources */,
 				30DEAAB616FB74FF00A0BDF3 /* info.png in Resources */,
 				30DEAAB716FB74FF00A0BDF3 /* info@2x.png in Resources */,
+				30F5842917F06603004D0AC6 /* MKStoreKitConfigs.plist in Resources */,
 				30DEAACB16FB7A1300A0BDF3 /* 1image.png in Resources */,
 				30DEAACC16FB7A1300A0BDF3 /* 1image@2x.png in Resources */,
 				30DEAACD16FB7A1300A0BDF3 /* 2image.png in Resources */,
@@ -767,7 +720,6 @@
 				3090D1A91729B72A000DEF8D /* soc_net_on@2x.png in Resources */,
 				3090D1AA1729B72A000DEF8D /* soc_net.png in Resources */,
 				3090D1AB1729B72A000DEF8D /* soc_net@2x.png in Resources */,
-				6A379BD11730FD710071A71A /* MKStoreKitConfigs.plist in Resources */,
 				8BF19EFA175F3A0400950763 /* shuffle_off.png in Resources */,
 				8BF19EFB175F3A0400950763 /* shuffle_off@2x.png in Resources */,
 				8BF19EFC175F3A0400950763 /* shuffle_on.png in Resources */,
@@ -817,12 +769,6 @@
 				308FF3C9171C6AC900BF1233 /* ManagedBlock.m in Sources */,
 				308FF3CC171C6AD400BF1233 /* ManagedItem.m in Sources */,
 				3090D1AF1729B884000DEF8D /* MESHKConfiguration.m in Sources */,
-				6A379BCD1730FD710071A71A /* NSData+MKBase64.m in Sources */,
-				6A379BCE1730FD710071A71A /* SFHFKeychainUtils.m in Sources */,
-				6A379BCF1730FD710071A71A /* MKSKProduct.m in Sources */,
-				6A379BD01730FD710071A71A /* MKSKSubscriptionProduct.m in Sources */,
-				6A379BD21730FD710071A71A /* MKStoreManager.m in Sources */,
-				6A379BD31730FD710071A71A /* VerificationController.m in Sources */,
 				30B3BEE4173162B800AE1ACE /* NSArray+Shuffling.m in Sources */,
 				30B3BEE71732126200AE1ACE /* MRDownloadManager.m in Sources */,
 				6AEC0E17173549DE004BADA7 /* AFHTTPClient+Synchronous.m in Sources */,

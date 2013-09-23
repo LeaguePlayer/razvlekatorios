@@ -21,10 +21,11 @@
 		<string>SHKTwitter</string>
 		<string>SHKDiigo</string>
 		<string>SHKPinboard</string>
-		<string>SHKGoogleReader</string>
+		<string>SHKGooglePlus</string>
 		<string>SHKFacebook</string>
 		<string>SHKVkontakte</string>
-		<string>SHKReadItLater</string>
+		<string>SHKBuffer</string>
+		<string>SHKPocket</string>
 		<string>SHKInstapaper</string>
 		<string>SHKTumblr</string>
 		<string>SHKFlickr</string>
@@ -32,6 +33,10 @@
 		<string>SHKFoursquareV2</string>
 		<string>SHKInstagram</string>
 		<string>SHKSinaWeibo</string>
+		<string>SHKHatena</string>
+		<string>SHKPlurk</string>
+		<string>SHKDropbox</string>
+		<string>SHKYouTube</string>
 	</array>
 </dict>
 </plist>

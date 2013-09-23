@@ -14,8 +14,6 @@
 
 "Cancel" = "Zrušiť";
 
-"Slug" = "Slug";
-
 "Private" = "Súkromné";
 
 "Public" = "Verejné";
@@ -86,8 +84,6 @@
 
 "The service encountered an error. Please try again later." = "Na službe sa vyskytla chyba. Skúste neskôr, prosím.";
 
-"There was an error sending your post to Tumblr." = "Počas odosielania na Tumblr sa vyskytla chyba.";
-
 "There was an error saving to Pinboard" = "Počas odosielania na Pinboard sa vyskytla chyba";
 
 "Sorry, %@ did not accept your credentials. Please try again." = "Prepáčte, %@ neakceptoval Vaše prihlasovacie údaje. Skúste znova, prosím.";
@@ -95,10 +91,6 @@
 "Sorry, %@ encountered an error. Please try again." = "Prepáčte, na službe %@ sa vyskytla chyba. Skúste znova, prosím.";
 
 "There was a problem saving to %@." = "Počas odosielania na %@ sa vyskytla chyba.";
-
-"Incorrect username and password" = "Nesprávne meno a heslo";
-
-"There was an error logging into Google Reader" = "Počas prihlasovania na Google Reader nastala chyba";
 
 "There was a problem authenticating your account." = "Nastal problém pri autorizácii Vášho konta.";
 
@@ -211,3 +203,12 @@
 "Select Group" = "Vybrať skupinu";
 "Flickr Groups" = "Flickr skupiny";
 
+//Demo app
+"Accounts" = "Kontá";
+
+//Tumblr V2
+"Publish type" = "Spôsob publikácie";
+"Publish now" = "Zverejniť ihneď";
+"Draft" = "Koncept";
+"Add to queue" = "Pridať do fronty";
+"Publish" = "Publikovať";

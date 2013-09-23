@@ -6,7 +6,6 @@
 "Share" = "Jaa";
 "More..." = "Lisää...";
 "Cancel" = "Peru";
-"Slug" = "Slugi";
 "Private" = "Yksityinen";
 "Public" = "Julkinen";
 "Caption" = "Kuvateksti";
@@ -48,7 +47,6 @@
 
 "Invalid email or password." = "Väärä sähköposti tai salasana.";
 "The service encountered an error. Please try again later." = "Tapahtui virhe. Yritä myöhemmin uudelleen.";
-"There was a sending your post to Tumblr." = "Virhe lähetettäessä Tumblriin.";
 
 "There was an error saving to Pinboard" = "Virhe tallennettaessa Pinboard";
 
@@ -56,8 +54,6 @@
 "Sorry, %@ encountered an error. Please try again." = "Virhe %@. Yritä myöhemmin uudelleen.";
 "There was a problem saving to %@." = "Ongelma tallennettaessa %@.";
 
-"Incorrect username and password" = "Väärä käyttäjätunnus tai salasana";
-"There was an error logging into Google Reader" = "Virhe kirjauduttaessa Google Readeriin";
 "There was a problem saving your note." = "Muistiinpanoa ei voitu tallentaa virheen takia.";
 
 "Open in Safari" = "Avaa Safarissa";

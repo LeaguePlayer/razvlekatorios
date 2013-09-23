@@ -6,7 +6,6 @@
 "Share" = "Konpartitu";
 "More..." = "Gehiago...";
 "Cancel" = "Ezeztatu";
-"Slug" = "Slug";
 "Private" = "Pribatua";
 "Public" = "Publikoa";
 "Caption" = "Legenda";
@@ -50,7 +49,6 @@
 
 "Invalid email or password." = "Email edo pasahitz okerra.";
 "The service encountered an error. Please try again later." = "Zerbitzuak errore bat eman du. Mesedez, saia zaitez berriro beranduago.";
-"There was an error sending your post to Tumblr." = "Errore bat egon da zure mezua Tumblra bidaltzean.";
 
 "There was an error saving to Pinboard" = "Errore bat egon da Pinboarden gordetzean";
 
@@ -58,8 +56,6 @@
 "Sorry, %@ encountered an error. Please try again." = "Barkatu, %@ errore bat eman du. Mesedez, saia zaitez berriro.";
 "There was a problem saving to %@." = "Arazo bat egon da %@ gordetzean.";
 
-"Incorrect username and password" = "Erabiltzaile eta pasahitz okerrak";
-"There was an error logging into Google Reader" = "Errore bat egon da Google Readerren sartzean";
 "There was a problem authenticating your account." = "Errore bat egon da zure kontua autentikatzean.";
 "There was a problem saving your note." = "Arazo bat egon da zure oharra gordetzeanThere was a problem saving your note.";
 

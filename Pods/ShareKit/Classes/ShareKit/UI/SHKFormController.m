@@ -25,13 +25,14 @@
 //
 //
 
-#import "SHK.h"
-#import "SHKConfiguration.h"
 #import "SHKFormController.h"
+
+#import "SHKConfiguration.h"
 #import "SHKCustomFormFieldCell.h"
 #import "SHKFormFieldCellText.h"
 #import "SHKFormFieldCellSwitch.h"
 #import "SHKFormFieldCellOptionPicker.h"
+#import "SHKFormFieldSettings.h"
 
 #define CELL_IDENTIFIER_TEXT @"textCell"
 #define CELL_IDENTIFIER_SWITCH @"switchCell"
@@ -106,20 +107,6 @@
 	
 	if (autoSelect)
 		[self.tableView selectRowAtIndexPath:[NSIndexPath indexPathForRow:0 inSection:0] animated:NO scrollPosition:UITableViewScrollPositionNone];
-}
-
-- (void)viewDidDisappear:(BOOL)animated
-{
-	[super viewDidDisappear:animated];
-	
-	// Remove the SHK view wrapper from the window (but only if the view doesn't have another modal over it)
-	// this happens when we have an options picker.
-	if (self.navigationController.topViewController == nil) {
-        
-        if (![UIViewController instancesRespondToSelector:@selector(dismissViewControllerAnimated:completion:)]) {
-            [[SHK currentHelper] viewWasDismissed];
-        }
-    }
 }
 
 - (void)viewDidLoad
@@ -286,8 +273,9 @@
 	
     for(SHKFormFieldSettings *settings in allFieldSettings)
 	{		
-        if (settings.value) {
-            [formValues setObject:settings.value forKey:settings.key];	
+        NSString *valueToSave = [settings valueToSave];
+        if (valueToSave) {
+            [formValues setObject:valueToSave forKey:settings.key];
         }        		
     }
 		

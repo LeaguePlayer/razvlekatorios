@@ -6,7 +6,6 @@
 "Share" = "Del";
 "More..." = "Mer...";
 "Cancel" = "Avbryt";
-"Slug" = "Prefiks";
 "Private" = "Privat";
 "Public" = "Offentlig";
 "Caption" = "Overskrift";
@@ -50,7 +49,6 @@
 
 "Invalid email or password." = "Ugyldig e-post eller passord.";
 "The service encountered an error. Please try again later." = "Det har oppstått en feil med denne tjenesten. Vennligst prøv igjen senere.";
-"There was a sending your post to Tumblr." = "Det oppstod en feil ved sending av ditt innlegg til Tumblr.";
 
 "There was an error saving to Pinboard" = "Det oppstod en feil ved lagring til Pinboard.";
 
@@ -58,8 +56,6 @@
 "Sorry, %@ encountered an error. Please try again." = "Beklager, det oppstod en feil med %@. Vennligst prøv igjen.";
 "There was a problem saving to %@." = "Det oppstod et problem med lagring til %@.";
 
-"Incorrect username and password" = "Feil brukernavn og passord";
-"There was an error logging into Google Reader" = "Det oppstod en feil under innlogging til Google Reader";
 "There was a problem authenticating your account." = "Det oppstod et problem med autorisering av din konto.";
 "There was a problem saving your note." = "Det oppstod en feil ved lagring av ditt notat.";
 

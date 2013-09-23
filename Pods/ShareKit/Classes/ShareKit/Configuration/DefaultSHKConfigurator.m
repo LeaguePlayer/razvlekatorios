@@ -26,6 +26,7 @@
 //
 
 #import "DefaultSHKConfigurator.h"
+#import "SHKFile.h"
 
 @implementation DefaultSHKConfigurator
 
@@ -103,10 +104,20 @@
 	return [NSNumber numberWithBool:false];
 }
 
+/*
+ Create a project on Google APIs console,
+ https://code.google.com/apis/console . Under "API Access", create a
+ client ID as "Installed application" with the type "iOS", and
+ register the bundle ID of your application.
+ */
+- (NSString*)googlePlusClientId {
+    return @"";
+}
 
-// Read It Later - http://readitlaterlist.com/api/signup/ 
-- (NSString*)readItLaterKey {
-	return @"";
+//Pocket v3 consumer key. http://getpocket.com/developer/apps/. If you have old read it later app, you should obtain new key.
+- (NSString *)pocketConsumerKey {
+    
+    return @"";
 }
 
 // Diigo - http://www.diigo.com/api_keys/new/
@@ -231,6 +242,7 @@
 - (NSNumber*)readabilityUseXAuth {
 	return [NSNumber numberWithInt:1];
 }
+
 // Foursquare V2 - https://developer.foursquare.com
 - (NSString*)foursquareV2ClientId {
     return @"";
@@ -239,6 +251,113 @@
 - (NSString*)foursquareV2RedirectURI {
     return @"";
 }
+
+// Tumblr - http://www.tumblr.com/docs/en/api/v2
+- (NSString*)tumblrConsumerKey {
+	return @"";
+}
+
+- (NSString*)tumblrSecret {
+	return @"";
+}
+
+//you can put whatever here. It must be the same you entered in tumblr app registration, eg tumblr.sharekit.com
+- (NSString*)tumblrCallbackUrl {
+	return @"";
+}
+
+// Hatena - https://www.hatena.com/yours12345/config/auth/develop
+- (NSString*)hatenaConsumerKey {
+	return @"";
+}
+
+- (NSString*)hatenaSecret {
+	return @"";
+}
+
+//required permissions. You do not need change these - but it must correspond with what you set during app registration on Hatena.
+- (NSString *)hatenaScope {
+    return @"write_public,read_public";
+}
+
+// Plurk - http://www.plurk.com/API
+- (NSString *)plurkAppKey {
+  return @"";
+}
+
+- (NSString *)plurkAppSecret {
+  return @"";
+}
+
+- (NSString *)plurkCallbackURL {
+  return @"";
+}
+
+// Instagram
+
+// Instagram crops images by default
+- (NSNumber*)instagramLetterBoxImages {
+    return [NSNumber numberWithBool:YES];
+}
+
+- (UIColor *)instagramLetterBoxColor
+{
+    return [UIColor whiteColor];
+}
+
+// YouTube - https://developers.google.com/youtube/v3/guides/authentication#OAuth2_Register
+- (NSString*)youTubeConsumerKey {
+	return @"";
+}
+
+- (NSString*)youTubeSecret {
+	return @"";
+}
+
+// Dropbox - https://www.dropbox.com/developers/apps
+- (NSString *) dropboxAppKey {
+    return @"";
+}
+- (NSString *) dropboxAppSecret {
+    return @"";
+}
+
+
+// Buffer
+/*
+ 1 - Set up an app at https://bufferapp.com/developers/apps/create
+ 2 - Once the app is set up this requires a URL Scheme to be set up within your apps info.plist. bufferXXXX where XXXX is your client ID, this will enable Buffer authentication.
+ 3 - Set bufferShouldShortenURLS. NO will use ShareKit's shortening (if available). YES will use Buffer's shortener once the sheet is autheorised and presented.
+*/
+
+- (NSString*)bufferClientID
+{
+	return @"";
+}
+
+- (NSString*)bufferClientSecret
+{
+	return @"";
+}
+
+-(BOOL)bufferShouldShortenURLS {
+    return YES;
+}
+
+/* 
+ This setting should correspond with permission type set during your app registration with Dropbox. You can choose from these two values:
+    @"sandbox" (set if you chose permission type "App folder" == kDBRootAppFolder. You will have access only to the app folder you set in  https://www.dropbox.com/developers/apps)
+    @"dropbox" (set if you chose permission type "Full dropbox" == kDBRootDropbox)
+*/
+- (NSString *) dropboxRootFolder {
+    return @"sandbox";
+}
+
+// if you set NO, a dialogue will appear where user can choose different filename, otherwise the file is silently overwritten.
+-(BOOL)dropboxShouldOverwriteExistedFile {
+    return YES;
+}
+
 
 /*
  UI Configuration : Basic
@@ -269,7 +388,7 @@
 	return @"UIModalPresentationFormSheet";// See: http://developer.apple.com/iphone/library/documentation/UIKit/Reference/UIViewController_Class/Reference/Reference.html#//apple_ref/occ/instp/UIViewController/modalPresentationStyle
 }
 
-- (NSString*)modalTransitionStyle {
+- (NSString*)modalTransitionStyleForController:(UIViewController *)controller {
 	return @"UIModalTransitionStyleCoverVertical";// See: http://developer.apple.com/iphone/library/documentation/UIKit/Reference/UIViewController_Class/Reference/Reference.html#//apple_ref/occ/instp/UIViewController/modalTransitionStyle
 }
 // ShareMenu Ordering
@@ -297,7 +416,7 @@
  These values are used to define the default favorite sharers appearing on ShareKit's action sheet.
  */
 - (NSArray*)defaultFavoriteURLSharers {
-    return [NSArray arrayWithObjects:@"SHKTwitter",@"SHKFacebook", @"SHKReadItLater", nil];
+    return [NSArray arrayWithObjects:@"SHKTwitter",@"SHKFacebook", @"SHKPocket", nil];
 }
 - (NSArray*)defaultFavoriteImageSharers {
     return [NSArray arrayWithObjects:@"SHKMail",@"SHKFacebook", @"SHKCopy", nil];
@@ -305,8 +424,24 @@
 - (NSArray*)defaultFavoriteTextSharers {
     return [NSArray arrayWithObjects:@"SHKMail",@"SHKTwitter",@"SHKFacebook", nil];
 }
-- (NSArray*)defaultFavoriteFileSharers {
-    return [NSArray arrayWithObjects:@"SHKMail",@"SHKEvernote", nil];
+
+//ShareKit will remember last used sharers for each particular mime type.
+
+- (NSArray *)defaultFavoriteSharersForFile:(SHKFile *)file {
+    
+    NSMutableArray *result = [NSMutableArray arrayWithObjects:@"SHKMail",@"SHKEvernote", nil];
+    if ([file.mimeType hasPrefix:@"video/"] || [file.mimeType hasPrefix:@"audio/"] || [file.mimeType hasPrefix:@"image/"]) {
+        [result addObject:@"SHKTumblr"];
+    }
+    return result;
+}
+
+- (NSArray*)defaultFavoriteSharersForMimeType:(NSString *)mimeType {
+    return [self defaultFavoriteSharersForFile:nil];
+}
+
+- (NSArray *)defaultFavoriteFileSharers {
+    return [self defaultFavoriteSharersForFile:nil];
 }
 
 //by default, user can see last used sharer on top of the SHKActionSheet. You can switch this off here, so that user is always presented the same sharers for each SHKShareType.
@@ -342,6 +477,13 @@
  ----------------------
  These settings can be left as is.  This only need to be changed for uber custom installs.
  */
+
+
+/* cocoaPods can not build ShareKit.bundle resource target. This switches ShareKit to use resources directly. If someone knows how to build a resource target with cocoapods, please submit a pull request, so we can get rid of languages ShareKit.bundle and put languages directly to resource target */
+- (NSNumber *)isUsingCocoaPods {
+    return [NSNumber numberWithBool:NO];
+}
+
 - (NSNumber*)maxFavCount {
 	return [NSNumber numberWithInt:3];
 }

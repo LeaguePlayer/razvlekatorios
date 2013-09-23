@@ -14,8 +14,6 @@
 
 "Cancel" = "Cancel·lar";
 
-"Slug" = "Slug";
-
 "Private" = "Privat";
 
 "Public" = "Públic";
@@ -86,17 +84,12 @@
 
 "The service encountered an error. Please try again later." = "El servei ha trobat un error. Intenta-ho més tard.";
 
-"There was an error sending your post to Tumblr." = "Hi ha hagut un error enviant el teu missatge a Tumblr.";
-
 "There was an error saving to Pinboard" = "Hi ha hagut un error desant a Pinboard";
 
 "Sorry, %@ did not accept your credentials. Please try again." = "Ho sentim, %@ no ha acceptat les teves credencials. Torna a intentar-ho.";
 "Sorry, %@ encountered an error. Please try again." = "Ho sentim, %@ ha trobat un error. Torna a intentar-ho.";
 "There was a problem saving to %@." = "Hi ha hagut un problema desant a %@.";
 
-"Incorrect username and password" = "Usuari i contrasenya incorrectes";
-
-"There was an error logging into Google Reader" = "Hi ha hagut un error entrant a Google Reader";
 "There was a problem saving your note." = "Hi ha hagut un error desant la teva nota.";
 
 "Open in Safari" = "Obrir a Safari";

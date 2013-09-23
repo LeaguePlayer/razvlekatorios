@@ -6,7 +6,6 @@
 "Share" = "Teile";
 "More..." = "Mehr...";
 "Cancel" = "Abbrechen";
-"Slug" = "Slug";
 "Private" = "Privat";
 "Public" = "Öffentlich";
 "Caption" = "Kommentar";
@@ -50,7 +49,6 @@
 
 "Invalid email or password." = "Falsche Email oder Passwort.";
 "The service encountered an error. Please try again later." = "Der Dienst konnte nicht abgeschlossen werden. Bitte versuchen Sie es später erneut.";
-"There was an error sending your post to Tumblr." = "Beim Posten auf Tumblr trat ein Fehler auf.";
 
 "There was an error saving to Pinboard" = "Beim Speichern zu Pinboard trat ein Fehler auf.";
 
@@ -58,8 +56,6 @@
 "Sorry, %@ encountered an error. Please try again." = "%@ schlug fehl. Bitte versuchen Sie es erneut.";
 "There was a problem saving to %@." = "Beim Speichern auf %@ trat ein Problem auf.";
 
-"Incorrect username and password" = "Falscher Username und Passwort";
-"There was an error logging into Google Reader" = "Beim Einloggen zu Google Reader trat ein Fehler auf";
 "There was a problem authenticating your account." = "Beim Authentifizieren Ihres Accounts trat ein Fehler auf.";
 "There was a problem saving your note." = "Beim Speichern Ihrer Notiz trat ein Problem auf.";
 

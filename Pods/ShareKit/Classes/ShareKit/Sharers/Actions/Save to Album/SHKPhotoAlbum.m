@@ -26,7 +26,7 @@
 //
 
 #import "SHKPhotoAlbum.h"
-
+#import "SharersCommonHeaders.h"
 
 @implementation SHKPhotoAlbum
 
@@ -68,22 +68,24 @@
 
 - (BOOL)send
 {	
-	if (item.shareType == SHKShareTypeImage)
+	if (self.item.shareType == SHKShareTypeImage)
 		[self writeImageToAlbum];
-	// Notify user
-	[[SHKActivityIndicator currentIndicator] displayCompleted:SHKLocalizedString(@"Saved!")];
-	
-	// Notify delegate, but quietly
-	self.quiet = YES;
-	[self sendDidFinish];
 	
 	return YES;
 }
 
 - (void) writeImageToAlbum
 {
-	UIImageWriteToSavedPhotosAlbum(item.image, nil, nil, nil);
+	UIImageWriteToSavedPhotosAlbum(self.item.image, self, @selector(image:didFinishSavingWithError:contextInfo:), nil);
 }
 
+- (void)image:(UIImage *)image didFinishSavingWithError:(NSError *)error contextInfo:(void *)ctxInfo
+{
+    if (error) {
+        [self sendShowSimpleErrorAlert];
+    } else {
+        [self sendDidFinish];
+    }
+}
 
 @end

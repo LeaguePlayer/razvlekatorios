@@ -1,5 +1,5 @@
 /*
- * Copyright 2012 Facebook
+ * Copyright 2010-present Facebook.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -290,7 +290,7 @@ static const NSInteger kMinimumCountToCollate = 6;
     NSString *text = @"";
     
     if (self.groupByField) {
-        text = [item objectForKey:self.groupByField];
+        text = [item objectForKey:self.groupByField] ?: @"";
     }
     
     if (self.useCollation) {
@@ -464,7 +464,7 @@ static const NSInteger kMinimumCountToCollate = 6;
 {
     NSArray *sectionItems = [self sectionItemsForSection:section];
     
-    int count = [sectionItems count];
+    NSUInteger count = [sectionItems count];
     // If we are expecting more objects to be loaded via paging, add 1 to the
     // row count for the last section.
     if (self.expectingMoreGraphObjects &&

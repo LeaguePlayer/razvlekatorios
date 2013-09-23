@@ -6,7 +6,6 @@
 "Share" = "共有";
 "More..." = "その他";
 "Cancel" = "キャンセル";
-"Slug" = "Slug";
 "Private" = "プライベート";
 "Public" = "パブリック";
 "Caption" = "キャプション";
@@ -48,7 +47,6 @@
 
 "Invalid email or password." = "メールアドレスかパスワードが間違えています";
 "The service encountered an error. Please try again later." = "只今サービスが利用できません。しばらくして再試行してください";
-"There was an error sending your post to Tumblr." = "Tumblrに未送信の投稿があります";
 
 "There was an error saving to Pinboard" = "Pinboardの保存にエラーが起きました";
 
@@ -56,8 +54,6 @@
 "Sorry, %@ encountered an error. Please try again." = "%@エラーが発生しました。再試行してください";
 "There was a problem saving to %@." = "%@に保存中にエラーが発生しました。";
 
-"Incorrect username and password" = "ユーザー名かパスワードが間違えています";
-"There was an error logging into Google Reader" = "Googleリーダーにログイン失敗しました";
 "There was a problem authenticating your account." = "ユーザー認証に問題が発生しました";
 "There was a problem saving your note." = "ノートを保存中に問題が発生しました";
 

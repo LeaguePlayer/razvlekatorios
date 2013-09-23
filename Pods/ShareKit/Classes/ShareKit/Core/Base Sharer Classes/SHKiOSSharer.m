@@ -7,6 +7,7 @@
 //
 
 #import "SHKiOSSharer_Protected.h"
+#import "SharersCommonHeaders.h"
 #import <Social/Social.h>
 
 @interface SHKiOSSharer ()
@@ -27,7 +28,7 @@
     [sharerUIController addImage:self.item.image];
     [sharerUIController addURL:self.item.URL];
     
-    NSString *initialText = (self.item.shareType == SHKShareTypeText ? item.text : item.title);
+    NSString *initialText = (self.item.shareType == SHKShareTypeText ? self.item.text : self.item.title);
     
     NSString *tagString = [self joinedTags];
     if ([tagString length] > 0) initialText = [initialText stringByAppendingFormat:@" %@",tagString];

@@ -1,5 +1,5 @@
 /*
- * Copyright 2012 Facebook
+ * Copyright 2010-present Facebook.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -22,15 +22,16 @@
 #import "FBGraphObjectTableDataSource.h"
 #import "FBGraphObjectTableSelection.h"
 #import "FBGraphObjectTableCell.h"
+#import "FBAppEvents+Internal.h"
 #import "FBLogger.h"
 #import "FBRequest.h"
 #import "FBRequestConnection.h"
 #import "FBUtility.h"
 #import "FBSession+Internal.h"
 #import "FBSettings.h"
+#import "FBFriendPickerViewDefaultPNG.h"
 
 NSString *const FBFriendPickerCacheIdentity = @"FBFriendPicker";
-static NSString *defaultImageName = @"FacebookSDKResources.bundle/FBFriendPickerView/images/default.png";
 
 int const FBRefreshCacheDelaySeconds = 2;
 
@@ -105,7 +106,7 @@ int const FBRefreshCacheDelaySeconds = 2;
     FBGraphObjectTableDataSource *dataSource = [[[FBGraphObjectTableDataSource alloc]
                                                  init]
                                                 autorelease];
-    dataSource.defaultPicture = [UIImage imageNamed:defaultImageName];
+    dataSource.defaultPicture = [FBFriendPickerViewDefaultPNG image];
     dataSource.controllerDelegate = self;
     dataSource.itemTitleSuffixEnabled = YES;
     
@@ -370,13 +371,16 @@ int const FBRefreshCacheDelaySeconds = 2;
     FBRequest *request = [FBRequest requestForGraphPath:[NSString stringWithFormat:@"%@/friends", userID]];
     [request setSession:session];
     
+    // Use field expansion to fetch a 100px wide picture if we're on a retina device.
+    NSString *pictureField = ([FBUtility isRetinaDisplay]) ? @"picture.width(100).height(100)" : @"picture";
+    
     NSString *allFields = [datasource fieldsForRequestIncluding:fields,
                            @"id", 
                            @"name", 
                            @"first_name", 
                            @"middle_name",
                            @"last_name", 
-                           @"picture", 
+                           pictureField,
                            nil];
     [request.parameters setObject:allFields forKey:@"fields"];
     
@@ -386,6 +390,17 @@ int const FBRefreshCacheDelaySeconds = 2;
 - (void)centerAndStartSpinner {
     [FBUtility centerView:self.spinner tableView:self.tableView];
     [self.spinner startAnimating];    
+}
+
+- (void)logAppEvents:(BOOL)cancelled {
+    [FBAppEvents logImplicitEvent:FBAppEventNameFriendPickerUsage
+                      valueToSum:nil
+                      parameters:@{ FBAppEventParameterDialogOutcome : (cancelled
+                                                                             ? FBAppEventsDialogOutcomeValue_Cancelled
+                                                                             : FBAppEventsDialogOutcomeValue_Completed),
+                                    @"num_friends_picked" : [NSNumber numberWithUnsignedInteger:self.selection.count]
+                                  }
+                         session:self.session];
 }
 
 #pragma mark - FBGraphObjectSelectionChangedDelegate

@@ -91,11 +91,6 @@
 {
 	[super viewDidDisappear:animated];
 	
-	if (![UIViewController instancesRespondToSelector:@selector(dismissViewControllerAnimated:completion:)]) {
-        // Remove the SHK view wrapper from the window
-        [[SHK currentHelper] viewWasDismissed];
-    }
-	
     if(self.limboSharer != nil)
 		[self.limboSharer share];
 }
@@ -200,7 +195,7 @@
 	for( NSString *sharerClassName in source)
 	{
 		class = NSClassFromString(sharerClassName);
-		if ( [class canShare] && [class canShareType:item.shareType] )
+		if ( [class canShare] && [class canShareItem:item] )
 			[sectionData addObject:[NSDictionary dictionaryWithObjectsAndKeys:sharerClassName,@"className",[class sharerTitle],@"name",nil]];
 	}
     

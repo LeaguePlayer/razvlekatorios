@@ -14,10 +14,9 @@
 
 "Cancel" = "Cancel";
 
-"Slug" = "Slug";
-
 "Private" = "Private";
 
+/* Belonged to removed Google Reader, currently unused. Left undeleted, since this is a common word which might be of use elsewhere */
 "Public" = "Public";
 
 "Caption" = "Caption";
@@ -28,6 +27,7 @@
 
 "Notes" = "Notes";
 
+/* Belonged to removed Google Reader, currently unused. Left undeleted, since this is a common word which might be of use elsewhere */
 "Note" = "Note";
 
 "Shared" = "Shared";
@@ -86,17 +86,12 @@
 
 "The service encountered an error. Please try again later." = "The service encountered an error. Please try again later.";
 
-"There was an error sending your post to Tumblr." = "There was an error sending your post to Tumblr.";
-
 "There was an error saving to Pinboard" = "There was an error saving to Pinboard";
 
 "Sorry, %@ did not accept your credentials. Please try again." = "Sorry, %@ did not accept your credentials. Please try again.";
 "Sorry, %@ encountered an error. Please try again." = "Sorry, %@ encountered an error. Please try again.";
 "There was a problem saving to %@." = "There was a problem saving to %@.";
 
-"Incorrect username and password" = "Incorrect username and password";
-
-"There was an error logging into Google Reader" = "There was an error logging into Google Reader";
 "There was a problem saving your note." = "There was a problem saving your note.";
 
 "Open in Safari" = "Open in Safari";
@@ -205,3 +200,67 @@
 
 "Select Group" = "Select Group";
 "Flickr Groups" = "Flickr Groups";
+
+//Demo app
+"Accounts" = "Accounts";
+
+//Tumblr V2
+"Publish type" = "Publish type";
+"Publish now" = "Publish now";
+"Draft" = "Draft";
+"Add to queue" = "Add to queue";
+"Publish" = "Publish";
+
+/* Sharers' titles */
+"SMS" = "SMS";
+"Delicious" = "Delicious";
+"Diigo" = "Diigo";
+"Evernote" = "Evernote";
+"Facebook" = "Facebook";
+"Flickr" = "Flickr";
+"Foursquare" = "Foursquare";
+"Google+" = "Google+";
+"Hatena" = "Hatena";
+"Instapaper" = "Instapaper";
+"Kippt" = "Kippt";
+"LinkedIn" = "LinkedIn";
+"Pinboard" = "Pinboard";
+"Plurk" = "Plurk";
+"Pocket" = "Pocket";
+"Readability" = "Readability";
+"Sina Weibo" = "Sina Weibo";
+"Tumblr" = "Tumblr";
+"Twitter" = "Twitter";
+"Vkontakte" = "Vkontakte";
+"Instagram" = "Instagram";
+"YouTube" = "YouTube";
+"Dropbox" = "Dropbox";
+/*  SHKDropbox  */
+/*
+ *  user can rename file with new name while file is uploading to Dropbox
+ */
+"File name" = "File name";
+/*
+ *  "Path" uses as label to show the user remote dropbox directory, that uses
+ *  to save share object, ex. "Dropbox path"
+ */
+"Path" = "Path";
+/*
+ *  The resourse that user want to share with Dropbox may exceed the service limits
+ */
+"File size exceed %@ limits" = "File size exceed %@ limits";
+"You are over Dropbox storage quota" = "You are over Dropbox storage quota";
+/*
+ *  Dropbox could refuse the share file.
+ *  The reason could be: wrong path, or file name, or file name extenition is in Dropbox ignore list, etc..
+ */
+"File name is wrong" = "File name is wrong";
+/*
+ *  When file exist in dropbox remote directory SHKDropbox ask user permission to overwrite the file or enter new name.
+ *  Example "Do you want to overwrite existing file in Dropbox?"
+ */
+"Do you want to overwrite existing file in %@?" = "Do you want to overwrite existing file in %@?";
+/*
+ *  Show tips for user how to rename file or enter another remote directory while upload a file
+ */
+"Tips: you could enter /folder_name/file_name to save the file in other folder or/with new name" = "Tips: you could enter /folder_name/file_name to save the file in other folder or/with new name";

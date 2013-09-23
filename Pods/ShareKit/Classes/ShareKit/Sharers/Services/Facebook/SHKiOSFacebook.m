@@ -8,12 +8,13 @@
 
 #import "SHKiOSFacebook.h"
 #import "SHKiOSSharer_Protected.h"
+#import "SharersCommonHeaders.h"
 
 @implementation SHKiOSFacebook
 
 + (NSString *)sharerTitle
 {
-	return @"Facebook";
+	return SHKLocalizedString(@"Facebook");
 }
 
 + (NSString *)sharerId
