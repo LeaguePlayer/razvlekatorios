@@ -23,22 +23,19 @@
 
 #import "NSMutableDictionary+NSNullsToEmptyStrings.h"
 
+#import "NSDictionary+Recursive.h"
+#import "Debug.h"
+
 @implementation NSMutableDictionary (NSNullsToEmptyStrings)
 
 - (void)convertNSNullsToEmptyStrings {
     
-    NSArray *responseObjectKeys = [self allKeys];
-    
-    for (NSString *key in responseObjectKeys) {
+    [NSDictionary recursivelyEnumerateDictionary:self usingBlock:^(NSDictionary *dict, id key, id obj, BOOL *stop) {
         
-        id object = [self objectForKey:key];        
-        if (object == [NSNull null]) {
-            [self setObject:@"" forKey:key];
+        if (obj == [NSNull null]) {
+            [(NSMutableDictionary *)dict setObject:@"" forKey:key];
         }
-        else if ([object isKindOfClass:[NSMutableDictionary class]]) {
-            [object convertNSNullsToEmptyStrings];
-        }
-    }
+    }];
 }
 
 @end

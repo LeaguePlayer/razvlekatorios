@@ -30,44 +30,66 @@
 
 #define SHK_TIMEOUT 90
 
+@interface SHKRequest ()
+
+@property (copy) RequestCallback completion;
+
+@property (strong) NSURL *url;
+@property (strong) NSString *params;
+@property (strong) NSString *method;
+
+@property (strong) NSMutableURLRequest *request;
+
+@end
+
 @implementation SHKRequest
 
-@synthesize url, params, method, headerFields;
-@synthesize delegate, isFinishedSelector;
-@synthesize data, result, headers, response, connection;
-@synthesize success;
-
-- (void)dealloc
-{
-	[delegate release];
-    [url release];
-	[params release];
-	[method release];
-	[headerFields release];
-	[connection release];
-	[data release];
-	[result release];
-	[response release];
-    [headers release];
-	[super dealloc];
++ (void)startWithURL:(NSURL *)u params:(NSString *)p method:(NSString *)m completion:(RequestCallback)completionBlock {
+    
+    id request = [[self alloc] initWithURL:u params:p method:m completion:completionBlock];
+    [(SHKRequest *)request start];
 }
 
-- (id)initWithURL:(NSURL *)u params:(NSString *)p delegate:(id)d isFinishedSelector:(SEL)s method:(NSString *)m autostart:(BOOL)autostart
+- (instancetype)initWithURL:(NSURL *)u params:(NSString *)p method:(NSString *)m completion:(RequestCallback)completionBlock
 {
 	if (self = [super init])
 	{
-		self.url = u;
-		self.params = p;
-		self.method = m;
-		
-		self.delegate = d;
-		self.isFinishedSelector = s;
-		
-		if (autostart)
-			[self start];
+		_url = u;
+		_params = p;
+		_method = m;
+        _completion = completionBlock;
 	}
-	
 	return self;
+}
+
++ (void)startWithRequest:(NSMutableURLRequest *)request completion:(RequestCallback)completionBlock {
+    
+    id shkRequest = [[self alloc] initWithRequest:request completion:completionBlock];
+    [(SHKRequest *)shkRequest start];
+}
+
+- (instancetype)initWithRequest:(NSMutableURLRequest *)request completion:(RequestCallback)completionBlock {
+    
+    self = [super init];
+    if (self) {
+        _request = request;
+        _url = request.URL;
+        _method = request.HTTPMethod;
+        _params = [[NSString alloc] initWithData:request.HTTPBody encoding:NSUTF8StringEncoding];
+        _completion = completionBlock;
+    }
+    return self;
+}
+
+#pragma mark - Setters overrides
+
+- (void)setHeaderFields:(NSDictionary *)headerFields {
+    
+    _headerFields = headerFields;
+    
+    if (self.request) {
+        [self.request setAllHTTPHeaderFields:headerFields];
+    }
 }
 
 #pragma mark -
@@ -76,55 +98,80 @@
 {
 	NSMutableData *aData = [[NSMutableData alloc] initWithLength:0];
     self.data = aData;
-	[aData release];
 	
-	NSMutableURLRequest *request = [[NSMutableURLRequest alloc] initWithURL:url
-																  cachePolicy:NSURLRequestReloadIgnoringLocalAndRemoteCacheData
-															  timeoutInterval:SHK_TIMEOUT];
-	
-	// overwrite header fields (generally for cookies)
-	if (headerFields != nil)
-		[request setAllHTTPHeaderFields:headerFields];	
-	
-	// Setup Request Data/Params
-	if (params != nil)
-	{
-		NSData *paramsData = [ NSData dataWithBytes:[params UTF8String] length:[params length] ];
+    if (!self.request) {
+        self.request = [self createRequest];
+    }
 		
-		// Fill Request
-		[request setHTTPMethod:method];
-		[request setHTTPBody:paramsData];
-	}
-	
 	// Start Connection
-	SHKLog(@"Start SHKRequest:\nURL: %@\nparams: %@", url, params);
-	NSURLConnection *aConnection = [[NSURLConnection alloc] initWithRequest:request delegate:self startImmediately:YES];
-    [request release];
-    self.connection = aConnection;	
-	[aConnection release];
+	SHKLog(@"Start SHKRequest:\nURL: %@\nparams: %@", self.url, self.params);
+	NSURLConnection *aConnection = [[NSURLConnection alloc] initWithRequest:self.request delegate:self startImmediately:NO];
+    [aConnection scheduleInRunLoop:[NSRunLoop mainRunLoop]
+                           forMode:NSDefaultRunLoopMode];
+    self.connection = aConnection;
+    [aConnection start];
 }
 
+- (NSMutableURLRequest *)createRequest {
+    
+    NSMutableURLRequest *result = [[NSMutableURLRequest alloc] initWithURL:self.url
+                                                                cachePolicy:NSURLRequestReloadIgnoringLocalAndRemoteCacheData
+                                                            timeoutInterval:SHK_TIMEOUT];
+	
+	// overwrite header fields (generally for cookies)
+	if (self.headerFields != nil)
+		[result setAllHTTPHeaderFields:self.headerFields];
+	
+	// Setup Request Data/Params
+	if (self.params != nil)
+	{
+		NSData *paramsData = [ NSData dataWithBytes:[self.params UTF8String] length:[self.params length] ];
+		
+		// Fill Request
+		[result setHTTPMethod:self.method];
+		[result setHTTPBody:paramsData];
+	}
+    return result;
+}
 
 #pragma mark -
 
 - (void)connection:(NSURLConnection *)connection didReceiveResponse:(NSHTTPURLResponse *)theResponse 
 {
 	self.response = theResponse;
-	NSDictionary *aHeaders = [[response allHeaderFields] mutableCopy];
+	NSDictionary *aHeaders = [[self.response allHeaderFields] mutableCopy];
 	self.headers = aHeaders;
-	[aHeaders release];
 	
-	[data setLength:0];
+	[self.data setLength:0];
 }
 
 - (void)connection:(NSURLConnection *)connection didReceiveData:(NSData *)d 
 {
-	[data appendData:d];
+	[self.data appendData:d];
 }
 
 - (void)connectionDidFinishLoading:(NSURLConnection *)connection 
 {
 	[self finish];
+}
+
+- (NSURLRequest *)connection: (NSURLConnection *)connection
+             willSendRequest: (NSURLRequest *)request
+            redirectResponse: (NSURLResponse *)redirectResponse;
+{
+    if (redirectResponse) {
+        NSURL* newURL = [request URL];
+        if ([self.request.URL user]) {
+            // copy over the username and password if there was one.
+            newURL = [NSURL URLWithString:[NSString stringWithFormat:@"%@://%@:%@@%@%@?%@", [newURL scheme], self.request.URL.user, self.request.URL.password, [newURL host], [newURL path], [newURL query]]];
+            
+        }
+        NSMutableURLRequest *r = [self.request mutableCopy];
+        [r setURL: newURL];
+        return r;
+    } else {
+        return request;
+    }
 }
 
 - (void)connection:(NSURLConnection *)connection didFailWithError:(NSError *)error 
@@ -136,25 +183,16 @@
 
 - (void)finish
 {
-	self.success = (response.statusCode == 200 || response.statusCode == 201);
-	
-	if ([self.delegate respondsToSelector:isFinishedSelector])
-		[self.delegate performSelector:isFinishedSelector withObject:self];
-    self.delegate = nil;
-}
-
-- (NSString *)getResult
-{
-	if (result == nil)
-		self.result = [[[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding] autorelease];
-	return result;
+	self.result = [[NSString alloc] initWithData:self.data encoding:NSUTF8StringEncoding];
+    self.success = (self.response.statusCode == 200 || self.response.statusCode == 201);
+    self.completion(self);
 }
 
 #pragma mark -
 
 - (NSString *)description {
     
-    NSString *functionResult = [NSString stringWithFormat:@"method: %@\nurl: %@\nparams: %@\nresponse: %i (%@)\ndata: %@", self.method, [self.url absoluteString], self.params, [self.response statusCode], [NSHTTPURLResponse localizedStringForStatusCode:[self.response statusCode]], [[[NSString alloc] initWithData:self.data encoding:NSUTF8StringEncoding] autorelease]];
+    NSString *functionResult = [NSString stringWithFormat:@"method: %@\nurl: %@\nparams: %@\nresponse: %li (%@)\ndata: %@", self.method, [self.url absoluteString], self.params, (long)[self.response statusCode], [NSHTTPURLResponse localizedStringForStatusCode:[self.response statusCode]], [[NSString alloc] initWithData:self.data encoding:NSUTF8StringEncoding]];
     
     return functionResult;    
 }

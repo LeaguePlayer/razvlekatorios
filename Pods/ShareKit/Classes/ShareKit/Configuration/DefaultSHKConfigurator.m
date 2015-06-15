@@ -30,18 +30,22 @@
 
 @implementation DefaultSHKConfigurator
 
+#pragma mark - App Description
+
 /* 
  App Description 
  ---------------
  These values are used by any service that shows 'shared from XYZ'
  */
 - (NSString*)appName {
-	return @"My App Name";
+	return [[NSBundle mainBundle] infoDictionary][@"CFBundleDisplayName"];
 }
 
 - (NSString*)appURL {
 	return @"http://example.com";
 }
+
+#pragma mark - API Keys
 
 /*
  API Keys
@@ -60,15 +64,41 @@
  leaving that decision up to the user.
  */
 
+// OneNote - https://account.live.com/developers/applications
+- (NSString*)onenoteClientId {
+    return @"";
+}
 // Vkontakte
 // SHKVkontakteAppID is the Application ID provided by Vkontakte
 - (NSString*)vkontakteAppId {
 	return @"";
 }
 
+/*
+Forces using Facebook-ios-sdk instead of Apple's native Social.framework and Accounts.framework. Pre iOS6 posting means using SHKFacebook, instead of SHKiOSFacebook. Consequences of this are that user logs in via SSO trip to Safari/Facebook.app. (Instead of getting credentials from iOS settings). This way also share form is ShareKit's instead of iOS native SLComposeViewController.
+One of the troubles with the native share form is that it gives IOS6 props on facebook instead of your app.
+  If you wish to use iOS user credentials, and still use ShareKit's share form, set - (NSNumber *)useAppleShareUI to NO.
+*/
+- (NSNumber*)forcePreIOS6FacebookPosting {
+	return [NSNumber numberWithBool:false];
+    
+    /*
+     The default behavior (return NO from this function) causes user to be kind of locked in to use iOS settings.app credentials. If he has not Facebook credentials set in settings.app, the user is presented alert instructing him to add his credentials to settings.app if wants to share with Facebook. If you instead prefer your user to be automagically switched to legacy (Safari/Facebook app trip) authentication, use following implementation
+     */
+    
+    /*
+     BOOL result = NO;
+     //if they have an account on their device, then use it, but don't force a device level login
+     if (NSClassFromString(@"SLComposeViewController")) {
+     result = ![SLComposeViewController isAvailableForServiceType:SLServiceTypeFacebook];
+     }
+     return [NSNumber numberWithBool:result];
+     */
+}
+
 // Facebook - https://developers.facebook.com/apps
-// SHKFacebookAppID is the Application ID provided by Facebook
-// SHKFacebookLocalAppID is used if you need to differentiate between several iOS apps running against a single Facebook app. Useful, if you have full and lite versions of the same app,
+// facebookAppID is the Application ID provided by Facebook
+// facebookLocalAppID is used if you need to differentiate between several iOS apps running against a single Facebook app. Useful, if you have full and lite versions of the same app,
 // and wish sharing from both will appear on facebook as sharing from one main app. You have to add different suffix to each version. Do not forget to fill both suffixes on facebook developer ("URL Scheme Suffix"). Leave it blank unless you are sure of what you are doing. 
 // The CFBundleURLSchemes in your App-Info.plist should be "fb" + the concatenation of these two IDs.
 // Example: 
@@ -96,15 +126,6 @@
 }
 
 /*
- If you want to force use of old-style, posting path that does not use the native sheet. One of the troubles
- with the native sheet is that it gives IOS6 props on facebook instead of your app. This flag has no effect
- on the auth path. It will try to use native auth if availible.
- */
-- (NSNumber*)forcePreIOS6FacebookPosting {
-	return [NSNumber numberWithBool:false];
-}
-
-/*
  Create a project on Google APIs console,
  https://code.google.com/apis/console . Under "API Access", create a
  client ID as "Installed application" with the type "iOS", and
@@ -124,9 +145,19 @@
 - (NSString*)diigoKey {
   return @"";
 }
-// Twitter - http://dev.twitter.com/apps/new
+
+// Twitter
+
 /*
- Important Twitter settings to get right:
+ If you want to force use of old-style, pre-IOS5 twitter authentication, set this to true. This way user will have to enter credentials to the OAuthWebView presented by your app. These credentials will not end up in the device account store. If set to false, sharekit takes user credentials from the builtin device store on iOS6 or later and utilizes social.framework to share content. Much easier, and thus recommended is to leave this false and use iOS builtin authentication.
+ */
+- (NSNumber*)forcePreIOS5TwitterAccess {
+	return [NSNumber numberWithBool:false];
+}
+
+/* YOU CAN SKIP THIS SECTION unless you set forcePreIOS5TwitterAccess to true, or if you support iOS 4 or older.
+ 
+ Register your app here - http://dev.twitter.com/apps/new
  
  Differences between OAuth and xAuth
  --
@@ -140,14 +171,6 @@
  2. 'Application Type' should be set to BROWSER (not client)
  3. 'Callback URL' should match whatever you enter in SHKTwitterCallbackUrl.  The callback url doesn't have to be an actual existing url.  The user will never get to it because ShareKit intercepts it before the user is redirected.  It just needs to match.
  */
-
-/*
- If you want to force use of old-style, pre-IOS5 twitter framework, for example to ensure
- twitter accounts don't end up in the devices account store, set this to true.
- */
-- (NSNumber*)forcePreIOS5TwitterAccess {
-	return [NSNumber numberWithBool:false];
-}
 
 - (NSString*)twitterConsumerKey {
 	return @"";
@@ -168,6 +191,7 @@
 - (NSString*)twitterUsername {
 	return @"";
 }
+
 // Evernote - http://www.evernote.com/about/developer/api/
 /*	You need to set to sandbox until you get approved by evernote. If you use sandbox, you can use it with special sandbox user account only. You can create it here: https://sandbox.evernote.com/Registration.action
     If you already have a consumer-key and secret which have been created with the old username/password authentication system
@@ -195,7 +219,8 @@
 /*
  1 - This requires the CFNetwork.framework 
  2 - One needs to setup the flickr app as a "web service" on the flickr authentication flow settings, and enter in your app's custom callback URL scheme. 
- 3 - make sure you define and create the same URL scheme in your apps info.plist. It can be as simple as yourapp://flickr */
+ 3 - make sure you define and create the same URL scheme in your app description on Flickr. It can be as simple as yourapp://flickr
+ 4 - do not override this, unless you subclass the sharer and need more privileges for custom added functionality.*/
 - (NSString*)flickrConsumerKey {
     return @"";
 }
@@ -208,7 +233,11 @@
     return @"app://flickr";
 }
 
-// Bit.ly for shortening URLs in case you use original SHKTwitter sharer (pre iOS5). If you use iOS 5 builtin framework, the URL will be shortened anyway, these settings are not used in this case. http://bit.ly/account/register - after signup: http://bit.ly/a/your_api_key If you do not enter bit.ly credentials, URL will be shared unshortened.
+- (NSString *)flickrPermissions {
+    return @"write";
+}
+
+// Bit.ly for shortening URLs, used by some sharers (e.g. Buffer). http://bit.ly/account/register - after signup: http://bit.ly/a/your_api_key If you do not enter bit.ly credentials, URL will be shared unshortened.
 - (NSString*)bitLyLogin {
 	return @"";
 }
@@ -305,6 +334,11 @@
     return [UIColor whiteColor];
 }
 
+///only show instagram in the application list (instead of Instagram plus any other public/jpeg-conforming apps) 
+- (NSNumber *)instagramOnly {
+    return [NSNumber numberWithBool:YES];
+}
+
 // YouTube - https://developers.google.com/youtube/v3/guides/authentication#OAuth2_Register
 - (NSString*)youTubeConsumerKey {
 	return @"";
@@ -321,7 +355,19 @@
 - (NSString *) dropboxAppSecret {
     return @"";
 }
+/*
+ This setting should correspond with permission type set during your app registration with Dropbox. You can choose from these two values:
+ @"sandbox" (set if you chose permission type "App folder". You will have access only to the app folder you set in  https://www.dropbox.com/developers/apps)
+ @"dropbox" (set if you chose permission type "Full dropbox")
+ */
+- (NSString *) dropboxRootFolder {
+    return @"sandbox";
+}
 
+// if you set NO, a dialogue will appear to ask user if he really wants to overwrite. Otherwise the file is silently overwritten.
+- (NSNumber *)dropboxShouldOverwriteExistedFile {
+    return [NSNumber numberWithBool:YES];
+}
 
 // Buffer
 /*
@@ -340,30 +386,52 @@
 	return @"";
 }
 
--(BOOL)bufferShouldShortenURLS {
-    return YES;
+- (NSNumber *)bufferShouldShortenURLS {
+    return [NSNumber numberWithBool:YES];
 }
 
-/* 
- This setting should correspond with permission type set during your app registration with Dropbox. You can choose from these two values:
-    @"sandbox" (set if you chose permission type "App folder" == kDBRootAppFolder. You will have access only to the app folder you set in  https://www.dropbox.com/developers/apps)
-    @"dropbox" (set if you chose permission type "Full dropbox" == kDBRootDropbox)
-*/
-- (NSString *) dropboxRootFolder {
-    return @"sandbox";
+// Imgur
+/*
+ 1. Set up an app at https://api.imgur.com/oauth2/addclient
+ 2. 'Callback URL' should match whatever you enter in SHKImgurCallbackURL.  The callback url doesn't have to be an actual existing url.  The user will never get to it because ShareKit intercepts it before the user is redirected.  It just needs to match.
+ */
+
+- (NSString *)imgurClientID {
+    return @"";
 }
 
-// if you set NO, a dialogue will appear where user can choose different filename, otherwise the file is silently overwritten.
--(BOOL)dropboxShouldOverwriteExistedFile {
-    return YES;
+- (NSString *)imgurClientSecret {
+    return @"";
 }
 
+- (NSString *)imgurCallbackURL {
+    return @"";
+}
+
+///This removes user authorization. It allows image to be uploaded anonymously, without being tied to an account. More info is here: http://www.cimgf.com/2013/03/18/anonymous-image-file-upload-in-ios-with-imgur/
+- (NSNumber *)imgurAnonymousUploads {
+    return @NO;
+}
+
+///You can get Pinterest client ID from https://developers.pinterest.com/manage/
+- (NSString *)pinterestClientId {
+    return @"";
+}
+
+#pragma mark - Basic UI Configuration
 
 /*
  UI Configuration : Basic
  ------------------------
  These provide controls for basic UI settings.  For more advanced configuration see below.
  */
+
+/*
+ For sharers supported by Social.framework you can choose to present Apple's UI (SLComposeViewController) or ShareKit's UI (you can customize ShareKit's UI). Note that SLComposeViewController has only limited sharing capabilities, e.g. for file sharing on Twitter (photo files, video files, large UIImages) ShareKit's UI will be used anyway.
+ */
+- (NSNumber *)useAppleShareUI {
+    return @YES;
+}
 
 // Toolbars
 - (NSString*)barStyle {
@@ -410,19 +478,21 @@
 	return [NSNumber numberWithBool:true];// Setting this to true will show More... button in SHKActionSheet, setting to false will leave the button out.
 }
 
+#pragma mark - Favorite Sharers
+
 /*
  Favorite Sharers
  ----------------
  These values are used to define the default favorite sharers appearing on ShareKit's action sheet.
  */
 - (NSArray*)defaultFavoriteURLSharers {
-    return [NSArray arrayWithObjects:@"SHKTwitter",@"SHKFacebook", @"SHKPocket", nil];
+    return [NSArray arrayWithObjects:@"SHKTwitter",@"SHKiOSTwitter", @"SHKFacebook", @"SHKiOSFacebook", @"SHKPocket", nil];
 }
 - (NSArray*)defaultFavoriteImageSharers {
-    return [NSArray arrayWithObjects:@"SHKMail",@"SHKFacebook", @"SHKCopy", nil];
+    return [NSArray arrayWithObjects:@"SHKMail",@"SHKFacebook", @"SHKiOSFacebook", @"SHKCopy", nil];
 }
 - (NSArray*)defaultFavoriteTextSharers {
-    return [NSArray arrayWithObjects:@"SHKMail",@"SHKTwitter",@"SHKFacebook", nil];
+    return [NSArray arrayWithObjects:@"SHKMail",@"SHKTwitter", @"SHKiOSTwitter", @"SHKFacebook", @"SHKiOSFacebook", nil];
 }
 
 //ShareKit will remember last used sharers for each particular mime type.
@@ -449,16 +519,14 @@
     return [NSNumber numberWithBool:true];
 }
 
+#pragma mark - Advanced UI Configuration
+
 /*
  UI Configuration : Advanced
  ---------------------------
  If you'd like to do more advanced customization of the ShareKit UI, like background images and more,
  check out http://getsharekit.com/customize. To use a subclass, you can create your own, and let ShareKit know about it in your configurator, overriding one (or more) of these methods.
  */
-
-- (Class)SHKActionSheetSubclass {    
-    return NSClassFromString(@"SHKActionSheet");
-}
 
 - (Class)SHKShareMenuSubclass {    
     return NSClassFromString(@"SHKShareMenu");
@@ -468,21 +536,34 @@
     return NSClassFromString(@"UITableViewCell");
 }
 
+///You can override methods from Configuration section (see SHKFormController.h) to use your own cell subclasses.
 - (Class)SHKFormControllerSubclass {
     return NSClassFromString(@"SHKFormController");
 }
 
+- (Class)SHKUploadsViewControllerSubclass {
+    return NSClassFromString(@"SHKUploadsViewController");
+}
+
+- (Class)SHKAccountsViewControllerSubclass {
+    return NSClassFromString(@"SHKAccountsViewController");
+}
+
+- (Class)SHKActivityIndicatorSubclass {
+    return NSClassFromString(@"SHKActivityIndicator");
+}
+
+//You can supply your own way to react to various ShareKit events. The default shows HUD with progress, Saved! or error alert. Except changing this you can also listen for ShareKit's notifications, or simply subclass activityIndicator to whatever you need.
+- (Class)SHKSharerDelegateSubclass {
+    return NSClassFromString(@"SHKSharerDelegate");
+}
+#pragma mark - Advanced Configuration
+
 /*
  Advanced Configuration
  ----------------------
- These settings can be left as is.  This only need to be changed for uber custom installs.
+ These settings can be left as is.  This only needs to be changed for uber custom installs.
  */
-
-
-/* cocoaPods can not build ShareKit.bundle resource target. This switches ShareKit to use resources directly. If someone knows how to build a resource target with cocoapods, please submit a pull request, so we can get rid of languages ShareKit.bundle and put languages directly to resource target */
-- (NSNumber *)isUsingCocoaPods {
-    return [NSNumber numberWithBool:NO];
-}
 
 - (NSNumber*)maxFavCount {
 	return [NSNumber numberWithInt:3];
@@ -504,12 +585,15 @@
 	return [NSNumber numberWithBool:true];
 }
 
+#pragma mark - Debugging Settings
+
 /* 
  Debugging settings
  ------------------
- see DefaultSHKConfigurator.h
+ see Debug.h
  */
 
+#pragma mark - SHKItem sharer specific extension properties defaults
 /*
  SHKItem sharer specific values defaults
  -------------------------------------
@@ -563,6 +647,12 @@
 -(NSString*) popOverSourceRect;
  {
   return NSStringFromCGRect(CGRectZero);
+}
+
+/* SHKDropbox */
+//if set, no UI for choosing the target directory is presented to the user.
+- (NSString *)dropboxDestinationDirectory {
+    return nil;
 }
 
 @end

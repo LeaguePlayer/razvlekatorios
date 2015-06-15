@@ -190,22 +190,23 @@
 #pragma mark - action sheet delegate methods
 
 -(void)actionSheet:(UIActionSheet *)actionSheet clickedButtonAtIndex:(NSInteger)buttonIndex{
-    MRItem *currentItem = [self.block.items objectAtIndex:currentIndex];
-    UIImage *image = currentItem.image;
-    SHKItem *item = [SHKItem image:image title:@"Картинка отправлена через приложение Мобильный развлекатор"];
-    switch (buttonIndex) {
-        case 0:
-            [SHKVkontakte shareItem:item];
-            break;
-        case 1:
-            [SHKFacebook shareItem:item];
-            break;
-        case 2:
-            [SHKTwitter shareItem:item];
-            break;
-        default:
-            break;
-    }
+    NSLog(@"shared");
+//    MRItem *currentItem = [self.block.items objectAtIndex:currentIndex];
+//    UIImage *image = currentItem.image;
+//    SHKItem *item = [SHKItem image:image title:@"Картинка отправлена через приложение Мобильный развлекатор"];
+//    switch (buttonIndex) {
+//        case 0:
+//            [SHKVkontakte shareItem:item];
+//            break;
+//        case 1:
+//            [SHKFacebook shareItem:item];
+//            break;
+//        case 2:
+//            [SHKTwitter shareItem:item];
+//            break;
+//        default:
+//            break;
+//    }
 }
 
 #pragma mark - thumb view delegate methods

@@ -28,43 +28,25 @@
 #import <Foundation/Foundation.h>
 #import "SHKSharer.h"
 #import "OAuthConsumer.h"
+#import "SHKOAuthViewDelegate.h"
 
-@interface SHKOAuthSharer : SHKSharer
-{
-	NSString *consumerKey;
-	NSString *secretKey;
-	NSURL *authorizeCallbackURL;
-	
-	NSURL *authorizeURL;
-	NSURL *accessURL;
-	NSURL *requestURL;
-	
-	OAConsumer *consumer;
-	OAToken *requestToken;
-	OAToken *accessToken;
-	
-	id<OASignatureProviding> signatureProvider;
-	
-	NSDictionary *authorizeResponseQueryVars;
-}
+@interface SHKOAuthSharer : SHKSharer <SHKOAuthViewDelegate>
 
-@property (nonatomic, retain) NSString *consumerKey;
-@property (nonatomic, retain) NSString *secretKey;
-@property (nonatomic, retain) NSURL *authorizeCallbackURL;
+@property (nonatomic, strong) NSString *consumerKey;
+@property (nonatomic, strong) NSString *secretKey;
+@property (nonatomic, strong) NSURL *authorizeCallbackURL;
 
-@property (nonatomic, retain) NSURL *authorizeURL;
-@property (nonatomic, retain) NSURL *accessURL;
-@property (nonatomic, retain) NSURL *requestURL;
+@property (nonatomic, strong) NSURL *authorizeURL;
+@property (nonatomic, strong) NSURL *accessURL;
+@property (nonatomic, strong) NSURL *requestURL;
 
-@property (retain) OAConsumer *consumer;
-@property (retain) OAToken *requestToken;
-@property (retain) OAToken *accessToken;
+@property (strong) OAConsumer *consumer;
+@property (strong) OAToken *requestToken;
+@property (strong) OAToken *accessToken;
 
-@property (retain) id<OASignatureProviding> signatureProvider;
+@property (strong) id<OASignatureProviding> signatureProvider;
 
-@property (nonatomic, retain) NSDictionary *authorizeResponseQueryVars;
-
-
+@property (nonatomic, strong) NSDictionary *authorizeResponseQueryVars;
 
 #pragma mark -
 #pragma mark OAuth Authorization
@@ -85,6 +67,5 @@
 - (void)storeAccessToken;
 - (BOOL)restoreAccessToken;
 - (void)refreshToken;
-
 
 @end

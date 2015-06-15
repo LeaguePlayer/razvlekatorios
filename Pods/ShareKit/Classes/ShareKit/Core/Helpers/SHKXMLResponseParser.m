@@ -22,31 +22,46 @@
 //  THE SOFTWARE.
 
 #import "SHKXMLResponseParser.h"
+#import "NSDictionary+Recursive.h"
 
 @interface SHKXMLResponseParser ()
 
-@property (nonatomic, retain) NSMutableDictionary *parsedResponse;
-@property (nonatomic, retain) NSMutableString *currentElementValue;
-@property (nonatomic, retain) NSData *data;
+@property (nonatomic, strong) NSMutableDictionary *parsedResponse;
+@property (nonatomic, strong) NSMutableArray *currentElementNames;
+@property (nonatomic, strong) NSMutableDictionary *currentParentElement;
+@property (nonatomic, strong) NSMutableString *currentElementValue;
+@property (nonatomic, strong) NSData *data;
 @property BOOL xmlParsedSuccessfully;
-
-- (id)initWithData:(NSData *)responseData;
-- (void)parse;
-- (NSString *)findRecursivelyValueForKey:(NSString *)searchedKey inDict:(NSDictionary *)dictionary;
 
 @end
 
 @implementation SHKXMLResponseParser
 
-@synthesize parsedResponse, currentElementValue, data, xmlParsedSuccessfully;
++ (id)getValueForElement:(NSString *)element fromXMLData:(NSData *)data {
+    
+    SHKXMLResponseParser *shkParser = [[SHKXMLResponseParser alloc] initWithData:data];
+    [shkParser parse];
+    
+    id result;
+    if (shkParser.xmlParsedSuccessfully) {
+        result = [shkParser.parsedResponse findRecursivelyValueForKey:element];
+    } else {
+        result = nil;
+    }
 
-- (void)dealloc {
+    return result;    
+}
+
++ (NSDictionary *)dictionaryFromData:(NSData *)data {
     
-    [parsedResponse release];
-    [currentElementValue release];
-    [data release];
+    SHKXMLResponseParser *shkParser = [[SHKXMLResponseParser alloc] initWithData:data];
+    [shkParser parse];
     
-    [super dealloc];
+    NSDictionary *result = nil;
+    if (shkParser.xmlParsedSuccessfully) {
+        result = shkParser.parsedResponse;
+    }
+    return result;
 }
 
 - (id)initWithData:(NSData *)responseData {
@@ -54,44 +69,10 @@
     self = [super init];
     
     if (self) {
-        data = [responseData retain];        
+        _data = responseData;
+        _currentElementNames = [[NSMutableArray alloc] initWithCapacity:3];
     }
     return self;
-}
-
-+ (NSString *)getValueForElement:(NSString *)element fromResponse:(NSData *)data {
-    
-    SHKXMLResponseParser *shkParser = [[SHKXMLResponseParser alloc] initWithData:data];
-    [shkParser parse];
-    
-    NSString *result;    
-    if (shkParser.xmlParsedSuccessfully) {
-        result = [shkParser findRecursivelyValueForKey:element inDict:shkParser.parsedResponse];
-    } else {
-        result = nil;
-    }
-    [shkParser release];
-
-    return result;    
-}
-
-- (NSString *)findRecursivelyValueForKey:(NSString *)searchedKey inDict:(NSDictionary *)dictionary {
-    
-    __block NSString *result = nil;
-    
-    [dictionary enumerateKeysAndObjectsUsingBlock:^(id key, id obj, BOOL *stop){
-        
-        if ([key isEqualToString:searchedKey]) {
-            result = obj;
-            *stop = YES;
-            
-        } else if ([obj isKindOfClass:[NSDictionary class]]) {
-            result = [self findRecursivelyValueForKey:searchedKey inDict:obj];           
-            
-        }
-    }];
-    
-    return result;
 }
 
 - (void)parse {
@@ -99,7 +80,6 @@
     NSXMLParser *xmlParser = [[NSXMLParser alloc] initWithData:self.data];
     xmlParser.delegate = self;        
     self.xmlParsedSuccessfully = [xmlParser parse];
-    [xmlParser release];
 }
 
 #pragma mark -
@@ -109,25 +89,52 @@
   namespaceURI:(NSString *)namespaceURI qualifiedName:(NSString *)qualifiedName
     attributes:(NSDictionary *)attributeDict {
     
-    self.currentElementValue = nil;
-    
     if (!self.parsedResponse) {
         self.parsedResponse = [NSMutableDictionary dictionaryWithCapacity:0];
-    } 
+    }
     
-    if (attributeDict) {
-        [self.parsedResponse setObject:attributeDict forKey:elementName];
+    //if lastElement is not finished, create container - will be subsequently filled with coming elements
+    NSString *parentName = [self.currentElementNames lastObject];
+    NSDictionary *parentsParent = [self parentOfElement:parentName];
+    BOOL elementsParentExists;
+    if (parentsParent) {
+        elementsParentExists = parentsParent[parentName] != nil;
+    } else {
+        elementsParentExists = self.parsedResponse[parentName] != nil;
+    }
+    if ([self.currentElementNames count] > 0 && !elementsParentExists) {
+        NSMutableDictionary *lastLevelDict = [NSMutableDictionary dictionaryWithCapacity:3];
+        
+        if (self.currentParentElement) {
+            [self.currentParentElement setObject:lastLevelDict forKey:[self.currentElementNames lastObject]];
+        } else {
+            [self.parsedResponse setObject:lastLevelDict forKey:[self.currentElementNames lastObject]];
+        }
+        
+        self.currentParentElement = lastLevelDict;
+    }
+    [self.currentElementNames addObject:elementName];
+    
+    if ([attributeDict count]) {
+        
+        NSMutableDictionary *mutableAttributesDict = [attributeDict mutableCopy];
+        if (self.currentParentElement) {
+            [self.currentParentElement setObject:mutableAttributesDict forKey:elementName];
+        } else {
+            [self.parsedResponse setObject:mutableAttributesDict forKey:elementName];
+        }
+        self.currentParentElement = mutableAttributesDict;
     }
 }
 
 - (void)parser:(NSXMLParser *)parser foundCharacters:(NSString *)string {
     
+    if (!string) return;
+    
+    //append or create current element value
     if (!self.currentElementValue) {
-        
         self.currentElementValue = [NSMutableString stringWithString:string];
-        
     } else {
-        
         [self.currentElementValue appendString:string];
     }    
 }
@@ -135,13 +142,55 @@
 - (void)parser:(NSXMLParser *)parser didEndElement:(NSString *)elementName
   namespaceURI:(NSString *)namespaceURI qualifiedName:(NSString *)qName {
     
-    if(![elementName isEqualToString:@"errors"] && ![elementName isEqualToString:@"error"]) {
-        
-        NSString *trimmedElementValue = [self.currentElementValue stringByTrimmingCharactersInSet:[NSCharacterSet characterSetWithCharactersInString:@" "]];        
-        if (trimmedElementValue) {
-            [self.parsedResponse setValue:trimmedElementValue forKey:elementName];
-        }        
+    if ([self isElementDictionary:elementName]) {
+        self.currentParentElement = [self parentOfElement:elementName];
+    } else {
+        //trim and save finished current element
+        if(self.currentElementValue) {
+            
+            NSString *trimmedElementValue = [self.currentElementValue stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]];
+            self.currentElementValue = nil;
+            [self.currentParentElement setObject:trimmedElementValue forKey:elementName];
+        }
     }
+    [self.currentElementNames removeLastObject];
+}
+
+#pragma mark - Helpers
+
+- (BOOL)isElementDictionary:(NSString *)elementName {
+    
+    id element = [self findElement:elementName];
+    BOOL result = [element isKindOfClass:[NSDictionary class]];
+    return result;
+}
+
+- (NSMutableDictionary *)parentOfElement:(NSString *)elementName {
+    
+    NSUInteger indexOfElement = [self.currentElementNames indexOfObject:elementName];
+    if (indexOfElement > 0 && indexOfElement != NSNotFound) {
+        NSString *parentName = self.currentElementNames[indexOfElement - 1];
+        NSMutableDictionary *result = [self findElement:parentName];
+        return result;
+    } else {
+        return nil; //elementName is top level
+    }
+}
+
+- (id)findElement:(NSString *)elementName {
+    
+    //find root parent
+    NSUInteger containerIndex = 0;
+    NSString *containerName = self.currentElementNames[containerIndex];
+    id result = self.parsedResponse[containerName];
+    
+    //navigate branch till we have the element
+    while (![elementName isEqualToString:containerName]) {
+        containerIndex++;
+        containerName = self.currentElementNames[containerIndex];
+        result = result[containerName];
+    }
+    return result;
 }
 
 @end

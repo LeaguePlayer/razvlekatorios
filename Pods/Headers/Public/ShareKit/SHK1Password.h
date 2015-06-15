@@ -1,0 +1,1 @@
+../../../ShareKit/Classes/ShareKit/Sharers/Actions/Open in 1Password/SHK1Password.h

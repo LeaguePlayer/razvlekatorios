@@ -27,48 +27,36 @@
 
 #import <Foundation/Foundation.h>
 
+@class SHKRequest;
 
-@interface SHKRequest : NSObject 
-{
-	NSURL *url;
-	NSString *params;
-	NSString *method;
-	NSDictionary *headerFields;
-	
-	id delegate;
-	SEL isFinishedSelector;
-	
-	NSURLConnection *connection;
-	
-	NSHTTPURLResponse *response;
-	NSDictionary *headers;
-	
-	NSMutableData *data;
-	NSString *result;
-	BOOL success;
-}
+typedef void (^RequestCallback) (SHKRequest *request);
 
-@property (retain) NSURL *url;
-@property (retain) NSString *params;
-@property (retain) NSString *method;
-@property (retain) NSDictionary *headerFields;
+@interface SHKRequest : NSObject
 
-@property (retain) id delegate;
-@property (assign) SEL isFinishedSelector;
+///You can set this prior starting the request if needed
+@property (nonatomic, strong) NSDictionary *headerFields;
 
-@property (retain) NSURLConnection *connection;
+@property (readonly, strong) NSURL *url;
+@property (readonly, strong) NSString *params;
+@property (readonly, strong) NSString *method;
 
-@property (retain) NSHTTPURLResponse *response;
-@property (retain) NSDictionary *headers;
+@property (strong) NSURLConnection *connection;
 
-@property (retain) NSMutableData *data;
-@property (nonatomic, retain, getter=getResult) NSString *result;
+//*** response properties ***
+@property (strong) NSHTTPURLResponse *response;
+@property (strong) NSDictionary *headers;
+
+@property (strong) NSMutableData *data;
+@property (nonatomic, strong, getter=getResult) NSString *result;
 @property (nonatomic) BOOL success;
 
-- (id)initWithURL:(NSURL *)u params:(NSString *)p delegate:(id)d isFinishedSelector:(SEL)s method:(NSString *)m autostart:(BOOL)autostart;
++ (void)startWithURL:(NSURL *)u params:(NSString *)p method:(NSString *)m completion:(RequestCallback)completionBlock;
+- (instancetype)initWithURL:(NSURL *)u params:(NSString *)p method:(NSString *)m completion:(RequestCallback)completionBlock;
+
++ (void)startWithRequest:(NSMutableURLRequest *)request completion:(RequestCallback)completionBlock;
+- (instancetype)initWithRequest:(NSMutableURLRequest *)request completion:(RequestCallback)completionBlock;
 
 - (void)start;
 - (void)finish;
-
 
 @end

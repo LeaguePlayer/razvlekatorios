@@ -34,11 +34,7 @@
 @synthesize vkWebView, appID, delegate;
 
 - (void) dealloc {
-	[delegate release];
-	[appID release];
 	vkWebView.delegate = nil;
-	[vkWebView release];
-	[super dealloc];
 }
 
 - (void)didReceiveMemoryWarning
@@ -54,10 +50,9 @@
 
 - (void) addCloseButton
 {
-    self.navigationItem.leftBarButtonItem = [[[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonItemStyleBordered
+    self.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemCancel
                                                                                            target:self
-                                                                                           action:@selector(closeView)]
-                                             autorelease];
+                                                                                           action:@selector(closeView)];
 }
 
 #pragma mark - View lifecycle
@@ -69,7 +64,7 @@
     
 	if(!vkWebView)
 	{
-		self.vkWebView = [[[UIWebView alloc] initWithFrame:self.view.bounds] autorelease];
+		self.vkWebView = [[UIWebView alloc] initWithFrame:self.view.bounds];
 		vkWebView.delegate = self;
 		vkWebView.scalesPageToFit = YES;
 		self.vkWebView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
@@ -81,11 +76,15 @@
 		[[SHK currentHelper] hideCurrentViewControllerAnimated:YES];
 		return;
 	}
-	NSString *authLink = [NSString stringWithFormat:@"http://api.vk.com/oauth/authorize?client_id=%@&scope=wall,photos,friends,offline,docs&redirect_uri=http://api.vk.com/blank.html&display=touch&response_type=token", appID];
-	NSURL *url = [NSURL URLWithString:authLink];
-	
-	[vkWebView loadRequest:[NSURLRequest requestWithURL:url]];
-	
+}
+
+- (void)viewDidAppear:(BOOL)animated {
+    [super viewDidAppear:animated];
+
+    NSString *authLink = [NSString stringWithFormat:@"http://api.vk.com/oauth/authorize?client_id=%@&scope=wall,photos,friends,offline,docs&redirect_uri=http://api.vk.com/blank.html&display=touch&response_type=token", appID];
+    NSURL *url = [NSURL URLWithString:authLink];
+
+    [vkWebView loadRequest:[NSURLRequest requestWithURL:url]];
 }
 
 - (void)viewDidUnload

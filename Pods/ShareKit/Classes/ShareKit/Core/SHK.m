@@ -26,6 +26,9 @@
 //
 
 #import "SHK.h"
+#import "Singleton.h"
+#import "Debug.h"
+
 #import "SHKActivityIndicator.h"
 #import "SHKConfiguration.h"
 #import "SHKActionSheet.h"
@@ -33,23 +36,34 @@
 #import "SSKeychain.h"
 #import "SHKReachability.h"
 #import "SHKMail.h"
+#import "SHKItem.h"
+#import "SHKUploadInfo.h"
+
 #import <objc/runtime.h>
 #import <objc/message.h>
 #import <MessageUI/MessageUI.h>
-#import "Singleton.h"
+
+NSString * const SHKAuthDidFinishNotification = @"SHKAuthDidFinish";
 
 NSString * const SHKSendDidStartNotification = @"SHKSendDidStartNotification";
-NSString * const SHKSendDidFinishNotification = @"SHKSendDidFinish";
 NSString * const SHKSendDidFailWithErrorNotification = @"SHKSendDidFailWithError";
 NSString * const SHKSendDidCancelNotification = @"SHKSendDidCancel";
-NSString * const SHKAuthDidFinishNotification = @"SHKAuthDidFinish";
+
+NSString * const SHKSendDidFinishNotification = @"SHKSendDidFinish";
+NSString * const SHKShareResponseKeyName = @"SHKShareResponseKeyName";
+
+NSString * const SHKUploadProgressNotification = @"SHKUploadProgressNotification";
+NSString * const SHKUploadProgressInfoKeyName = @"SHKUploadProgressInfoKeyName";
+NSString * const SHKUploadInfosDefaultsKeyName = @"SHKUploadInfosDefaultsKeyName";
 
 NSString * SHKLocalizedStringFormat(NSString* key);
 
 @interface SHK ()
 
-@property (nonatomic, assign) UIViewController *rootViewController;
-@property SEL showMethod;
+@property (nonatomic, weak) UIViewController *rootViewController;
+@property BOOL wrapViewController;
+@property (strong) NSMutableArray *sharerReferences;
+@property (strong, nonatomic) NSMutableOrderedSet *uploadProgressUserInfos;
 
 @end
 
@@ -64,12 +78,64 @@ BOOL SHKinit;
     });
 }
 
-- (void)dealloc
-{
-	[_currentView release];
-	[_pendingView release];
-	[_offlineQueue release];
-	[super dealloc];
+- (id)init {
+    
+    self = [super init];
+    if (self) {
+        _sharerReferences = [@[] mutableCopy];
+        
+        NSData *data = [[NSUserDefaults standardUserDefaults] dataForKey:SHKUploadInfosDefaultsKeyName];
+      
+        if (data) {
+            NSArray *savedUploadUserInfosArray = [NSKeyedUnarchiver unarchiveObjectWithData:data];
+            _uploadProgressUserInfos = [[NSMutableOrderedSet alloc] initWithArray:savedUploadUserInfosArray];
+        } else {
+            _uploadProgressUserInfos = [[NSMutableOrderedSet alloc] initWithCapacity:10];
+        }
+    }
+    return self;
+}
+
+- (void)dealloc {
+    SHKLog(@"SHK base deallocated");
+}
+
+#pragma mark -
+#pragma mark Sharer Management
+
+- (void)keepSharerReference:(SHKSharer *)sharer {
+    
+    SHKLog(@"+++ %@ reference", [sharer sharerTitle]);
+    [self.sharerReferences addObject:sharer];
+}
+
+- (void)removeSharerReference:(SHKSharer *)sharer {
+    
+    SHKLog(@"--- %@ reference", [sharer sharerTitle]);
+    
+    NSUInteger indexOfSharer = [self.sharerReferences indexOfObject:sharer];
+    
+    if (indexOfSharer != NSNotFound) {
+        [self.sharerReferences removeObjectAtIndex:indexOfSharer];
+    } else {
+        SHKLog(@"Attempt to removeSharerReference NON Existing reference!!! Watch out, something is wrong with sharers implementation!!!");
+    }
+}
+
+#pragma mark -
+#pragma mark - Uploads Progress Management
+
+- (void)uploadInfoChanged:(SHKUploadInfo *)uploadProgressUserInfo {
+    
+    if (uploadProgressUserInfo) {
+        [self.uploadProgressUserInfos insertObject:uploadProgressUserInfo atIndex:0];
+    }
+    
+    //save change to NSUserDefaults
+    NSArray *array = [self.uploadProgressUserInfos array];
+    NSData *uploadInfosData = [NSKeyedArchiver archivedDataWithRootObject:array];
+    [[NSUserDefaults standardUserDefaults] setObject:uploadInfosData forKey:SHKUploadInfosDefaultsKeyName];
+    [[NSUserDefaults standardUserDefaults] synchronize];
 }
 
 #pragma mark -
@@ -86,7 +152,7 @@ BOOL SHKinit;
     UIViewController *result = [self getCurrentRootViewController];
     
     // Find the top most view controller being displayed (so we can add the modal view to it and not one that is hidden)
-	while (result.modalViewController != nil) result = result.modalViewController;
+	while (result.presentedViewController != nil) result = result.presentedViewController;
     
     NSAssert(result, @"ShareKit: There is no view controller to display from");
 	return result;  
@@ -130,7 +196,7 @@ BOOL SHKinit;
 
 - (void)showViewController:(UIViewController *)vc
 {
-    self.showMethod = @selector(showViewController:);
+    self.wrapViewController = YES;
     
     BOOL isHidingPreviousView = [self hidePreviousView:vc];
     if (isHidingPreviousView) return;
@@ -143,7 +209,7 @@ BOOL SHKinit;
         NSAssert(vc.presentingViewController == nil, @"vc must not be in the view hierarchy now"); //ios5+
     }
     
-	if (![vc isKindOfClass:[UINavigationController class]]) vc = [[[UINavigationController alloc] initWithRootViewController:vc] autorelease];
+	if (![vc isKindOfClass:[UINavigationController class]]) vc = [[UINavigationController alloc] initWithRootViewController:vc];
     
     [(UINavigationController *)vc navigationBar].barStyle = [SHK barStyle];
     [(UINavigationController *)vc toolbar].barStyle = [SHK barStyle];
@@ -155,7 +221,7 @@ BOOL SHKinit;
 /* method for sharers with custom UI, e.g. all social.framework sharers, print etc */
 - (void)showStandaloneViewController:(UIViewController *)vc {
     
-    self.showMethod = @selector(presentVC:);
+    self.wrapViewController = NO;
     
     BOOL isHidingPreviousView = [self hidePreviousView:vc];
     if (isHidingPreviousView) return;    
@@ -165,7 +231,8 @@ BOOL SHKinit;
 
 - (void)presentVC:(UIViewController *)vc {
     
-    BOOL isSocialOrTwitterComposeVc = [vc respondsToSelector:@selector(setInitialText:)];
+    SEL selector = NSSelectorFromString(@"setInitialText:");
+    BOOL isSocialOrTwitterComposeVc = [vc respondsToSelector:selector];
 
     if ([vc respondsToSelector:@selector(modalPresentationStyle)] && !isSocialOrTwitterComposeVc)
         vc.modalPresentationStyle = [SHK modalPresentationStyleForController:vc];
@@ -174,13 +241,8 @@ BOOL SHKinit;
         vc.modalTransitionStyle = [SHK modalTransitionStyleForController:vc];
     
     UIViewController *topViewController = [self rootViewForUIDisplay];
-    
-    if ([UIViewController instancesRespondToSelector:@selector(presentViewController:animated:completion:)]) {
-        [topViewController presentViewController:vc animated:YES completion:nil];
-    } else {
-        [topViewController presentModalViewController:vc animated:YES];
-    }
-    
+    [topViewController presentViewController:vc animated:YES completion:nil];
+
     self.currentView = vc;
 	self.pendingView = nil;
 }
@@ -229,8 +291,11 @@ BOOL SHKinit;
 
 - (void)showPendingView
 {
-    if (self.pendingView)
-        [self performSelector:self.showMethod withObject:self.pendingView];
+    if (self.wrapViewController) {
+        [self showViewController:self.pendingView];
+    } else {
+        [self presentVC:self.pendingView];
+    }
 }
 
 - (void)viewWasDismissed
@@ -304,6 +369,20 @@ BOOL SHKinit;
 {	
 	
     NSArray *favoriteSharers = [[NSUserDefaults standardUserDefaults] objectForKey:[self favoritesKeyForItem:item]];
+    
+    //temporary check for iOS sharers. They were separated from original sharers such as SHKFacebook. Under certain circumstances this caused no sharers in shareMenu, see https://github.com/ShareKit/ShareKit/issues/885.
+    BOOL favoritesContainSoloLegacyFacebook = [favoriteSharers containsObject:@"SHKFacebook"] && ![favoriteSharers containsObject:@"SHKiOSFacebook"];
+    if (favoritesContainSoloLegacyFacebook) {
+        NSMutableArray *mutableFavoriteSharers = [favoriteSharers mutableCopy];
+        [mutableFavoriteSharers addObject:@"SHKiOSFacebook"];
+        favoriteSharers = mutableFavoriteSharers;
+    }
+    BOOL favoritesContainSoloLegacyTwitter = [favoriteSharers containsObject:@"SHKTwitter"] && ![favoriteSharers containsObject:@"SHKiOSTwitter"];
+    if (favoritesContainSoloLegacyTwitter) {
+        NSMutableArray *mutableFavoriteSharers = [favoriteSharers mutableCopy];
+        [mutableFavoriteSharers addObject:@"SHKiOSTwitter"];
+        favoriteSharers = mutableFavoriteSharers;
+    }
 		
 	// set defaults
 	if (favoriteSharers == nil)
@@ -356,7 +435,6 @@ BOOL SHKinit;
 		favoriteSharers = [NSArray arrayWithArray:newFavs];
 		[self setFavorites:favoriteSharers forItem:item];
 		
-		[newFavs release];
     }
 	
 	// Make sure the favorites are not using any exclusions, remove them if they are.
@@ -373,7 +451,6 @@ BOOL SHKinit;
 		favoriteSharers = [NSArray arrayWithArray:newFavs];
 		[self setFavorites:favoriteSharers forItem:item];
 		
-		[newFavs release];
 	}
 	
 	return favoriteSharers;
@@ -402,7 +479,6 @@ BOOL SHKinit;
 	
 	[self setFavorites:favs forItem:item];
 	
-	[favs release];
 }
 
 + (void)setFavorites:(NSArray *)favs forItem:(SHKItem *)item
@@ -421,6 +497,25 @@ BOOL SHKinit;
     return result;
 }
 
++ (NSMutableArray *)sharersToShowInActionSheetForItem:(SHKItem *)item {
+    
+    NSMutableArray *result = [NSMutableArray arrayWithCapacity:0];
+    NSArray *favoriteSharers = [SHK favoriteSharersForItem:item];
+    
+    // Add buttons for each favorite sharer
+    id class;
+    for(NSString *sharerId in favoriteSharers)
+    {
+        //Do not add buttons for sharers, which are not able to share item
+        class = NSClassFromString(sharerId);
+        if ([class canShare] && [class canShareItem:item])
+        {
+            [result addObject:sharerId];
+        }
+    }
+    return result;    
+}
+
 #pragma mark -
 #pragma mark Credentials
 
@@ -428,45 +523,25 @@ BOOL SHKinit;
 
 + (NSString *)getAuthValueForKey:(NSString *)key forSharer:(NSString *)sharerId
 {
-#if TARGET_IPHONE_SIMULATOR
-	// Using NSUserDefaults for storage is very insecure, but because Keychain only exists on a device
-	// we use NSUserDefaults when running on the simulator to store objects.  This allows you to still test
-	// in the simulator.  You should NOT modify in a way that does not use keychain when actually deployed to a device.
-	return [[NSUserDefaults standardUserDefaults] objectForKey:[NSString stringWithFormat:@"%@%@%@",SHKCONFIG(authPrefix),sharerId,key]];
-#else
-	return [SSKeychain passwordForService:[NSString stringWithFormat:@"%@%@",SHKCONFIG(authPrefix),sharerId] 
-								  account:key 
-									error:nil ];
-#endif
+
+    return [SSKeychain passwordForService:[NSString stringWithFormat:@"%@%@",SHKCONFIG(authPrefix),sharerId]
+                                  account:key
+                                    error:nil ];
 }
 
 + (void)setAuthValue:(NSString *)value forKey:(NSString *)key forSharer:(NSString *)sharerId
 {
-#if TARGET_IPHONE_SIMULATOR
-	// Using NSUserDefaults for storage is very insecure, but because Keychain only exists on a device
-	// we use NSUserDefaults when running on the simulator to store objects.  This allows you to still test
-	// in the simulator.  You should NOT modify in a way that does not use keychain when actually deployed to a device.
-	[[NSUserDefaults standardUserDefaults] setObject:value forKey:[NSString stringWithFormat:@"%@%@%@",SHKCONFIG(authPrefix),sharerId,key]];
-#else
-	[SSKeychain setPassword:value 
-				 forService:[NSString stringWithFormat:@"%@%@",SHKCONFIG(authPrefix),sharerId] 
-					account:key 
-					  error:nil];
-#endif
+    [SSKeychain setPassword:value
+                 forService:[NSString stringWithFormat:@"%@%@",SHKCONFIG(authPrefix),sharerId]
+                    account:key
+                      error:nil];
 }
 
 + (void)removeAuthValueForKey:(NSString *)key forSharer:(NSString *)sharerId
 {
-#if TARGET_IPHONE_SIMULATOR
-	// Using NSUserDefaults for storage is very insecure, but because Keychain only exists on a device
-	// we use NSUserDefaults when running on the simulator to store objects.  This allows you to still test
-	// in the simulator.  You should NOT modify in a way that does not use keychain when actually deployed to a device.
-	[[NSUserDefaults standardUserDefaults] removeObjectForKey:[NSString stringWithFormat:@"%@%@%@",SHKCONFIG(authPrefix),sharerId,key]];
-#else
-	[SSKeychain deletePasswordForService:[NSString stringWithFormat:@"%@%@",SHKCONFIG(authPrefix),sharerId] 
-								 account:key 
-								   error:nil];
-#endif
+    [SSKeychain deletePasswordForService:[NSString stringWithFormat:@"%@%@",SHKCONFIG(authPrefix),sharerId]
+                                 account:key
+                                   error:nil];
 }
 
 + (void)logoutOfAll
@@ -490,7 +565,7 @@ static NSString *shareKitLibraryBundlePath = nil;
 {
     if (shareKitLibraryBundlePath == nil) {
         
-        shareKitLibraryBundlePath = [[[NSBundle bundleForClass:[SHK class]] pathForResource:@"ShareKit" ofType:@"bundle"] retain];
+        shareKitLibraryBundlePath = [[NSBundle bundleForClass:[SHK class]] pathForResource:@"ShareKit" ofType:@"bundle"];
     }
     return shareKitLibraryBundlePath;
 }
@@ -501,18 +576,18 @@ static NSDictionary *sharersDictionary = nil;
 {
 	if (sharersDictionary == nil)
     {        
-		sharersDictionary = [[NSDictionary dictionaryWithContentsOfFile:[[SHK shareKitLibraryBundlePath] stringByAppendingPathComponent:SHKCONFIG(sharersPlistName)]] retain];
+		sharersDictionary = [NSDictionary dictionaryWithContentsOfFile:[[SHK shareKitLibraryBundlePath] stringByAppendingPathComponent:SHKCONFIG(sharersPlistName)]];
     }
     
     //if user sets his own sharers plist - name only
     if (sharersDictionary == nil) 
     {
-        sharersDictionary = [[NSDictionary dictionaryWithContentsOfFile:[[[NSBundle mainBundle] resourcePath] stringByAppendingPathComponent:SHKCONFIG(sharersPlistName)]] retain];
+        sharersDictionary = [NSDictionary dictionaryWithContentsOfFile:[[[NSBundle mainBundle] resourcePath] stringByAppendingPathComponent:SHKCONFIG(sharersPlistName)]];
     }
     
     //if user sets his own sharers plist - complete path
     if (sharersDictionary == nil) {
-        sharersDictionary = [[NSDictionary dictionaryWithContentsOfFile:SHKCONFIG(sharersPlistName)] retain];
+        sharersDictionary = [NSDictionary dictionaryWithContentsOfFile:SHKCONFIG(sharersPlistName)];
     }
     
     NSAssert(sharersDictionary != nil, @"ShareKit: You do not have properly set sharersPlistName");
@@ -521,6 +596,19 @@ static NSDictionary *sharersDictionary = nil;
 	return sharersDictionary;
 }
 
++ (NSArray *)activeSharersRequiringAuthentication {
+    
+    NSDictionary *sharersDictionary = [SHK sharersDictionary];
+    NSArray *services = [sharersDictionary objectForKey:@"services"];
+    NSMutableArray *result = [[NSMutableArray alloc] initWithCapacity:[services count]];
+    for (NSString *sharer in services) {
+        Class sharerClass = NSClassFromString(sharer);
+        if (sharerClass && [sharerClass canShare] && [sharerClass requiresAuthentication]) {
+            [result addObject:sharerClass];
+        }
+    }
+    return result;
+}
 
 #pragma mark -
 #pragma mark Offline Support
@@ -550,7 +638,7 @@ static NSDictionary *sharersDictionary = nil;
 + (NSMutableArray *)getOfflineQueueList
 {
 	//TODO:should do this off the main thread
-    return [[[NSArray arrayWithContentsOfFile:[self offlineQueueListPath]] mutableCopy] autorelease];
+    return [[NSArray arrayWithContentsOfFile:[self offlineQueueListPath]] mutableCopy];
 }
 
 + (void)saveOfflineQueueList:(NSMutableArray *)queueList
@@ -598,12 +686,11 @@ static NSDictionary *sharersDictionary = nil;
 		if (helper.offlineQueue == nil) {
             NSOperationQueue *aQueue = [[NSOperationQueue alloc] init];
 			helper.offlineQueue = aQueue;	
-            [aQueue release];
         }
 			
 		for (NSDictionary *entry in queueList)
 		{
-            [helper.offlineQueue addOperation:[[[SHKOfflineSharer alloc] initWithDictionary:entry] autorelease]];
+            [helper.offlineQueue addOperation:[[SHKOfflineSharer alloc] initWithDictionary:entry]];
 		}
 		
 		// Remove offline queue - TODO: only do this if everything was successful?
@@ -621,7 +708,7 @@ static NSDictionary *sharersDictionary = nil;
 	if (description) {
 		va_list args;
 		va_start(args, description);
-		NSString *string = [[[NSString alloc] initWithFormat:description arguments:args] autorelease];
+		NSString *string = [[NSString alloc] initWithFormat:description arguments:args];
 		va_end(args);
 
 		userInfo = [NSDictionary dictionaryWithObject:string forKey:NSLocalizedDescriptionKey];
@@ -642,11 +729,6 @@ static NSDictionary *sharersDictionary = nil;
 }
 
 @end
-
-NSString * SHKStringOrBlank(NSString * value)
-{
-	return value == nil ? @"" : value;
-}
 
 NSString * SHKEncode(NSString * value)
 {
@@ -671,12 +753,11 @@ NSString * SHKEncodeURL(NSURL * value)
 	if (value == nil)
 		return @"";
 	
-	NSString *result = (NSString *)CFURLCreateStringByAddingPercentEscapes(kCFAllocatorDefault,
-                                                                           (CFStringRef)value.absoluteString,
+	NSString *result = (__bridge_transfer NSString *)CFURLCreateStringByAddingPercentEscapes(kCFAllocatorDefault,
+                                                                           (__bridge CFStringRef)value.absoluteString,
                                                                            NULL,
 																		   CFSTR("!*'();:@&=+$,/?%#[]"),
                                                                            kCFStringEncodingUTF8);
-    [result autorelease];
 	return result;
 }
 
@@ -710,17 +791,12 @@ NSString* SHKLocalizedStringFormat(NSString* key)
   static NSBundle* bundle = nil;
   if (nil == bundle) {
       
-      NSString *path = nil;
-      if ([SHKCONFIG(isUsingCocoaPods) boolValue]) {
-          path = [SHK shareKitLibraryBundlePath];
-      } else {
-          path = [[SHK shareKitLibraryBundlePath] stringByAppendingPathComponent:@"ShareKit.bundle"];
-      }
-      
-      bundle = [[NSBundle bundleWithPath:path] retain];
+      NSString *path = [SHK shareKitLibraryBundlePath];
+      bundle = [NSBundle bundleWithPath:path];
       NSCAssert(bundle != nil,@"ShareKit has been refactored to be used as Xcode subproject. Please follow the updated installation wiki and re-add it to the project. Please do not forget to clean project and clean build folder afterwards. In case you use CocoaPods override - (NSNumber *)isUsingCocoaPods; method in your configurator subclass and return [NSNumber numberWithBool:YES]");
   }
-  return [bundle localizedStringForKey:key value:key table:nil];
+  NSString *result = [bundle localizedStringForKey:key value:nil table:nil];
+  return result;
 }
 
 NSString* SHKLocalizedString(NSString* key, ...) 
@@ -730,7 +806,7 @@ NSString* SHKLocalizedString(NSString* key, ...)
 	
 	va_list args;
     va_start(args, key);
-    NSString *string = [[[NSString alloc] initWithFormat:localizedStringFormat arguments:args] autorelease];
+    NSString *string = [[NSString alloc] initWithFormat:localizedStringFormat arguments:args];
     va_end(args);
 	
 	return string;

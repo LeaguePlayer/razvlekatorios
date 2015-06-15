@@ -29,6 +29,7 @@
 
 - (void)viewDidLoad
 {
+    DefaultContext;
     [super viewDidLoad];
 	// Do any additional setup after loading the view.
     [self initDownloader];

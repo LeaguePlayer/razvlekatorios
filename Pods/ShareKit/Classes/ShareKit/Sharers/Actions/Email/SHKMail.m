@@ -111,19 +111,22 @@
 
 - (BOOL)sendMail
 {	
-	MFMailComposeViewController *mailController = [[[MFMailComposeViewController alloc] init] autorelease];
+	MFMailComposeViewController *mailController = [[MFMailComposeViewController alloc] init];
 	if (!mailController) {
 		// e.g. no mail account registered (will show alert)
 		[[SHK currentHelper] hideCurrentViewControllerAnimated:YES];
 		return YES;
 	}
 	
-    [self retain]; //must retain, because mailController does not retain its delegates. Released in callback.
+    [[SHK currentHelper] keepSharerReference:self]; //must retain, because mailController does not retain its delegates. Released in callback.
 	mailController.mailComposeDelegate = self;
 	mailController.navigationBar.tintColor = SHKCONFIG_WITH_ARGUMENT(barTintForView:,mailController);
 	
 	NSString *body = self.item.text ? self.item.text : @"";
-	BOOL isHTML = self.item.isMailHTML;
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wdeprecated-declarations"
+	BOOL isHTML = self.item.isMailHTML || self.item.isHTMLText;
+#pragma clang diagnostic pop
     NSString *separator = (isHTML ? @"<br/><br/>" : @"\n\n");
 		
 		if (self.item.URL != nil)
@@ -199,8 +202,7 @@
 			[self sendDidFailWithError:nil];
 			break;
 	}
-	[self autorelease];
+	[[SHK currentHelper] removeSharerReference:self];
 }
-
 
 @end

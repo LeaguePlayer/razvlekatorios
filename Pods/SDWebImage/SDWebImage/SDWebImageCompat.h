@@ -26,31 +26,45 @@
 #define UIImageView NSImageView
 #endif
 #else
+
 #import <UIKit/UIKit.h>
+
 #endif
 
-// @see https://github.com/ccgus/fmdb/commit/aef763eeb64e6fa654e7d121f1df4c16a98d9f4f
-#define SDDispatchQueueRelease(q) (dispatch_release(q))
-#if TARGET_OS_IPHONE
-    #if __IPHONE_OS_VERSION_MIN_REQUIRED >= 60000
-        #undef SDDispatchQueueRelease
-        #define SDDispatchQueueRelease(q)
-        #undef SDDispatchQueueSetterSementics
-        #define SDDispatchQueueSetterSementics strong
-    #endif
-#else
-    #if MAC_OS_X_VERSION_MIN_REQUIRED >= 1080
-        #undef SDDispatchQueueRelease
-        #define SDDispatchQueueRelease(q)
-        #undef SDDispatchQueueSetterSementics
-        #define SDDispatchQueueSetterSementics strong
-    #endif
+#ifndef NS_ENUM
+#define NS_ENUM(_type, _name) enum _name : _type _name; enum _name : _type
+#endif
+
+#ifndef NS_OPTIONS
+#define NS_OPTIONS(_type, _name) enum _name : _type _name; enum _name : _type
 #endif
 
 #if OS_OBJECT_USE_OBJC
+    #undef SDDispatchQueueRelease
+    #undef SDDispatchQueueSetterSementics
+    #define SDDispatchQueueRelease(q)
     #define SDDispatchQueueSetterSementics strong
 #else
-    #define SDDispatchQueueSetterSementics assign
+#undef SDDispatchQueueRelease
+#undef SDDispatchQueueSetterSementics
+#define SDDispatchQueueRelease(q) (dispatch_release(q))
+#define SDDispatchQueueSetterSementics assign
 #endif
 
-extern UIImage *SDScaledImageForPath(NSString *path, NSObject *imageOrData);
+extern UIImage *SDScaledImageForKey(NSString *key, UIImage *image);
+
+typedef void(^SDWebImageNoParamsBlock)();
+
+#define dispatch_main_sync_safe(block)\
+    if ([NSThread isMainThread]) {\
+        block();\
+    } else {\
+        dispatch_sync(dispatch_get_main_queue(), block);\
+    }
+
+#define dispatch_main_async_safe(block)\
+    if ([NSThread isMainThread]) {\
+        block();\
+    } else {\
+        dispatch_async(dispatch_get_main_queue(), block);\
+    }

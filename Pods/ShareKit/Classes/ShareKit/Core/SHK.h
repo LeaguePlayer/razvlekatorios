@@ -31,26 +31,56 @@
 
 @class SHKActionSheet;
 @class SHKItem;
+@class SHKSharer;
+@class SHKUploadInfo;
 
+extern NSString * const SHKAuthDidFinishNotification;
 extern NSString * const SHKSendDidStartNotification;
-extern NSString * const SHKSendDidFinishNotification;
 extern NSString * const SHKSendDidFailWithErrorNotification;
 extern NSString * const SHKSendDidCancelNotification;
-extern NSString * const SHKAuthDidFinishNotification;
+
+extern NSString * const SHKSendDidFinishNotification;
+extern NSString * const SHKShareResponseKeyName;
+
+extern NSString * const SHKUploadProgressNotification;
+extern NSString * const SHKUploadProgressInfoKeyName;
+extern NSString * const SHKUploadInfosDefaultsKeyName;
 
 @interface SHK : NSObject 
 
-@property (nonatomic, retain) UIViewController *currentView;
-@property (nonatomic, retain) UIViewController *pendingView;
+@property (nonatomic, strong) UIViewController *currentView;
+@property (nonatomic, strong) UIViewController *pendingView;
 @property BOOL isDismissingView;
 
-@property (nonatomic, retain) NSOperationQueue *offlineQueue;
+@property (nonatomic, strong) NSOperationQueue *offlineQueue;
+@property (readonly) NSMutableOrderedSet *uploadProgressUserInfos;
 
 #pragma mark -
 
 + (SHK *)currentHelper;
 
 + (NSDictionary *)sharersDictionary;
+
+///returns array of classes of existing sharers which can share and require authentication.
++ (NSArray *)activeSharersRequiringAuthentication;
+
+#pragma mark -
+#pragma mark Sharer Management
+
+///some sharers need to be retained until callback from UI or web service, otherwise they would be prematurely deallocated. Each sharer is responsible for removing itself on callback.
+- (void)keepSharerReference:(SHKSharer *)sharer;
+///Warning: this method removes only the first occurence of the sharer. If the sharer is on multiple indexes, the sharer's implementation is responsible to remove each one separately. The reason is pendingShare - the sharer might finish authentication, thus remove itself. Then it would be unavailable for callback after finishing subsequent pending share.
+- (void)removeSharerReference:(SHKSharer *)sharer;
+
+#pragma mark -
+#pragma mark - Uploads Progress Management
+
+/*!
+ Each time there is a change of upload status (start, finish, failure, cancel) this method should be called. Saves the upload info reference to uploadProgressUserInfos property, and saves the change persistently to NSUserDefaults. Do not call this each time when upload bytes progress is reported, because saving to NSUserDefaults is expensive and unneccessary. Bytes progress is reported using SHKUploadProgressNotification.
+ @param uploadProgressUserInfo
+ Changed upload info
+ */
+- (void)uploadInfoChanged:(SHKUploadInfo *)uploadProgressUserInfo;
 
 #pragma mark -
 #pragma mark View Management
@@ -77,6 +107,8 @@ extern NSString * const SHKAuthDidFinishNotification;
 + (NSArray *)favoriteSharersForItem:(SHKItem *)item;
 + (void)pushOnFavorites:(NSString *)className forItem:(SHKItem *)item;
 + (void)setFavorites:(NSArray *)favs forItem:(SHKItem *)item;
+
++ (NSMutableArray *)sharersToShowInActionSheetForItem:(SHKItem *)item;
 
 #pragma mark -
 #pragma mark Credentials
@@ -109,7 +141,6 @@ extern NSString * const SHKAuthDidFinishNotification;
 
 @end
 
-NSString * SHKStringOrBlank(NSString * value);
 NSString * SHKEncode(NSString * value);
 NSString * SHKEncodeURL(NSURL * value);
 NSString * SHKFlattenHTML(NSString * value, BOOL preserveLineBreaks);

@@ -4,7 +4,6 @@
 //
 //  Created by Nathan Weiner on 6/8/10.
 
-//
 //  Permission is hereby granted, free of charge, to any person obtaining a copy
 //  of this software and associated documentation files (the "Software"), to deal
 //  in the Software without restriction, including without limitation the rights
@@ -22,17 +21,6 @@
 //  LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 //  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 //  THE SOFTWARE.
-//
-//
-
-#import <UIKit/UIKit.h>
-
-#import "SHKItem.h"
-
-@class SHKRequest;
-@class SHKFormController;
-@class SHKFormOptionController;
-@class SHKFile;
 
 @class SHKSharer;
 
@@ -44,66 +32,54 @@
 - (void)sharerCancelledSending:(SHKSharer *)sharer;
 - (void)sharerShowBadCredentialsAlert:(SHKSharer *)sharer;
 - (void)sharerShowOtherAuthorizationErrorAlert:(SHKSharer *)sharer;
+- (void)hideActivityIndicatorForSharer:(SHKSharer *)sharer;
+- (void)displayActivity:(NSString *)activityDescription forSharer:(SHKSharer *)sharer;
+- (void)displayCompleted:(NSString *)completionText forSharer:(SHKSharer *)sharer;
+- (void)showProgress:(CGFloat)progress forSharer:(SHKSharer *)sharer;
 @optional
 - (void)sharerAuthDidFinish:(SHKSharer *)sharer success:(BOOL)success;	
 
 @end
 
-typedef enum 
-{
-	SHKPendingNone,
-	SHKPendingShare, //when ShareKit detects invalid credentials BEFORE user sends. User continues editing share content after login.
-	SHKPendingRefreshToken, //when OAuth token expires
-    SHKPendingSend, //when ShareKit detects invalid credentials AFTER user sends. Item is resent without showing edit dialogue (user edited already). 
-} SHKSharerPendingAction;
+#import "SHKSessionDelegate.h"
 
-@interface SHKSharer : UINavigationController
+@class SHKItem;
 
-@property (nonatomic, retain) id <SHKSharerDelegate> shareDelegate;
+@interface SHKSharer : UINavigationController <SHKSessionDelegate, UIDocumentInteractionControllerDelegate>
 
-@property (retain) SHKItem *item;
-@property (retain) SHKFormController *pendingForm;
-@property (assign) SHKFormOptionController *curOptionController; //TODO in ARC should be weak, remove all nilling
-@property (retain) SHKRequest *request; //TODO: sharer retains request, but request retains sharer too. Memory leak?
-@property (nonatomic, retain) NSError *lastError;
+@property (nonatomic, strong) id <SHKSharerDelegate> shareDelegate;
+
+///holds last error encountered by sharer. Useful if you need to present it to the user.
+@property (readonly, nonatomic, strong) NSError *lastError;
+
+///YES means no alerts, no activity indicators are displayed during the share process.
 @property BOOL quiet;
-@property SHKSharerPendingAction pendingAction;
+
+@property (readonly, strong) SHKItem *item;
 
 #pragma mark -
 #pragma mark Configuration : Service Definition
 
 + (NSString *)sharerTitle;
 - (NSString *)sharerTitle;
-+ (NSString *)sharerId;
-- (NSString *)sharerId;
-+ (BOOL)canShareText;
-+ (BOOL)canShareURL;
-- (BOOL)requiresShortenedURL;
-+ (BOOL)canShareImage;
-+ (BOOL)canShareFile:(SHKFile *)file;
-+ (BOOL)canGetUserInfo;
++ (BOOL)canShareItem:(SHKItem *)item;
 + (BOOL)shareRequiresInternetConnection;
 + (BOOL)canShareOffline;
 + (BOOL)requiresAuthentication;
-+ (BOOL)canShareItem:(SHKItem *)item;
 + (BOOL)canAutoShare;
 
 #pragma mark -
 #pragma mark Configuration : Dynamic Enable
 
 + (BOOL)canShare;
-- (BOOL)shouldAutoShare;
-
-#pragma mark -
-#pragma mark Initialization
-
-- (id)init;
 
 #pragma mark -
 #pragma mark Share Item Loading Convenience Methods
 
+///Shares the item immediately
 + (id)shareItem:(SHKItem *)i;
 
+///Loads item without sharing. Useful, if you wish to specify your own delegate, or otherwise setup the sharer. Do not forget to call 'share' method to actually share the item.
 - (void)loadItem:(SHKItem *)i;
 
 + (id)shareURL:(NSURL *)url;
@@ -115,102 +91,44 @@ typedef enum
 
 + (id)shareFile:(NSData *)file filename:(NSString *)filename mimeType:(NSString *)mimeType title:(NSString *)title __attribute__((deprecated("use shareFileData:filename:title or shareFilePath:title instead. Mimetype is derived from filename")));
 
-// use if you share in-memory data.
+/// use if you share in-memory data.
 + (id)shareFileData:(NSData *)data filename:(NSString *)filename title:(NSString *)title;
 
-//use if you share file from disk.
+///use if you share file from disk.
 + (id)shareFilePath:(NSString *)path title:(NSString *)title;
 
-//only for services, which do not save credentials to the keychain, such as Twitter or Facebook. The result is complete user information (e.g. username) fetched from the service, saved to user defaults under the key kSHK<Service>UserInfo. When user does logout, it is meant to be deleted too. Useful, when you want to present some kind of logged user information (e.g. username) somewhere in your app.
+///only for services, which do not save credentials to the keychain, such as Twitter or Facebook. The result is complete user information (e.g. username) fetched from the service, saved to user defaults under the key kSHK<Service>UserInfo. When user does logout, it is meant to be deleted too. Useful, when you want to present some kind of logged user information (e.g. username) somewhere in your app.
 + (id)getUserInfo;
-
-#pragma mark - 
-#pragma mark Share Item Save Methods
-
-/* used by subclasses when user has to quit the app during share process - e.g. during Facebook SSO trip to facebook app or browser. These methods save item temporarily to defaults and read it back. Data attachments (filedata, image) are stored as separate files in cache dir */
-- (void)saveItemForLater:(SHKSharerPendingAction)inPendingAction;
-- (BOOL)restoreItem;
-
-// useful for handling custom posting error states
-+ (void)clearSavedItem;
-
-#pragma mark - 
-#pragma mark - Share Item URL Shortening
-
-- (void)shortenURL;
 
 #pragma mark -
 #pragma mark Commit Share
 
 - (void)share;
+- (void)cancel;
 
 #pragma mark -
 #pragma mark Authentication
 
-- (BOOL)isAuthorized;
+/*!
+ * Authorizes the sharer, without sharing anything.
+ *
+ * @return If service is already authorized, returns YES. Otherwise returns NO and presents authorization form.
+ */
 - (BOOL)authorize;
-- (void)promptAuthorization;
-- (NSString *)getAuthValueForKey:(NSString *)key;
 
-#pragma mark Authorization Form
-
-- (void)authorizationFormShow;
-- (void)authorizationFormValidate:(SHKFormController *)form;
-- (void)authorizationFormSave:(SHKFormController *)form;
-- (void)authorizationFormCancel:(SHKFormController *)form;
-- (NSArray *)authorizationFormFields;
-- (NSString *)authorizationFormCaption;
-+ (NSArray *)authorizationFormFields;
-+ (NSString *)authorizationFormCaption;
-+ (void)logout;
+/*!
+ * Convenient method for getting authorization status for particular service.
+ *
+ * @return If any user is authorized, returns YES, otherwise nil.
+ */
 + (BOOL)isServiceAuthorized;
 
-#pragma mark -
-#pragma mark API Implementation
-
-- (NSString *)tagStringJoinedBy:(NSString *)joinString allowedCharacters:(NSCharacterSet *)charset tagPrefix:(NSString *)prefixString tagSuffix:(NSString *)suffixString;
-
-- (BOOL)validateItem;
-- (BOOL)tryToSend;
-- (BOOL)send;
-
-#pragma mark -
-#pragma mark UI Implementation
-
-- (void)show;
-
-#pragma mark -
-#pragma mark Share Form
-
-- (NSArray *)shareFormFieldsForType:(SHKShareType)type;
-- (void)shareFormValidate:(SHKFormController *)form;
-- (void)shareFormSave:(SHKFormController *)form;
-- (void)shareFormCancel:(SHKFormController *)form;
-
-#pragma mark -
-#pragma mark Pending Actions
-
-- (void)tryPendingAction;
-
-#pragma mark -
-#pragma mark Delegate Notifications
-
-- (void)sendDidStart;
-- (void)sendDidFinish;
-- (void)shouldReloginWithPendingAction:(SHKSharerPendingAction)action;
-- (void)sendDidFailWithError:(NSError *)error;
-- (void)sendDidFailWithError:(NSError *)error shouldRelogin:(BOOL)shouldRelogin;
-- (void)sendDidCancel;
-/*  centralized error reporting */
-- (void)authShowBadCredentialsAlert;
-- (void)authShowOtherAuthorizationErrorAlert;
-- (void)sendShowSimpleErrorAlert;
-/*	called when an auth request returns. This is helpful if you need to use a service somewhere else in your
-	application other than sharing. It lets you use the same stored auth creds and login screens.
+/*!
+ * Convenient method for getting username, if any user is logged in.
+ *
+ * @return If any user is authorized, returns username, otherwise nil. For this method to work for OAuth sharer, this has to implement canGetUserInfo, otherwise returns nil.
  */
-- (void)authDidFinish:(BOOL)success;	
++ (NSString *)username;
++ (void)logout;
 
 @end
-
-
-

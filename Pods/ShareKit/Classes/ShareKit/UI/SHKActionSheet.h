@@ -30,12 +30,20 @@
 
 @protocol SHKShareItemDelegate;
 
-@interface SHKActionSheet : UIActionSheet <UIActionSheetDelegate>
+__attribute__((availability(ios,
+                            introduced = 3.0,
+                            deprecated = 8.0,
+                            message = "SHKActionSheet is a subclass of deprecated UIActionSheet. Use SHKAlertController instead")))
 
-@property (retain) NSMutableArray *sharers;
-@property (retain) SHKItem *item;
-@property (retain) id<SHKShareItemDelegate> shareDelegate;
+@interface SHKActionSheet : UIActionSheet  <UIActionSheetDelegate>
 
-+ (SHKActionSheet *)actionSheetForItem:(SHKItem *)i;
+
+
+@property (strong) id<SHKShareItemDelegate> shareDelegate;
+
++ (instancetype)actionSheetForItem:(SHKItem *)i;
+
+- (NSMutableArray *)sharersToShow;
+- (void)populateButtons;
 
 @end

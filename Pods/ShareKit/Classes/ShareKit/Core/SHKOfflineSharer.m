@@ -26,22 +26,17 @@
 //
 
 #import "SHKOfflineSharer.h"
-#import "SHKSharer.h"
+#import "SHKSharer_protected.h"
 
 @interface SHKOfflineSharer ()
 
-@property (retain) NSDictionary *savedShareDictionary;
+@property (strong) NSDictionary *savedShareDictionary;
 @property BOOL isShareFinished;
 
 @end
 
 @implementation SHKOfflineSharer
 
-- (void)dealloc
-{
-	[_savedShareDictionary release];
-	[super dealloc];
-}
 
 - (id)initWithDictionary:(NSDictionary *)dictionary {
     
@@ -49,7 +44,7 @@
     
     if (self)
 	{
-        _savedShareDictionary = [dictionary retain];
+        _savedShareDictionary = dictionary;
 	}
 	return self;
 }
@@ -71,7 +66,7 @@
     if (!item || !sharerID) return;    
     
     // create sharer
-	SHKSharer *sharer = [[[NSClassFromString(sharerID) alloc] init] autorelease];
+	SHKSharer *sharer = [[NSClassFromString(sharerID) alloc] init];
 	sharer.item = item;
 	sharer.quiet = YES;
 	sharer.shareDelegate = self;
@@ -91,10 +86,7 @@
 #pragma mark -
 #pragma mark SHKSharerDelegate
 
-- (void)sharerStartedSending:(SHKSharer *)aSharer
-{
-	
-}
+- (void)sharerStartedSending:(SHKSharer *)aSharer { }
 
 - (void)sharerFinishedSending:(SHKSharer *)aSharer
 {
@@ -111,19 +103,12 @@
     self.isShareFinished = YES;
 }
 
-- (void)sharerAuthDidFinish:(SHKSharer *)sharer success:(BOOL)success
-{
-
-}
-
-- (void)sharerShowBadCredentialsAlert:(SHKSharer *)sharer
-{
-    
-}
-
-- (void)sharerShowOtherAuthorizationErrorAlert:(SHKSharer *)sharer
-{
-    
-}
+- (void)sharerAuthDidFinish:(SHKSharer *)sharer success:(BOOL)success { }
+- (void)sharerShowBadCredentialsAlert:(SHKSharer *)sharer { }
+- (void)sharerShowOtherAuthorizationErrorAlert:(SHKSharer *)sharer { }
+- (void)hideActivityIndicatorForSharer:(SHKSharer *)sharer { }
+- (void)displayActivity:(NSString *)activityDescription forSharer:(SHKSharer *)sharer { }
+- (void)displayCompleted:(NSString *)completionText forSharer:(SHKSharer *)sharer { }
+- (void)showProgress:(CGFloat)progress forSharer:(SHKSharer *)sharer { }
 
 @end

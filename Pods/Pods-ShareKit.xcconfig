@@ -1,1 +1,0 @@
-PODS_SHAREKIT_OTHER_LDFLAGS = -framework AVFoundation -framework CoreMedia -framework MessageUI -framework MobileCoreServices -framework Security -framework SystemConfiguration -framework Twitter

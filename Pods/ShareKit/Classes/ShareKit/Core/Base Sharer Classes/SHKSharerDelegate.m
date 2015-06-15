@@ -23,44 +23,51 @@
 
 #import "SHKSharerDelegate.h"
 #import "SHKActivityIndicator.h"
+#import "SHKConfiguration.h"
 #import "SHK.h"
+#import "Debug.h"
 
 @implementation SHKSharerDelegate
 
 #pragma mark -
 #pragma mark SHKSharerDelegate protocol methods
 
-// These are used if you do not provide your own custom UI and delegate
+- (instancetype)init {
+    
+    self = [super init];
+    if (self) {
+        _activityIndicator = [SHKCONFIG(SHKActivityIndicatorSubclass) currentIndicator];
+    }
+    return self;
+}
 
+// These are used if you do not provide your own custom UI and delegate
 - (void)sharerStartedSending:(SHKSharer *)sharer
 {
 	if (!sharer.quiet)
-		[[SHKActivityIndicator currentIndicator] displayActivity:SHKLocalizedString(@"Saving to %@", [[sharer class] sharerTitle])];
+		[self.activityIndicator displayActivity:SHKLocalizedString(@"Saving to %@", [[sharer class] sharerTitle]) forSharer:sharer];
 }
 
 - (void)sharerFinishedSending:(SHKSharer *)sharer
 {
 	if (!sharer.quiet)
-		[[SHKActivityIndicator currentIndicator] displayCompleted:SHKLocalizedString(@"Saved!")];
+		[self.activityIndicator displayCompleted:SHKLocalizedString(@"Saved!") forSharer:sharer];
 }
 
 - (void)sharer:(SHKSharer *)sharer failedWithError:(NSError *)error shouldRelogin:(BOOL)shouldRelogin
 {
     
-    [[SHKActivityIndicator currentIndicator] hide];
+    [self.activityIndicator hideForSharer:sharer];
 
     //if user sent the item already but needs to relogin we do not show alert
-    if (!sharer.quiet && sharer.pendingAction != SHKPendingShare && sharer.pendingAction != SHKPendingSend)
+    if (!sharer.quiet && !shouldRelogin)
 	{				
-		[[[[UIAlertView alloc] initWithTitle:SHKLocalizedString(@"Error")
+		[[[UIAlertView alloc] initWithTitle:SHKLocalizedString(@"Error")
 									 message:sharer.lastError!=nil?[sharer.lastError localizedDescription]:SHKLocalizedString(@"There was an error while sharing")
 									delegate:nil
 						   cancelButtonTitle:SHKLocalizedString(@"Close")
-						   otherButtonTitles:nil] autorelease] show];
+						   otherButtonTitles:nil] show];
     }		
-    if (shouldRelogin) {        
-        [sharer promptAuthorization];
-	}
 }
 
 - (void)sharerCancelledSending:(SHKSharer *)sharer
@@ -70,30 +77,55 @@
 
 - (void)sharerAuthDidFinish:(SHKSharer *)sharer success:(BOOL)success
 {
-
+    //it is convenient to fetch user info after successful authorization. Not only you have username etc at your disposal, but there can be also various limits used by ShareKit to determine if the service can accept particular item (eg. video size) for this user. If it does not, ShareKit does not offer this service in share menu.
+    if (success){
+        [[sharer class] getUserInfo];
+    }
 }
 
 - (void)sharerShowBadCredentialsAlert:(SHKSharer *)sharer
 {    
     NSString *errorMessage = SHKLocalizedString(@"Sorry, %@ did not accept your credentials. Please try again.", [[sharer class] sharerTitle]);
        
-    [[[[UIAlertView alloc] initWithTitle:SHKLocalizedString(@"Login Error")
+    [[[UIAlertView alloc] initWithTitle:SHKLocalizedString(@"Login Error")
                                  message:errorMessage
                                 delegate:nil
                        cancelButtonTitle:SHKLocalizedString(@"Close")
-                       otherButtonTitles:nil] autorelease] show];
+                       otherButtonTitles:nil] show];
 }
 
 - (void)sharerShowOtherAuthorizationErrorAlert:(SHKSharer *)sharer
-{    
+{
     NSString *errorMessage = SHKLocalizedString(@"Sorry, %@ encountered an error. Please try again.", [[sharer class] sharerTitle]);
     
-    [[[[UIAlertView alloc] initWithTitle:SHKLocalizedString(@"Login Error")
+    [[[UIAlertView alloc] initWithTitle:SHKLocalizedString(@"Login Error")
                                  message:errorMessage
                                 delegate:nil
                        cancelButtonTitle:SHKLocalizedString(@"Close")
-                       otherButtonTitles:nil] autorelease] show];
+                       otherButtonTitles:nil] show];
 }
 
+- (void)hideActivityIndicatorForSharer:(SHKSharer *)sharer {
+    
+    [self.activityIndicator hideForSharer:sharer];
+}
+
+- (void)displayActivity:(NSString *)activityDescription forSharer:(SHKSharer *)sharer {
+    
+    if (sharer.quiet) return;
+    [self.activityIndicator displayActivity:activityDescription forSharer:sharer];
+}
+
+- (void)displayCompleted:(NSString *)completionText forSharer:(SHKSharer *)sharer {
+    
+    if (sharer.quiet) return;
+    [self.activityIndicator displayCompleted:completionText forSharer:sharer];
+}
+
+- (void)showProgress:(CGFloat)progress forSharer:(SHKSharer *)sharer {
+    
+    if (sharer.quiet) return;
+    [self.activityIndicator showProgress:progress forSharer:sharer];
+}
 
 @end

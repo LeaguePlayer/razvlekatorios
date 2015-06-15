@@ -9,37 +9,32 @@
 #import <UIKit/UIKit.h>
 
 @class SHKFormFieldSettings;
+@class SHKFormFieldOptionPickerSettings;
+
 @protocol SHKFormOptionControllerClient;
 @protocol SHKFormOptionControllerOptionProvider;
 
-@interface SHKFormOptionController : UITableViewController {
-	SHKFormFieldSettings* settings;
-	id<SHKFormOptionControllerClient> client;
-	id<SHKFormOptionControllerOptionProvider> provider;
-	bool didLoad;
-}
+@interface SHKFormOptionController : UITableViewController
 
-@property(nonatomic,retain) SHKFormFieldSettings* settings;
-@property(nonatomic,assign) id<SHKFormOptionControllerClient> client;
+@property (nonatomic, readonly) SHKFormFieldOptionPickerSettings *settings;
 
+///used if pushContentOnSelection is true. Provider uses this value to fetch content for selection.
+@property (nonatomic, strong) NSString *selectionValue;
 
-- (id)initWithOptionsInfo:(SHKFormFieldSettings*) settingsItem client:(id<SHKFormOptionControllerClient>) optionClient;
-- (void) optionsEnumerated:(NSArray*) options;
-- (void) optionsEnumerationFailedWithError:(NSError *)error;;
+- (id)initWithOptionPickerSettings:(SHKFormFieldOptionPickerSettings *)settingsItem client:(id <SHKFormOptionControllerClient>)optionClient;
+
+- (void)optionsEnumeratedDisplay:(NSArray *)displayOptions save:(NSArray *)saveOptions;
+- (void)optionsEnumerationFailedWithError:(NSError *)error;
+
 @end
-
-
-
 
 @protocol SHKFormOptionControllerClient
 
 @required
 // called when an item is taped or cancel is clicked, cancel passes nil pickedOption.
 - (void)SHKFormOptionControllerDidFinish:(SHKFormOptionController *)optionController;
-@end	
 
-
-
+@end
 
 @protocol SHKFormOptionControllerOptionProvider
 

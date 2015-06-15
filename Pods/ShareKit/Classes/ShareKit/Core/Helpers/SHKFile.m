@@ -9,6 +9,7 @@
 #import "SHKFile.h"
 #import <AVFoundation/AVFoundation.h>
 #import <MobileCoreServices/MobileCoreServices.h>
+#import "Debug.h"
 
 @interface SHKFile()
 
@@ -17,6 +18,7 @@
 @property (nonatomic, strong) NSString *filename;
 @property (nonatomic) NSUInteger size;
 @property (nonatomic) NSUInteger duration;
+@property (nonatomic, strong) NSString *temporaryUIDocumentsInteractionControllerCopyPath;
 
 @end
 
@@ -53,7 +55,8 @@ static NSString *tempDirectory;
         
         _path = path;
         _filename = path.lastPathComponent;
-        _mimeType = [self MIMETypeForPath:self.filename];
+        _mimeType = [self MIMETypeForPath:_filename];
+        _UTIType = [self NSStringUTITypeForPath:_filename];
     }
     return self;
 }
@@ -69,7 +72,8 @@ static NSString *tempDirectory;
         if (!filename) filename = [NSString stringWithFormat:@"ShareKit_file_%li", random() % 100];
         
         _filename = filename;
-        _mimeType = [self MIMETypeForPath:self.filename];
+        _mimeType = [self MIMETypeForPath:filename];
+        _UTIType = [self NSStringUTITypeForPath:filename];
     }
     return self;
 }
@@ -86,12 +90,14 @@ static NSString *tempDirectory;
             
             _filename = _path.lastPathComponent;
             _mimeType = [self MIMETypeForPath:_filename];
+            _UTIType = [self NSStringUTITypeForPath:_filename];
         
         } else {
             
             _data = [decoder decodeObjectForKey:kSHKFileData];
             _filename = [decoder decodeObjectForKey:kSHKFileName];
             _mimeType = [self MIMETypeForPath:_filename];
+            _UTIType = [self NSStringUTITypeForPath:_filename];
         }
     }
     return self;
@@ -157,15 +163,20 @@ static NSString *kSHKFileData = @"kSHKFileData";
 
 -(void)createPathFromData
 {
+    SHKLog(@"Warning, you are saving a file to the disc");
     NSString *sanitizedFileName = [self sanitizeFileNameString:self.filename];
     
     // Our filename
     _path = [tempDirectory stringByAppendingPathComponent:sanitizedFileName];
     
     // Create our file
-    if([[NSFileManager defaultManager] fileExistsAtPath:_path]) {
+    if([[NSFileManager defaultManager] fileExistsAtPath:_path]){
+        
         // TODO: This file already exists - throw an error
-        NSAssert(NO, @"file already exists?!");
+        
+        //SHKLog(@"file already exists, OK?");
+        //return;
+        //NSAssert(NO, @"file already exists?!");
     }
     
     // Read our file into the file system
@@ -182,6 +193,7 @@ static NSString *kSHKFileData = @"kSHKFileData";
 
 -(void)createDataFromPath
 {
+    SHKLog(@"Warning, you are reading file to memory");
     NSError *error;
     _data = [NSData dataWithContentsOfFile:_path options:NSDataReadingMapped|NSDataReadingUncached error:&error];
     
@@ -194,6 +206,12 @@ static NSString *kSHKFileData = @"kSHKFileData";
 {
     if(!self.hasPath || [self.path rangeOfString:tempDirectory].location == NSNotFound) return;
     [[NSFileManager defaultManager] removeItemAtPath:self.path error:nil];
+}
+
+- (NSURL *)URL {
+    
+    NSURL *result = [[NSURL alloc] initFileURLWithPath:[self.path stringByExpandingTildeInPath]];
+    return result;
 }
 
 #pragma mark ---
@@ -220,9 +238,9 @@ static NSString *kSHKFileData = @"kSHKFileData";
 #pragma mark Utility
 
 - (NSString *)MIMETypeForPath:(NSString *)path{
+    
     NSString *result = @"";
-    NSString *extension = [path pathExtension];
-    CFStringRef uti = UTTypeCreatePreferredIdentifierForTag(kUTTagClassFilenameExtension, (__bridge CFStringRef)extension, NULL);
+    CFStringRef uti = CreateUTITypeForPath(path);
     if (uti) {
         CFStringRef cfMIMEType = UTTypeCopyPreferredTagWithClass(uti, kUTTagClassMIMEType);
         if (cfMIMEType) {
@@ -231,6 +249,47 @@ static NSString *kSHKFileData = @"kSHKFileData";
         CFRelease(uti);
     }
     return result;
+}
+
+CFStringRef CreateUTITypeForPath(NSString *path) {
+    
+    NSString *extension = [path pathExtension];
+    CFStringRef result = UTTypeCreatePreferredIdentifierForTag(kUTTagClassFilenameExtension, (__bridge CFStringRef)extension, NULL);
+    return result;
+}
+
+- (NSString *)NSStringUTITypeForPath:(NSString *)path {
+    
+    NSString *result = nil;
+    CFStringRef uti = CreateUTITypeForPath(path);
+    if (uti) {
+        result = CFBridgingRelease(uti);
+    }
+    return result;
+}
+
+#pragma mark UIDocumentInteractionController helpers
+
+- (NSString *)makeTemporaryUIDICCopyWithFileExtension:(NSString *)extension {
+    
+    NSString *fileName = [@"tempCopy." stringByAppendingString:extension];
+    self.temporaryUIDocumentsInteractionControllerCopyPath = [tempDirectory stringByAppendingPathComponent:fileName];
+    
+    //clear previous
+    [[NSFileManager defaultManager] removeItemAtPath:self.temporaryUIDocumentsInteractionControllerCopyPath error:nil];
+    
+    NSError *error;
+    BOOL success;
+    if (self.hasData) {
+        success = [self.data writeToFile:self.temporaryUIDocumentsInteractionControllerCopyPath atomically:YES];
+    } else {
+        [[NSFileManager defaultManager] copyItemAtPath:self.path toPath:self.temporaryUIDocumentsInteractionControllerCopyPath error:&error];
+        success = error == nil;
+    }
+    
+    if (!success) self.temporaryUIDocumentsInteractionControllerCopyPath = nil;
+    
+    return self.temporaryUIDocumentsInteractionControllerCopyPath;
 }
 
 @end

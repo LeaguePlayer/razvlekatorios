@@ -1,30 +1,41 @@
 PODS:
-  - AFNetworking (1.1.0)
-  - Facebook-iOS-SDK (3.8.0)
-  - JSONKit (1.5pre)
-  - MagicalRecord (2.1)
+  - AFNetworking (1.3.2)
+  - Bolts (1.1.4)
+  - Facebook-iOS-SDK (3.23.2):
+    - Bolts (~> 1.0)
+  - MagicalRecord (2.1):
+    - MagicalRecord/Core (= 2.1)
+  - MagicalRecord/Core (2.1)
   - MKStoreKit (4.99)
-  - Reachability (3.1.0)
-  - SDWebImage (3.2):
-    - SDWebImage/Core
-  - SDWebImage/Core (3.2)
-  - ShareKit/Core (2.3.1):
-    - SSKeychain (= 0.2.1)
-  - ShareKit/Facebook (2.3.1):
-    - Facebook-iOS-SDK (~> 3.7)
+  - PKMultipartInputStream (1.1.0)
+  - Reachability (3.2)
+  - SAMTextView (0.2.2)
+  - SDWebImage (3.7.2):
+    - SDWebImage/Core (= 3.7.2)
+  - SDWebImage/Core (3.7.2)
+  - ShareKit/Core (4.0.4):
+    - PKMultipartInputStream
+    - SAMTextView (~> 0.2.1)
+    - SDWebImage (~> 3.7)
+    - ShareKit/Reachability
+    - SSKeychain (~> 1.2.2)
+    - UIActivityIndicator-for-SDWebImage (~> 1.2)
+  - ShareKit/Facebook (4.0.4):
+    - Facebook-iOS-SDK (~> 3.2)
     - ShareKit/Core
-  - ShareKit/Twitter (2.3.1):
-    - JSONKit (~> 1.4)
+  - ShareKit/Reachability (4.0.4)
+  - ShareKit/Twitter (4.0.4):
     - ShareKit/Core
-  - ShareKit/Vkontakte (2.3.1):
-    - JSONKit (~> 1.4)
+  - ShareKit/Vkontakte (4.0.4):
     - ShareKit/Core
-  - SSKeychain (0.2.1)
-  - SSToolkit (1.0.2)
-  - SVProgressHUD (0.9)
+  - SSKeychain (1.2.3)
+  - SSToolkit (1.0.4)
+  - SVProgressHUD (1.1.3)
+  - UIActivityIndicator-for-SDWebImage (1.2):
+    - SDWebImage (~> 3.7)
 
 DEPENDENCIES:
-  - AFNetworking
+  - AFNetworking (= 1.3.2)
   - MagicalRecord (= 2.1)
   - MKStoreKit
   - Reachability
@@ -32,20 +43,33 @@ DEPENDENCIES:
   - ShareKit/Facebook
   - ShareKit/Twitter
   - ShareKit/Vkontakte
-  - SSToolkit (= 1.0.2)
+  - SSToolkit (from `https://github.com/soffes/sstoolkit.git`, commit `1403f02cb98f8357f4b8e43c59d9c69d608d7bed`)
   - SVProgressHUD
 
-SPEC CHECKSUMS:
-  AFNetworking: 761a418233d280c1e0580bcb76ff9cb4c3073d17
-  Facebook-iOS-SDK: 55a22fe8bcaacd638cde9014af6b3ee85f4d71fb
-  JSONKit: 409734ab3407fce90ef7eaa95d7168f38d9a6601
-  MagicalRecord: 64e7184c240087a45e9588a722eaf05b0ad837f7
-  MKStoreKit: 5dea8e2966c1218c0d0f0b5c749d2d9317141a2b
-  Reachability: ba94ecd4eaa037be3d0588b38956672588530c5b
-  SDWebImage: f742ac91b65bd34b6d452325115e2ded3a73380e
-  ShareKit: f1d9200c6126d23415bc1b4bff264647615b271b
-  SSKeychain: ffa1a79eb716d9ed1ca184fb0cf218087ca28486
-  SSToolkit: eaa02ea1dce63eb9575292465e9939b83ffbabe0
-  SVProgressHUD: 03d4845ec8e64591726428a08236c6a5489d45f8
+EXTERNAL SOURCES:
+  SSToolkit:
+    :commit: 1403f02cb98f8357f4b8e43c59d9c69d608d7bed
+    :git: https://github.com/soffes/sstoolkit.git
 
-COCOAPODS: 0.25.0
+CHECKOUT OPTIONS:
+  SSToolkit:
+    :commit: 1403f02cb98f8357f4b8e43c59d9c69d608d7bed
+    :git: https://github.com/soffes/sstoolkit.git
+
+SPEC CHECKSUMS:
+  AFNetworking: 9168af1ebe62092499df4398ecb5e7b885e6a250
+  Bolts: f8e2f94edbf9fec7bb8de5ecaaa3aa6b7de6f64e
+  Facebook-iOS-SDK: cd87f0b2f0c1d9574b44e8fa2baacc275524bac3
+  MagicalRecord: f03ffa9c9b90eeb8d4f1b37bedcba8b7226d7a55
+  MKStoreKit: 748617e5f87ad1e0d3f075155047945248eccefc
+  PKMultipartInputStream: 1fb466fac9347857e3477e4dfc6fcc62fea7a944
+  Reachability: 33e18b67625424e47b6cde6d202dce689ad7af96
+  SAMTextView: 979c43bb1fa5859ddfbfeb35e9c296a2b0ec55fd
+  SDWebImage: 71b7cdc1d1721d6a82ed62889030225f2c249e29
+  ShareKit: 48a9a3aed20d4b59b49ae3c8efdbb46e95beab33
+  SSKeychain: 3f42991739c6c60a9cf1bbd4dff6c0d3694bcf3d
+  SSToolkit: 689acaedac79c2079e492e528a55bcb5db9d98c4
+  SVProgressHUD: 748080e4f36e603f6c02aec292664239df5279c1
+  UIActivityIndicator-for-SDWebImage: 7bf7ebbf0ed1747dedc0d6e949c4603a6d0f9e0c
+
+COCOAPODS: 0.35.0

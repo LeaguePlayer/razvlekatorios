@@ -22,43 +22,36 @@
 //  LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 //  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 //  THE SOFTWARE.
-//
-//
 
 #import "SHKFormController.h"
 
 #import "SHKConfiguration.h"
-#import "SHKCustomFormFieldCell.h"
 #import "SHKFormFieldCellText.h"
+#import "SHKFormFieldCellTextLarge.h"
 #import "SHKFormFieldCellSwitch.h"
 #import "SHKFormFieldCellOptionPicker.h"
 #import "SHKFormFieldSettings.h"
+#import "SHKFormFieldLargeTextSettings.h"
+#import "SHKFormFieldOptionPickerSettings.h"
 
 #define CELL_IDENTIFIER_TEXT @"textCell"
+#define CELL_IDENTIFIER_LARGE_TEXT @"largeTextCell"
 #define CELL_IDENTIFIER_SWITCH @"switchCell"
 #define CELL_IDENTIFIER_OPTIONS @"optionsCell"
 
+#define LARGE_TEXT_CELL_HEIGHT 120
+
 @interface SHKFormController ()
 
-@property (nonatomic, retain) UITextField *activeField;
+@property (nonatomic, strong) UITextField *activeField;
+
+///if pushNewContentOnSelection=YES on SHKFormOptionController, here is track of user selections
+@property (nonatomic) NSUInteger lastOptionControllersCount;
+
 
 @end
 
 @implementation SHKFormController
-
-@synthesize delegate, validateSelector, saveSelector, cancelSelector; 
-@synthesize sections;
-@synthesize activeField;
-@synthesize autoSelect;
-
-- (void)dealloc 
-{
-	delegate = nil;
-	[sections release];
-	[activeField release];
-	
-    [super dealloc];
-}
 
 #pragma mark -
 #pragma mark Initialization
@@ -69,22 +62,23 @@
 	{
 		self.title = barTitle;
 		
-		self.navigationItem.leftBarButtonItem = [[[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemCancel
+		self.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemCancel
 																							  target:self
-																							  action:@selector(cancel)] autorelease];
+																							  action:@selector(cancel)];
 		
-		self.navigationItem.rightBarButtonItem = [[[UIBarButtonItem alloc] initWithTitle:rightButtonTitle
+		self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:rightButtonTitle
 																				  style:UIBarButtonItemStyleDone
 																				 target:self
-																				 action:@selector(validateForm)] autorelease];
+																				 action:@selector(validateForm)];
         self.tableView.separatorStyle = UITableViewCellSeparatorStyleSingleLine;
+        _lastOptionControllersCount = 1; //self is first on the nav controller stack
 	}
 	return self;
 }
 
 - (void)addSection:(NSArray *)fields header:(NSString *)header footer:(NSString *)footer
 {
-	if (sections == nil)
+	if (self.sections == nil)
 		self.sections = [NSMutableArray arrayWithCapacity:0];
 	
 	NSMutableDictionary *dict = [NSMutableDictionary dictionaryWithCapacity:0];
@@ -96,7 +90,12 @@
 	if (footer)
 		[dict setObject:footer forKey:@"footer"];
 	
-	[sections addObject:dict];
+	[self.sections addObject:dict];
+}
+
+- (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation
+{
+    return YES;
 }
 
 #pragma mark -
@@ -105,8 +104,38 @@
 {
 	[super viewDidAppear:animated];
 	
-	if (autoSelect)
-		[self.tableView selectRowAtIndexPath:[NSIndexPath indexPathForRow:0 inSection:0] animated:NO scrollPosition:UITableViewScrollPositionNone];
+    NSIndexPath *fieldToSelect = nil;
+	if (self.autoSelect) {
+        fieldToSelect = [NSIndexPath indexPathForRow:0 inSection:0];
+    } else {
+        fieldToSelect = [self fieldToSelect];
+    }
+    if (fieldToSelect) {
+        
+        //Fix for bug (or behaviour) introduced on iOS7, when on landscaped iPad form was displaced after selecting the row. Hate doing this, hopefully this is temporary...
+        [self performSelector:@selector(selectRowAfterDelay:) withObject:fieldToSelect afterDelay:0.1];
+    }
+    
+    [self checkFieldValidity];
+}
+
+- (void)selectRowAfterDelay:(NSIndexPath *)path {
+    
+    [self.tableView selectRowAtIndexPath:path animated:NO scrollPosition:UITableViewScrollPositionNone];
+}
+
+- (NSIndexPath *)fieldToSelect {
+    
+    NSIndexPath *result = nil;
+    NSArray *fieldToSelect = [self settingsPassingTest:^BOOL (id obj, NSUInteger idx, BOOL *stop) {
+    
+        BOOL result = [(SHKFormFieldSettings *)obj select];
+        if (result) *stop = YES;
+        return result;
+    }];
+    
+    if ([fieldToSelect count]) result = fieldToSelect[0];
+    return result;
 }
 
 - (void)viewDidLoad
@@ -120,19 +149,54 @@
 	}
 }
 
+#pragma mark -
+#pragma mark Right Bar Button dynamic enable
+
+- (void)checkFieldValidity {
+       
+    NSArray *invalidFields = [self settingsPassingTest:^BOOL (id obj, NSUInteger idx, BOOL *stop) {
+        
+        BOOL isInvalid = ![(SHKFormFieldSettings *)obj isValid];
+        if (isInvalid) *stop = YES;
+        return isInvalid;
+    }];
+    
+    BOOL allowSend = [invalidFields count] == 0;    
+    self.navigationItem.rightBarButtonItem.enabled = allowSend;
+}
 
 #pragma mark -
 #pragma mark Table view
+
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath{
 	
     UITableViewCell *cell = [self tableView:self.tableView cellForRowAtIndexPath:indexPath];
     
     if ([cell isKindOfClass:[SHKFormFieldCellOptionPicker class]]) {
         
-        SHKFormFieldSettings* settingsForCell = [self rowSettingsForIndexPath:indexPath];        
-        SHKFormOptionController* optionsPicker = [[SHKFormOptionController alloc] initWithOptionsInfo:settingsForCell client:self];
+        SHKFormFieldOptionPickerSettings *settingsForCell = (SHKFormFieldOptionPickerSettings *)[self rowSettingsForIndexPath:indexPath];
+        SHKFormOptionController* optionsPicker = [[SHKFormOptionController alloc] initWithOptionPickerSettings:settingsForCell client:self];
+        if (settingsForCell.pushNewContentOnSelection) self.navigationController.delegate = self;
 		[self.navigationController pushViewController:optionsPicker animated:YES];
-        [optionsPicker release];
+    }
+}
+
+- (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
+    
+    SHKFormFieldSettings *settings = [self rowSettingsForIndexPath:indexPath];
+    if (settings.type == SHKFormFieldTypeTextLarge) {
+        return LARGE_TEXT_CELL_HEIGHT;
+    } else {
+        return [super tableView:tableView heightForRowAtIndexPath:indexPath];
+    }
+}
+
+- (void)tableView:(UITableView *)tableView willDisplayCell:(UITableViewCell *)cell forRowAtIndexPath:(NSIndexPath *)indexPath {
+    
+    //to allow clip overlap neighbouring cell
+    BOOL isLargeTextCell = [(SHKFormFieldCellTextLarge *)cell settings].type == SHKFormFieldTypeTextLarge;
+    if (isLargeTextCell) {
+        [self.tableView bringSubviewToFront:cell];
     }
 }
 
@@ -141,12 +205,12 @@
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView 
 {
-    return sections.count;
+    return self.sections.count;
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section 
 {
-    return [[[sections objectAtIndex:section] objectForKey:@"rows"] count];
+    return [[[self.sections objectAtIndex:section] objectForKey:@"rows"] count];
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath 
@@ -162,16 +226,20 @@
         case SHKFormFieldTypeTextNoCorrect:
         case SHKFormFieldTypePassword:
             cellIdentifier = CELL_IDENTIFIER_TEXT;
-            cellSubclass = [SHKFormFieldCellText class];
+            cellSubclass = [self SHKFormFieldCellTextClass];
+            break;
+        case SHKFormFieldTypeTextLarge:
+            cellIdentifier = CELL_IDENTIFIER_LARGE_TEXT;
+            cellSubclass = [self SHKFormFieldCellTextLargeClass];
             break;
         case SHKFormFieldTypeSwitch:
             cellIdentifier = CELL_IDENTIFIER_SWITCH;
-            cellSubclass = [SHKFormFieldCellSwitch class];
+            cellSubclass = [self SHKFormFieldCellSwitchClass];
             break;
         case SHKFormFieldTypeOptionPicker:
             cellIdentifier = CELL_IDENTIFIER_OPTIONS;
             cellStyle = UITableViewCellStyleValue1;
-            cellSubclass = [SHKFormFieldCellOptionPicker class];
+            cellSubclass = [self SHKFormFieldCellOptionPickerClass];
         default:
             break;
     }    
@@ -180,7 +248,7 @@
     
     if (cell == nil) {
 		
-        cell = [[[cellSubclass alloc] initWithStyle:cellStyle reuseIdentifier:cellIdentifier] autorelease];
+        cell = [[cellSubclass alloc] initWithStyle:cellStyle reuseIdentifier:cellIdentifier];
 		cell.delegate = self;
         [cell setupLayout];
     }
@@ -190,26 +258,65 @@
     return cell;
 }
 
-- (SHKFormFieldSettings *)rowSettingsForIndexPath:(NSIndexPath *)indexPath
-{
-	return [[[sections objectAtIndex:indexPath.section] objectForKey:@"rows"] objectAtIndex:indexPath.row];
-}
+- (Class)SHKFormFieldCellTextClass { return [SHKFormFieldCellText class]; }
+
+- (Class)SHKFormFieldCellTextLargeClass { return [SHKFormFieldCellTextLarge class]; }
+
+- (Class)SHKFormFieldCellSwitchClass { return [SHKFormFieldCellSwitch class]; }
+
+- (Class)SHKFormFieldCellOptionPickerClass { return [SHKFormFieldCellOptionPicker class]; }
 
 - (NSString *)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section
 {
-	return [[sections objectAtIndex:section] objectForKey:@"header"];
+	return [[self.sections objectAtIndex:section] objectForKey:@"header"];
 }
 
 - (NSString *)tableView:(UITableView *)tableView titleForFooterInSection:(NSInteger)section
 {
-	return [[sections objectAtIndex:section] objectForKey:@"footer"];
+	return [[self.sections objectAtIndex:section] objectForKey:@"footer"];
 }
 
 #pragma mark -
 
-- (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation 
+- (SHKFormFieldSettings *)rowSettingsForIndexPath:(NSIndexPath *)indexPath
 {
-    return YES;
+	id result = [[[self.sections objectAtIndex:indexPath.section] objectForKey:@"rows"] objectAtIndex:indexPath.row];
+    return result;
+}
+
+- (void)setRowSettings:(SHKFormFieldSettings *)newSettings forIndexPath:(NSIndexPath *)indexPath {
+    
+    NSDictionary *section = [self.sections objectAtIndex:indexPath.section];
+    NSMutableArray *rows = [[section objectForKey:@"rows"] mutableCopy];
+    [rows replaceObjectAtIndex:indexPath.row withObject:newSettings];
+    [section setValue:rows forKey:@"rows"];
+}
+
+- (NSArray *)settingsPassingTest:(BOOL (^)(id obj, NSUInteger idx, BOOL *stop))predicate {
+    
+    NSMutableArray *result = [@[] mutableCopy];
+    BOOL shouldStop = NO;
+    
+    for (NSDictionary *section in self.sections) {
+        
+        if (shouldStop) break;
+        
+        NSArray *settingsForSection = [section objectForKey:@"rows"];
+        
+        for (SHKFormFieldSettings *settings in settingsForSection) {
+            
+            if (shouldStop) break;
+            
+            NSUInteger indexOfSettings = [settingsForSection indexOfObject:settings];
+            BOOL passed = predicate(settings, indexOfSettings, &shouldStop);
+            if (passed) {
+                
+                NSInteger sectionIndex = [self.sections indexOfObject:section];
+                [result addObject:[NSIndexPath indexPathForRow:indexOfSettings inSection:sectionIndex]];
+            }
+        }
+    }
+    return result;
 }
 
 #pragma mark - SHKFormFieldCellDelegate
@@ -219,16 +326,18 @@
     self.activeField = activeTextField;
 }
 
+- (void)valueChanged {
+    
+    [self checkFieldValidity];
+}
+
 #pragma mark - SHKFormOptionControllerClient
 
 - (void)SHKFormOptionControllerDidFinish:(SHKFormOptionController *)optionController
 {	
-    NSArray *fields = [[sections objectAtIndex:0] objectForKey:@"rows"];
-    NSUInteger index = [fields indexOfObject:optionController.settings];
-    SHKCustomFormFieldCell* cell = (SHKCustomFormFieldCell *)[self.tableView cellForRowAtIndexPath:[NSIndexPath indexPathForRow:index inSection:0]];
-    [cell setupWithSettings:optionController.settings];        
-    
-    [self.navigationController popViewControllerAnimated:YES];
+    self.navigationController.delegate = nil;
+    [self.tableView reloadData];
+    [self.navigationController popToRootViewControllerAnimated:YES];
 }
 
 #pragma mark -
@@ -242,19 +351,18 @@
 - (void)cancel
 {
 	[self close];
-	[delegate performSelector:cancelSelector withObject:self];
+    self.cancelBlock(self);
 }
 
 - (void)validateForm
 {
-	
     [self.activeField.delegate textFieldShouldReturn:self.activeField];
-	[delegate performSelector:validateSelector withObject:self];
+    self.validateBlock(self);
 }
 
 - (void)saveForm
 {
-	[delegate performSelector:saveSelector withObject:self];
+    self.saveBlock(self);
 	[self close];
 }
 
@@ -269,7 +377,7 @@
 {
 	// go through all form fields and get values
 	NSMutableDictionary *formValues = [NSMutableDictionary dictionaryWithCapacity:0];	
-	NSArray *allFieldSettings = [[sections objectAtIndex:section] objectForKey:@"rows"];
+	NSArray *allFieldSettings = [[self.sections objectAtIndex:section] objectForKey:@"rows"];
 	
     for(SHKFormFieldSettings *settings in allFieldSettings)
 	{		
@@ -282,5 +390,40 @@
 	return formValues;	
 }
 
-@end
+//used for keeping track of position (and corresponding settings data) in case SHKFormOptionController is configured to pushNewContentOnSelection=YES
+#pragma mark - UINavigationController delegate methods
 
+- (void)navigationController:(UINavigationController *)navigationController willShowViewController:(SHKFormOptionController *)viewController animated:(BOOL)animated {
+    
+    NSUInteger lastViewControllerIndex = [[navigationController viewControllers] count] - 2;
+    SHKFormOptionController *lastViewController = [navigationController viewControllers][lastViewControllerIndex];
+    
+    BOOL navigatingBack = self.lastOptionControllersCount > [[navigationController viewControllers] count];
+    if (navigatingBack) {
+        
+        [viewController.settings.selectedIndexes removeAllIndexes];
+        self.lastOptionControllersCount--;
+        
+    } else {
+        
+        //reset so that they are refetched in case of dismissing option controller and displaying again
+        if (![lastViewController isKindOfClass:[SHKFormOptionController class]] && viewController.settings.fetchFromWeb) {
+            viewController.settings.displayValues = nil;
+            viewController.settings.saveValues = nil;
+        }
+        self.lastOptionControllersCount++;
+    }
+    
+    if ([lastViewController isKindOfClass:[SHKFormOptionController class]]) {
+        [self SHKFormOptionControllerPushedNewContent:lastViewController];
+    }
+}
+
+- (void)SHKFormOptionControllerPushedNewContent:(SHKFormOptionController *)optionController {
+    
+    //exchange settings with selection
+    SHKFormFieldOptionPickerSettings *newSettings = optionController.settings;
+    [self setRowSettings:newSettings forIndexPath:[self.tableView indexPathForSelectedRow]];
+}
+
+@end

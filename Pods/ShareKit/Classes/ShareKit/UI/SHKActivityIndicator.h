@@ -25,33 +25,35 @@
 //
 //
 
+/*!
+ @class SHKActivityIndicator
+ @discussion Displays HUD with info about status of the sharing process. In case multiple sharers run at once, HUD displays info about the most recent sharer. Previous continue to share silently. 
+ */
+
 #import <Foundation/Foundation.h>
 
+@class SHKSharer;
 
 @interface SHKActivityIndicator : UIView
 
-@property (nonatomic, retain) UILabel *centerMessageLabel;
-@property (nonatomic, retain) UILabel *subMessageLabel;
-
-@property (nonatomic, retain) UIActivityIndicatorView *spinner;
-@property (nonatomic, retain) UIProgressView *progress;
-
 + (SHKActivityIndicator *)currentIndicator;
 
-- (void)show;
-- (void)hideAfterDelay;
-- (void)hide;
-- (void)persist;
-- (void)hidden;
-- (void)displayActivity:(NSString *)m;
-- (void)displayCompleted:(NSString *)m;
-- (void)setCenterMessage:(NSString *)message;
-- (void)setSubMessage:(NSString *)message;
-- (void)showSpinner;
-- (void)hideSpinner;
-- (void)showProgress;
-- (void)hideProgress;
-- (void)setProperRotation;
-- (void)setProperRotation:(BOOL)animated;
+- (void)hideForSharer:(SHKSharer *)sharer;
+- (void)displayActivity:(NSString *)m forSharer:(SHKSharer *)sharer;
+- (void)displayCompleted:(NSString *)m forSharer:(SHKSharer *)sharer;
+/*!
+ Displays specified progress. Supply range from 0.0 to 1.0.
+ */
+- (void)showProgress:(CGFloat)progress forSharer:(SHKSharer *)sharer;
+
+#pragma mark - Deprecated methods
+
+- (void)hide __attribute__((deprecated("use hideForSharer: instead")));
+- (void)displayActivity:(NSString *)m __attribute__((deprecated("use displayActivity:forSharer: instead")));
+- (void)displayCompleted:(NSString *)m __attribute__((deprecated("use displayCompleted:forSharer: instead")));
+/*!
+ Displays specified progress. Supply range from 0.0 to 1.0.
+ */
+- (void)showProgress:(CGFloat)progress __attribute__((deprecated("use showProgress:forSharer: instead")));
 
 @end
