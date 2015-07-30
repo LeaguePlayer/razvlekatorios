@@ -18,6 +18,9 @@
 @end
 
 @implementation DisplayViewController
+{
+     BOOL _statusBarHidden;
+}
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
@@ -46,14 +49,16 @@
 
 - (void)viewDidLoad{
     [super viewDidLoad];
+//    [UIViewController setNeedsStatusBarAppearanceUpdate];
+    [self setNeedsStatusBarAppearanceUpdate];
 	// Do any additional setup after loading the view.
     isFullScreen = NO;
     currentIndex = 0;
     isShuffled = NO;
-    [self setWantsFullScreenLayout:YES];
+//    [self setWantsFullScreenLayout:YES];
     [self initViewPositions];
     [self initPhotoViewer];
-    [self initTopBar];
+//    [self initTopBar];
     [self initBottomButtons];
 }
 
@@ -63,9 +68,9 @@
     [self.shuffleButton setSelected:NO];
 }
 
--(void)initTopBar{
-    
-}
+//-(void)initTopBar{
+////    [super initTop];
+//}
 
 -(void)rightItemClick:(id)sender{
     [self performSegueWithIdentifier:@"ToAbout" sender:self];
@@ -121,19 +126,34 @@
         [self exitFullscreen];
 }
 
+- (BOOL)prefersStatusBarHidden {
+    return _statusBarHidden;
+}
+
+- (void)showStatusBar:(BOOL)show {
+    [UIView animateWithDuration:0.3 animations:^{
+        _statusBarHidden = !show;
+     
+        [self setNeedsStatusBarAppearanceUpdate];
+    }];
+}
+
 -(void)enterFullscreen{
     isFullScreen = YES;
     
     [self disableApp];
     
-    UIApplication* application = [UIApplication sharedApplication];
-    if ([application respondsToSelector: @selector(setStatusBarHidden:withAnimation:)]) {
-        [[UIApplication sharedApplication] setStatusBarHidden: YES withAnimation: UIStatusBarAnimationFade]; // 3.2+
-    } else {
-#pragma GCC diagnostic ignored "-Wdeprecated-declarations"
-        [[UIApplication sharedApplication] setStatusBarHidden: YES animated:YES]; // 2.0 - 3.2
-#pragma GCC diagnostic warning "-Wdeprecated-declarations"
-    }
+//    UIApplication* application = [UIApplication sharedApplication];
+//    if ([application respondsToSelector: @selector(setStatusBarHidden:withAnimation:)]) {
+//        [[UIApplication sharedApplication] setStatusBarHidden: YES withAnimation: UIStatusBarAnimationFade]; // 3.2+
+//    } else {
+//#pragma GCC diagnostic ignored "-Wdeprecated-declarations"
+//        [[UIApplication sharedApplication] setStatusBarHidden: YES animated:YES]; // 2.0 - 3.2
+//#pragma GCC diagnostic warning "-Wdeprecated-declarations"
+//    }
+    [self showStatusBar:NO];
+
+    
     [UIView animateWithDuration:0.3 animations:^{
         self.bottomView.y = self.view.height+10;
         self.topView.y = - self.topView.height;
@@ -151,14 +171,15 @@
     
 	[self disableApp];
     
-	UIApplication* application = [UIApplication sharedApplication];
-	if ([application respondsToSelector: @selector(setStatusBarHidden:withAnimation:)]) {
-		[[UIApplication sharedApplication] setStatusBarHidden:NO withAnimation:UIStatusBarAnimationFade]; // 3.2+
-	} else {
-#pragma GCC diagnostic ignored "-Wdeprecated-declarations"
-		[[UIApplication sharedApplication] setStatusBarHidden:NO animated:NO]; // 2.0 - 3.2
-#pragma GCC diagnostic warning "-Wdeprecated-declarations"
-	}
+//	UIApplication* application = [UIApplication sharedApplication];
+//	if ([application respondsToSelector: @selector(setStatusBarHidden:withAnimation:)]) {
+//		[[UIApplication sharedApplication] setStatusBarHidden:NO withAnimation:UIStatusBarAnimationFade]; // 3.2+
+//	} else {
+//#pragma GCC diagnostic ignored "-Wdeprecated-declarations"
+//		[[UIApplication sharedApplication] setStatusBarHidden:NO animated:NO]; // 2.0 - 3.2
+//#pragma GCC diagnostic warning "-Wdeprecated-declarations"
+//	}
+    [self showStatusBar:YES];
     [UIView animateWithDuration:0.3 animations:^{
         self.bottomView.y = self.view.height - self.bottomView.height;
         self.topView.y = 21;

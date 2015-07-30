@@ -54,7 +54,8 @@
         item.price = @(((NSString *)[dict objectForKey:@"price"]).floatValue);
         item.paid = item.price.floatValue > 0;
         NSDictionary *images = (NSDictionary *)[dict objectForKey:@"images"];
-        item.imagePath = [MRUtils imageFromJSONDictionary:images];
+//        item.imagePath = [MRUtils imageFromJSONDictionary:images];
+        item.imagePath = (NSString *)[dict objectForKey:@"image"];
         item.productID = [@"com.amobile.blocks." stringByAppendingFormat:@"%d",item.id];
         //item.productID = @"com.amobile.blocks";
     }

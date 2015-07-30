@@ -26,7 +26,7 @@
 +(id)objectWithDict:(NSDictionary *)dict{
     MRItem *item = [[MRItem alloc] init];
     if (item){
-        item.imagePath = [MRUtils imageFromJSONDictionary:dict];
+        item.imagePath = [dict objectForKey:@"display"];
         
     }
     return item;
