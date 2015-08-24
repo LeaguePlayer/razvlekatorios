@@ -22,4 +22,6 @@
 @property (nonatomic,retain) SSCollectionView *collectionView;
 
 
+
+
 @end

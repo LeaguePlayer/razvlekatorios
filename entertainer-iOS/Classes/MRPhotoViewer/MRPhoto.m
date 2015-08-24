@@ -76,8 +76,8 @@
 }
 
 - (void)scrollViewDidEndZooming:(UIScrollView *)scrollView withView:(UIView *)view atScale:(float)scale {
-    [scrollView setZoomScale:scale+0.01 animated:NO];
-    [scrollView setZoomScale:scale animated:NO];
+//    [scrollView setZoomScale:scale+0.01 animated:NO];
+//    [scrollView setZoomScale:scale animated:NO];
     
 }
 

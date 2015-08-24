@@ -36,20 +36,40 @@
         self.imageView.backgroundColor = [UIColor clearColor];
         self.backgroundColor = [UIColor clearColor];
         self.imageView = nil;
+        
+//        self.nameLabel = [[UILabel alloc] initWithFrame:CGRectMake(0,0,125,20)];
+//        self.nameLabel.backgroundColor = [UIColor clearColor];
+//        self.nameLabel.textAlignment = NSTextAlignmentLeft;
+//        self.nameLabel.textColor = [UIColor blueColor];
+//        self.nameLabel.font = [UIFont systemFontOfSize:10];
+//        [self.nameLabel setAdjustsFontSizeToFitWidth:NO];
+//        [self.nameLabel setNumberOfLines:2];
         self.nameLabel = [[UILabel alloc] initWithFrame:CGRectMake(0,0,125,20)];
         self.nameLabel.backgroundColor = [UIColor clearColor];
-        self.nameLabel.textAlignment = NSTextAlignmentLeft;
+        self.nameLabel.textAlignment = NSTextAlignmentCenter;
         self.nameLabel.textColor = [UIColor blueColor];
-        self.nameLabel.font = [UIFont systemFontOfSize:12];
-        [self.nameLabel setAdjustsFontSizeToFitWidth:NO];
+        self.nameLabel.font = [UIFont boldSystemFontOfSize:12];
+        [self.nameLabel setAdjustsFontSizeToFitWidth:YES];
         [self.nameLabel setNumberOfLines:2];
+        
+        //        titleLabel.numberOfLines = 0
+        
+        self.nameLabel.preferredMaxLayoutWidth = 125;
         [self addSubview:self.nameLabel];
+        
+        
+        
         self.icon = [[UIImageView alloc] init];
         [self.icon setContentMode:UIViewContentModeScaleAspectFit];
         [self.icon setFrame:CGRectMake(0, 21, 125, 125)];
         [self addSubview:self.icon];
-        UIImage *removeImg = [UIImage imageNamed:@"remove.png"];
+        UIImage *removeImg = [UIImage imageNamed:@"remove"];
         self.removeImage = [[UIImageView alloc] initWithImage:removeImg];
+        
+        UIImage *infoImg = [UIImage imageNamed:@"info_block"];
+        self.infoImage = [[UIImageView alloc] initWithImage:infoImg];
+        
+        
         self.removeButton = [UIButton buttonWithType:UIButtonTypeCustom];
         CGRect frame = CGRectMake(126 - removeImg.size.width*3, 0, removeImg.size.width*3, removeImg.size.height*3);
         [self.removeButton setFrame:frame];
@@ -61,6 +81,23 @@
         [self addSubview:self.removeImage];
         UILongPressGestureRecognizer *recognizer = [[UILongPressGestureRecognizer alloc] initWithTarget:self action:@selector(itemPressed:)];
         [self addGestureRecognizer:recognizer];
+        
+        
+        self.infoButton = [UIButton buttonWithType:UIButtonTypeCustom];
+//        [self.infoButton setBackgroundColor:[UIColor redColor]];
+        CGRect infoFrame = CGRectMake(0, 0, infoImg.size.width*3, infoImg.size.height*3);
+        [self.infoButton setFrame:infoFrame];
+        infoFrame = CGRectMake(0, 21, infoImg.size.width, infoImg.size.height);
+        [self.infoImage setFrame:infoFrame];
+        [self.infoImage setHidden:YES];
+        [self.infoButton setHidden:YES];
+        [self addSubview:self.infoButton];
+        [self addSubview:self.infoImage];
+//        UILongPressGestureRecognizer *recognizerInfo = [[UILongPressGestureRecognizer alloc] initWithTarget:self action:@selector(itemPressed:)];
+//        [self addGestureRecognizer:recognizerInfo];
+        
+        
+        
     }
     return self;
 }
@@ -75,6 +112,8 @@
     CGFloat alpha = hide ? 0 : 1;
     [UIView animateWithDuration:0.3 animations:^{
         [self.removeButton setAlpha:alpha];
+        [self.infoButton setAlpha:alpha];
+        [self.infoImage setAlpha:alpha];
         [self.removeImage setAlpha:alpha];
     }];
 }

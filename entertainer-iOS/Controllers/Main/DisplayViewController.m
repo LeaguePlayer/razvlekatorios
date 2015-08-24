@@ -34,7 +34,8 @@
 -(void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
     [[UIApplication sharedApplication] setStatusBarStyle:UIStatusBarStyleBlackTranslucent];
-    [self.navigationController setNavigationBarHidden:YES animated:YES];
+//    [self.navigationController setNavigationBarHidden:YES animated:YES];
+    [self.navigationController setNavigationBarHidden:NO animated:NO];
 }
 
 -(void)viewDidAppear:(BOOL)animated{
@@ -55,6 +56,12 @@
     isFullScreen = NO;
     currentIndex = 0;
     isShuffled = NO;
+    [self initBackButton];
+    [self initInfoButtonWithTarget:self];
+    
+    [self.navigationController.navigationBar
+     setTitleTextAttributes:@{NSForegroundColorAttributeName : [UIColor whiteColor]}];
+    
 //    [self setWantsFullScreenLayout:YES];
     [self initViewPositions];
     [self initPhotoViewer];
@@ -152,13 +159,14 @@
 //#pragma GCC diagnostic warning "-Wdeprecated-declarations"
 //    }
     [self showStatusBar:NO];
-
+    
+    [self.navigationController setNavigationBarHidden:YES animated:YES];
     
     [UIView animateWithDuration:0.3 animations:^{
         self.bottomView.y = self.view.height+10;
-        self.topView.y = - self.topView.height;
+//        self.topView.y = - self.topView.height;
         [self.bottomView setAlpha:0];
-        [self.topView setAlpha:0];
+//        [self.topView setAlpha:0];
     } completion:^(BOOL finished) {
         [self enableApp];
     }];
@@ -179,12 +187,14 @@
 //		[[UIApplication sharedApplication] setStatusBarHidden:NO animated:NO]; // 2.0 - 3.2
 //#pragma GCC diagnostic warning "-Wdeprecated-declarations"
 //	}
+    
+    [self.navigationController setNavigationBarHidden:NO animated:YES];
     [self showStatusBar:YES];
     [UIView animateWithDuration:0.3 animations:^{
         self.bottomView.y = self.view.height - self.bottomView.height;
-        self.topView.y = 21;
+//        self.topView.y = 21;
         [self.bottomView setAlpha:1];
-        [self.topView setAlpha:1];
+//        [self.topView setAlpha:1];
     } completion:^(BOOL finished) {
         [self enableApp];
     }];
@@ -254,8 +264,12 @@
 - (IBAction)onShuffleButtonClick:(id)sender {
     isShuffled = !isShuffled;
     [self.shuffleButton setSelected:isShuffled];
+//    self.tit
     if (isShuffled)
-        [self.topLabel setText:@"Случайный порядок"];
+       [self setTitle:@"Случайный порядок"];
+    else
+         [self setTitle:@""];
+        
     [self.block setShuffled:!self.block.shuffled];
     [self.photor reloadData];
 }

@@ -14,6 +14,8 @@
 
 @property (nonatomic) int id;
 @property (nonatomic,retain) NSString *name;
+@property (nonatomic,retain) NSString *sizeBlock;
+@property (nonatomic) int slidesInBlock;
 @property (nonatomic,retain) NSArray *items;
 @property (nonatomic,retain) NSString *imagePath;
 @property (nonatomic,retain) UIImage *image;

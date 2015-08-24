@@ -122,16 +122,20 @@
     MRBlock *block = [blocks objectAtIndex:indexPath.row];
     
     [item.nameLabel setText:block.name];
-    [item.nameLabel sizeToFit];
-    CGRect frame = item.nameLabel.frame;
-    frame.origin.y = item.icon.frame.origin.y - frame.size.height;
-    [item.nameLabel setFrame:frame];
+//    [item.nameLabel sizeToFit];
+//    CGRect frame = item.nameLabel.frame;NSLog(@"%f",frame.size.height);
+//    frame.origin.y = item.icon.frame.origin.y - frame.size.height;
+//    [item.nameLabel setFrame:frame];
     
     [item.icon setImage:block.image];
     [item.removeButton addTarget:self action:@selector(removeItem:) forControlEvents:UIControlEventTouchUpInside];
+    [item.infoButton addTarget:self action:@selector(infoBlock:) forControlEvents:UIControlEventTouchUpInside];
+    
     if (self.shaking){
         [item.removeButton setHidden:NO];
         [item.removeImage setHidden:NO];
+        [item.infoImage setHidden:NO];
+        [item.infoButton setHidden:NO];
         [self startShakingView:item.icon];
     }
     return item;
@@ -149,10 +153,33 @@
 }
 
 -(void)removeItem:(UIButton *)sender{
+   
+    
     MRChooseCollectionViewItem *item = (MRChooseCollectionViewItem *)[sender superview];
     NSIndexPath *indexPath = [self.collectionView indexPathForItem:item];
     removingPath = indexPath;
+    
+     MRBlock *block = [blocks objectAtIndex:indexPath.row];
+    NSLog(@"%i",block.slidesInBlock);
+     NSLog(@"%@",block.sizeBlock);
     [self showAlert];
+}
+
+-(void)infoBlock:(UIButton *)sender{
+    
+    
+    MRChooseCollectionViewItem *item = (MRChooseCollectionViewItem *)[sender superview];
+    NSIndexPath *indexPath = [self.collectionView indexPathForItem:item];
+    removingPath = indexPath;
+    
+    MRBlock *block = [blocks objectAtIndex:indexPath.row];
+  
+    
+    NSString *messageAlert = [NSString stringWithFormat:@"Количество слайдов в блоке %i. Размер блока %@.", block.slidesInBlock, block.sizeBlock];
+    
+    UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Информация о блоке" message:messageAlert delegate:nil cancelButtonTitle:@"Отмена" otherButtonTitles:nil];
+    [alert show];
+    //    [self showAlert];
 }
 
 -(void)showAlert{
@@ -235,6 +262,8 @@
         MRChooseCollectionViewItem *colItem = (MRChooseCollectionViewItem *)[self.collectionView itemForIndexPath:path];
         [colItem.removeButton setHidden:!shaking];
         [colItem.removeImage setHidden:!shaking];
+        [colItem.infoButton setHidden:!shaking];
+        [colItem.infoImage setHidden:!shaking];
         if (shaking){
             [self startShakingView:colItem.icon];
         } else {

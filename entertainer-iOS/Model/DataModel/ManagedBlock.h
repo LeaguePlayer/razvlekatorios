@@ -15,6 +15,8 @@
 
 @property (nonatomic, retain) NSNumber * id;
 @property (nonatomic, retain) NSString * name;
+@property (nonatomic, retain) NSString * sizeBlock;
+@property (nonatomic, retain) NSNumber * slidesInBlock;
 @property (nonatomic, retain) NSNumber * price;
 @property (nonatomic, retain) NSString * imagePath;
 @property (nonatomic, retain) id image;

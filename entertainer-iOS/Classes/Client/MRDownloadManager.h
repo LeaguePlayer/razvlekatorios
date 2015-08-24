@@ -34,5 +34,6 @@
 -(void)removeAllDelegates;
 -(BOOL)isDelegate:(id<MRDownloadManagerDelegate>)delegate;
 -(void)startLoadingBlock:(MRBlock *)block;
+-(NSString *)platformString;
 
 @end

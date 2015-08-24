@@ -11,6 +11,7 @@
 #import "SVProgressHUD.h"
 #import "MRBlock.h"
 #import "SDWebImageDownloader.h"
+#import "UIDeviceHardware.h"
 
 typedef void (^MRHTTPClientSuccessResults)(NSArray *results);
 typedef void (^MRHTTPClientFailure)(int statusCode, NSArray *errors, NSError *commonError);
@@ -24,5 +25,6 @@ typedef void (^MRHTTPClientFailure)(int statusCode, NSArray *errors, NSError *co
 -(void)allBlocksWithSuccess:(MRHTTPClientSuccessResults)success failure:(MRHTTPClientFailure)failure;
 -(void)blockItemsWithBlock:(MRBlock *)block progress:(void(^)(CGFloat state))progress success:(MRHTTPClientSuccessResults)success failure:(MRHTTPClientFailure)failure;
 -(void)applicationInfoWithSuccess:(void(^)(NSString *info))success failure:(MRHTTPClientFailure)failure;
+-(void)platformString;
 
 @end

@@ -36,14 +36,25 @@ static MRHTTPClient *_sharedClient;
     return self;
 }
 
+-(void)platformString
+{
+    NSString *platform = [UIDevice currentDevice].model;
+    NSLog(@"platforn: %@",platform);
+}
+
 -(void)allBlocksWithSuccess:(MRHTTPClientSuccessResults)success failure:(MRHTTPClientFailure)failure{
-    NSString *urlString = @"/api/allblocks";
+//    [self platformString];
+    UIDeviceHardware *device = [[UIDeviceHardware alloc] init];
+//    NSLog(@"%@",[device platformString]);
+    NSString *urlString = [NSString stringWithFormat:@"/api/allblocks/device/%@", [device platformString]];
     urlString = [urlString stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
+    NSLog(@"%@",urlString);
     NSURLRequest *request = [self requestWithMethod:@"GET" path:urlString parameters:nil];
     AFJSONRequestOperation *operation = [AFJSONRequestOperation JSONRequestOperationWithRequest:request success:^(NSURLRequest *request, NSHTTPURLResponse *response, id JSON) {
         NSNumber *status = JSON[@"result"];
         if ([status isEqualToNumber:@(1)]){
             NSDictionary *respDict = (NSDictionary *)JSON[@"response"];
+            NSLog(@"%@",respDict);
             NSArray *blocksArray = (NSArray *)respDict[@"blocks"];
             NSMutableArray *results = [NSMutableArray array];
             for (NSDictionary *dict in blocksArray){
@@ -66,7 +77,8 @@ static MRHTTPClient *_sharedClient;
 }
 
 -(NSArray *)allBlockSynchroniusly {
-    NSDictionary *response = (NSDictionary *)[self synchronouslyGetPath:@"/api/allblocks" parameters:nil operation:NULL error:nil];
+    UIDeviceHardware *device = [[UIDeviceHardware alloc] init];
+    NSDictionary *response = (NSDictionary *)[self synchronouslyGetPath:[NSString stringWithFormat:@"/api/allblocks/device/%@",[device platformString]] parameters:nil operation:NULL error:nil];
     if (response) {
         NSNumber *status = response[@"result"];
         if ([status isEqualToNumber:@(1)]){
@@ -88,7 +100,8 @@ static MRHTTPClient *_sharedClient;
 }
 
 -(void)blockItemsWithBlock:(MRBlock *)block progress:(void(^)(CGFloat state))progress success:(MRHTTPClientSuccessResults)success failure:(MRHTTPClientFailure)failure{
-    NSString *urlString = [NSString stringWithFormat:@"/api/getblock/%d",block.id];
+    UIDeviceHardware *device = [[UIDeviceHardware alloc] init];
+    NSString *urlString = [NSString stringWithFormat:@"/api/getblock/%d?device=%@",block.id,[device platformString]];
     urlString = [urlString stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
     NSURLRequest *request = [self requestWithMethod:@"GET" path:urlString parameters:nil];
     AFJSONRequestOperation *operation = [AFJSONRequestOperation JSONRequestOperationWithRequest:request success:^(NSURLRequest *request, NSHTTPURLResponse *response, id JSON){
@@ -110,7 +123,7 @@ static MRHTTPClient *_sharedClient;
                     dispatch_queue_t queue = dispatch_get_main_queue();
                     dispatch_async(queue, ^{
                         count++;
-                        NSLog (@"%d",count);
+                        NSLog (@"%d == %d",count,max);
                         if (count == max){
                             block.items = results;
                             success(results);

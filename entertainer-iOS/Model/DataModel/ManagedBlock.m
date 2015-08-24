@@ -16,6 +16,8 @@
 
 @dynamic id;
 @dynamic name;
+@dynamic slidesInBlock;
+@dynamic sizeBlock;
 @dynamic price;
 @dynamic imagePath;
 @dynamic image;
@@ -30,6 +32,13 @@
     ManagedBlock *item = [ManagedBlock MR_createInContext:DefaultContext];
     item.id = @(block.id);
     item.name = block.name;
+    item.slidesInBlock =  @(block.slidesInBlock);
+    NSLog(@"%@",@(block.slidesInBlock));
+    NSLog(@"%i",block.slidesInBlock);
+    NSLog(@"%i",(int)block.slidesInBlock);
+    NSLog(@"%@",item.slidesInBlock);
+//    NSLog(@"%i",[NSNumber numberWithInt:block.slidesInBlock]);
+    item.sizeBlock = block.sizeBlock;
     item.desc = block.desc;
     item.imagePath = block.imagePath;
     item.image = [MRUtils transformedValue:block.image];

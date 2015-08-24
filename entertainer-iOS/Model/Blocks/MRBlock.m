@@ -23,6 +23,8 @@
         self.name = @"";
         self.items = [NSArray array];
         self.price = @(0);
+        self.slidesInBlock = @"";
+        self.sizeBlock = @"";
         self.imagePath = @"";
         self.image = [[UIImage alloc] init];
         self.shuffled = NO;
@@ -48,8 +50,12 @@
 +(id)objectWithDict:(NSDictionary *)dict{
     MRBlock *item = [[MRBlock alloc] init];
     if (item){
+        
         item.id = ((NSString *)[dict objectForKey:@"id"]).intValue;
         item.desc = (NSString *)[dict objectForKey:@"desc"];
+        item.sizeBlock = (NSString *)[dict objectForKey:@"sizeBlock"];
+        item.slidesInBlock = ((NSString *)[dict objectForKey:@"slidesInBlock"]).intValue;
+        
         item.name = [dict objectForKey:@"name"];
         item.price = @(((NSString *)[dict objectForKey:@"price"]).floatValue);
         item.paid = item.price.floatValue > 0;
@@ -81,6 +87,9 @@
     if (item){
         item.id = block.id.intValue;
         item.name = block.name;
+//        NSLog(@"%i",block.slidesInBlock);
+        item.slidesInBlock = block.slidesInBlock.intValue;
+        item.sizeBlock = block.sizeBlock;
         item.imagePath = block.imagePath;
         item.image = [MRUtils reverseTransformedValue:block.image];
         NSMutableArray *items = [NSMutableArray array];

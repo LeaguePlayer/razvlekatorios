@@ -78,10 +78,12 @@
 }
 
 -(void)initContent{
+   
     [SVProgressHUD showWithStatus:@"Загрузка" maskType:SVProgressHUDMaskTypeGradient];
     [CurrentClient allBlocksWithSuccess:^(NSArray *results) {
         [SVProgressHUD dismiss];
         blocks = results;
+         NSLog(@"initContent");
 //        images = [NSMutableArray array];
 //        for (int i = 0; i < blocks.count; i++){
 //            [images addObject:@(NO)];
@@ -122,6 +124,10 @@
 
 - (void)didReceiveMemoryWarning
 {
+    blocks = nil;
+    images = nil;
+    imageDownloader = nil;
+    selectedPath = nil;
     [super didReceiveMemoryWarning];
     // Dispose of any resources that can be recreated.
 }
@@ -152,16 +158,18 @@
     MRBlock *block = [blocks objectAtIndex:indexPath.row];
     
     [item.nameLabel setText:block.name];
-    [item.nameLabel sizeToFit];
-    CGRect frame = item.nameLabel.frame;
-    frame.origin.y = item.icon.frame.origin.y - frame.size.height;
-    [item.nameLabel setFrame:frame];
+//    [item.nameLabel setBackgroundColor:[UIColor redColor]];
+//    [item.nameLabel sizeToFit];
+
+//    CGRect frame = item.nameLabel.frame;NSLog(@"%f",frame.size.height);
+//    frame.origin.y = item.icon.frame.origin.y - frame.size.height;
+//    [item.nameLabel setFrame:frame];
     
     NSURL *imageUrl = [NSURL URLWithString:block.imagePath];
     [imageDownloader downloadImageWithURL:imageUrl options:nil progress:nil completed:^(UIImage *image, NSData *data, NSError *error, BOOL finished) {
         dispatch_async(dispatch_get_main_queue(), ^{
             [item.icon setImage:image];
-            [item.activityView removeFromSuperview];
+            [item.activityView setAlpha:0];
         });
     }];
     NSString *price;
@@ -184,19 +192,23 @@
 
 
 - (void)collectionView:(SSCollectionView *)aCollectionView didSelectItemAtIndexPath:(NSIndexPath *)indexPath{
+//    MRDownloadCollectionViewItem *item =[aCollectionView itemForIndexPath:indexPath];
+    
+//    return;
     MRBlock *block = [blocks objectAtIndex:indexPath.row];
     NSString *information = block.desc;
     selectedPath = indexPath;
     if ([DownloadManager loadsObjectWithId:block.id])
         return;
     if ([block isStored]){
+        
         [self performSegueWithIdentifier:@"ToDisplay" sender:self];
         return;
     }
     if ([block.desc isEqualToString:@""]){
         [self downloadBlock:block];
     } else {
-        UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:@"Информация о блоке" message:information delegate:self cancelButtonTitle:@"Отмена" otherButtonTitles:@"Мне нравится", nil];
+        UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:@"Информация о блоке" message:information delegate:self cancelButtonTitle:@"Отмена" otherButtonTitles:@"Скачать", nil];
         [alertView show];
     }
 }
@@ -215,6 +227,8 @@
         MRDownloadCollectionViewItem *item = (MRDownloadCollectionViewItem *)[self.collectionView itemForIndexPath:selectedPath];
         [UIView animateWithDuration:0.2 animations:^{
             [item.progressView setAlpha:1];
+            [item.activityView setAlpha:1];
+            [item.icon setAlpha:0.3];
         }];
         item.progressView.progress = 0;
         [DownloadManager startLoadingBlock:block];
@@ -247,6 +261,7 @@
     }
     if (!path) return;
     MRDownloadCollectionViewItem *item = (MRDownloadCollectionViewItem *)[self.collectionView itemForIndexPath:path];
+    NSLog(@"progress is %f",state);
     [item.progressView setProgress:state];
 }
 
@@ -261,8 +276,11 @@
     if (!path) return;
     MRDownloadCollectionViewItem *item = (MRDownloadCollectionViewItem *)[self.collectionView itemForIndexPath:path];
     item.priceLabel.text = @"Загружено";
+    
     [UIView animateWithDuration:0.2 animations:^{
         [item.progressView setAlpha:0];
+        [item.activityView setAlpha:0];
+        [item.icon setAlpha:1];
     }];
 }
 

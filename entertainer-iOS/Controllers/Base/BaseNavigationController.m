@@ -35,7 +35,17 @@
 }
 
 -(void)initBar{
-    [self.navigationBar setBackgroundImage:[UIImage imageNamed:@"topbar.png"] forBarMetrics:UIBarMetricsDefault];
+//    [self.navigationBar setBackgroundImage:[UIImage imageNamed:@"2v_topbar"] forBarMetrics:UIBarMetricsDefault];
+//    [self.navigationBar setBackgroundColor:[UIColor redColor]];
+    
+    UINavigationBar *navigationBar = self.navigationBar;
+    
+    [navigationBar setBackgroundImage:[UIImage imageNamed:@"2v_topbar"]
+                       forBarPosition:UIBarPositionAny
+                           barMetrics:UIBarMetricsDefault];
+    
+    [navigationBar setShadowImage:[UIImage new]];
+    
 }
 
 - (void)didReceiveMemoryWarning

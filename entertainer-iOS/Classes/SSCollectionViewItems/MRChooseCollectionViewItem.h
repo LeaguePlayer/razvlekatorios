@@ -24,7 +24,9 @@
 @property (nonatomic,retain) UILabel *nameLabel;
 @property (nonatomic,retain) UIImageView *icon;
 @property (nonatomic, retain) UIButton *removeButton;
+@property (nonatomic, retain) UIButton *infoButton;
 @property (nonatomic, retain) UIImageView *removeImage;
+@property (nonatomic, retain) UIImageView *infoImage;
 @property (nonatomic, retain) id<ChooseCollectionViewItemDelegate> delegate;
 
 - (id)initWithReuseIdentifier:(NSString *)aReuseIdentifier;

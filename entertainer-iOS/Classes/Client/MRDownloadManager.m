@@ -31,6 +31,8 @@ static MRDownloadManager *_sharedManager;
     return self;
 }
 
+
+
 -(BOOL)loadsObjectWithId:(int)id{
     for (MRBlock *block in loadingObjects){
         if (block.id == id){
