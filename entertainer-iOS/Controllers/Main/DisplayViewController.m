@@ -12,6 +12,8 @@
 #import "SHKFacebook.h"
 #import "SHKVkontakte.h"
 #import "SHKTwitter.h"
+#import "SVProgressHUD.h"
+#import "NSArray+Shuffling.h"
 
 @interface DisplayViewController ()
 
@@ -67,6 +69,14 @@
     [self initPhotoViewer];
 //    [self initTopBar];
     [self initBottomButtons];
+    
+    [SVProgressHUD showWithStatus:@"Загружаю блок" maskType:SVProgressHUDMaskTypeGradient];
+    dispatch_async(dispatch_get_main_queue(), ^{
+     thumbs = [NSMutableArray arrayWithArray:[MRItem allItemsWithSelectedBlockId:self.block.id]];
+        [SVProgressHUD dismiss];
+    });
+    
+//    [SVProgressHUD dismiss];
 }
 
 -(void)initBottomButtons{
@@ -94,6 +104,7 @@
     MRPhotoViewer *photoViewer = [[MRPhotoViewer alloc] initWithFrame:self.view.bounds];
     [photoViewer setDataSource:self];
     [photoViewer setDelegate:self];
+    photoViewer.selectedBlock = self.block;
     [photoViewer setAutoresizingMask:UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight];
     [self.view insertSubview:photoViewer atIndex:0];
     self.photor = photoViewer;
@@ -102,6 +113,8 @@
 
 - (void)didReceiveMemoryWarning
 {
+//    [self.photor relo]
+//    self.photor.items = nil;
     [super didReceiveMemoryWarning];
     // Dispose of any resources that can be recreated.
 }
@@ -109,18 +122,20 @@
 #pragma mark - photo viewer data source methods
 
 -(NSUInteger)numberOfPhotosInPhotoViewer:(MRPhotoViewer *)photoViewer{
-    return self.block.items.count;
+//    NSLog(@"all counts is %lu",(unsigned long)self.block.items.count);
+    return self.itemsCount;
 }
 
--(UIImage *)photoViewer:(MRPhotoViewer *)photoViewer imageAtIndex:(NSUInteger)index{
-    MRItem *item = [self.block.items objectAtIndex:index];
-    return item.image;
-}
+//-(UIImage *)photoViewer:(MRPhotoViewer *)photoViewer imageAtIndex:(NSUInteger)index{
+//    MRItem *item = [self.block.items objectAtIndex:index];
+////    NSLog(@"%@",item.image);
+//    return item.image;
+//}
 
 #pragma mark - photo viewer delegate methods
 
 -(void)photoViewer:(MRPhotoViewer *)photoViewer positionChangedAtIndex:(NSUInteger)index{
-    int count = self.block.items.count;
+    int count = self.itemsCount;
     currentIndex = index;
     if (!isShuffled)
         [self.topLabel setText:[NSString stringWithFormat:@"Страница %d из %d", index + 1,count]];
@@ -266,24 +281,65 @@
     [self.shuffleButton setSelected:isShuffled];
 //    self.tit
     if (isShuffled)
-       [self setTitle:@"Случайный порядок"];
+    {
+        self.photor.suffleArrayKeys = [NSArray arrayWithShuffledIds:[thumbs count]];
+        [self setTitle:@"Случайный порядок"];
+        
+       
+        NSMutableArray* new_thumbs = [[NSMutableArray alloc] init];
+        for(id index in self.photor.suffleArrayKeys)
+        {
+            [new_thumbs addObject:[thumbs objectAtIndex:[index integerValue]]];
+        }
+//         thumbs = nil;
+        thumbsShuffled = [NSMutableArray arrayWithArray:new_thumbs];
+        new_thumbs = nil;
+    }
     else
-         [self setTitle:@""];
+    {
+        [self setTitle:@""];
+        self.photor.suffleArrayKeys = nil;
+        thumbsShuffled = nil;
+//        NSMutableArray* new_thumbs = [[NSMutableArray alloc] init];
+//        for(int index = 0; index<500; index++)
+//        {
+//            [new_thumbs addObject:[thumbs objectAtIndex:index]];
+//        }
+//        thumbs = nil;
+//        thumbs = [NSMutableArray arrayWithArray:new_thumbs];
+//        new_thumbs = nil;
+    }
         
     [self.block setShuffled:!self.block.shuffled];
+    
+    
+    
     [self.photor reloadData];
 }
 
 - (IBAction)onDocumentsButtonClick:(id)sender {
-    ThumbsViewController *controller = [[ThumbsViewController alloc] init];
-    controller.block = self.block;
-    [controller setDelegate:self];
-    [UIView  beginAnimations:nil context:NULL];
-    [UIView setAnimationCurve:UIViewAnimationCurveEaseInOut];
-    [UIView setAnimationDuration:0.75];
-    [self.navigationController pushViewController:controller animated:NO];
-    [UIView setAnimationTransition:UIViewAnimationTransitionFlipFromRight forView:self.navigationController.view cache:NO];
-    [UIView commitAnimations];
+    [SVProgressHUD showWithMaskType:SVProgressHUDMaskTypeGradient];
+    dispatch_async(dispatch_get_main_queue(), ^{
+        ThumbsViewController *controller = [[ThumbsViewController alloc] init];
+        controller.block = self.block;
+        controller.itemsCount = [thumbs count];
+//        if(self.photor.suffleArrayKeys)
+//        {
+//            controller.thumbs = thumbs;
+//        }
+//        else
+        controller.thumbs = (thumbsShuffled) ? thumbsShuffled : thumbs;
+        [controller setDelegate:self];
+        [UIView  beginAnimations:nil context:NULL];
+        [UIView setAnimationCurve:UIViewAnimationCurveEaseInOut];
+        [UIView setAnimationDuration:0.75];
+        [self.navigationController pushViewController:controller animated:NO];
+        [UIView setAnimationTransition:UIViewAnimationTransitionFlipFromRight forView:self.navigationController.view cache:NO];
+        [UIView commitAnimations];
+    });
+   
+    
+    
 }
 
 @end

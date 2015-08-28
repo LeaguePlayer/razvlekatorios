@@ -52,17 +52,23 @@
 -(void)viewDidAppear:(BOOL)animated{
     [super viewDidAppear:animated];
     [DownloadManager addDelegate:self];
-    [self updateProgressViews];
+    
 }
 
 -(void)updateProgressViews{
+    NSLog(@"ww");
+    NSLog(@"blocks.count is %i", blocks.count);
     for (int i = 0; i < blocks.count; i++){
         MRBlock *block = [blocks objectAtIndex:i];
         NSIndexPath *path = [NSIndexPath indexPathForRow:i inSection:0];
         MRDownloadCollectionViewItem *item = (MRDownloadCollectionViewItem *)[self.collectionView itemForIndexPath:path];
+        
+        NSLog(@"block.id is %i",block.id);
         if ([DownloadManager loadsObjectWithId:block.id]){
             CGFloat state = [DownloadManager loadingStateOfObjectWithId:block.id];
             [item.progressView setAlpha:1];
+            [item.activityView setAlpha:1];
+            [item.icon setAlpha:0.3];
             [item.progressView setProgress:state];
         }
     }
@@ -88,7 +94,13 @@
 //        for (int i = 0; i < blocks.count; i++){
 //            [images addObject:@(NO)];
 //        }
+        
         [self.collectionView reloadData];
+        dispatch_async(dispatch_get_main_queue(), ^{
+            [DownloadManager addDelegate:self];
+            [self updateProgressViews];
+        });
+        
     } failure:^(int statusCode, NSArray *errors, NSError *commonError) {
         [SVProgressHUD dismiss];
     }];
@@ -147,6 +159,8 @@
 }
 
 
+
+
 - (NSUInteger)collectionView:(SSCollectionView *)aCollectionView numberOfItemsInSection:(NSUInteger)section {
     return blocks.count;
 }
@@ -158,18 +172,12 @@
     MRBlock *block = [blocks objectAtIndex:indexPath.row];
     
     [item.nameLabel setText:block.name];
-//    [item.nameLabel setBackgroundColor:[UIColor redColor]];
-//    [item.nameLabel sizeToFit];
-
-//    CGRect frame = item.nameLabel.frame;NSLog(@"%f",frame.size.height);
-//    frame.origin.y = item.icon.frame.origin.y - frame.size.height;
-//    [item.nameLabel setFrame:frame];
     
     NSURL *imageUrl = [NSURL URLWithString:block.imagePath];
     [imageDownloader downloadImageWithURL:imageUrl options:nil progress:nil completed:^(UIImage *image, NSData *data, NSError *error, BOOL finished) {
         dispatch_async(dispatch_get_main_queue(), ^{
             [item.icon setImage:image];
-            [item.activityView setAlpha:0];
+//            [item.activityView setAlpha:0];
         });
     }];
     NSString *price;
@@ -187,7 +195,7 @@
 #pragma mark - SSCollectionViewDelegate
 
 - (CGSize)collectionView:(SSCollectionView *)aCollectionView itemSizeForSection:(NSUInteger)section {
-    return CGSizeMake(125.0f, 145.0f);
+    return CGSizeMake(125.0f, 160.0f);
 }
 
 
@@ -209,6 +217,9 @@
         [self downloadBlock:block];
     } else {
         UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:@"Информация о блоке" message:information delegate:self cancelButtonTitle:@"Отмена" otherButtonTitles:@"Скачать", nil];
+        
+      
+        
         [alertView show];
     }
 }
@@ -261,7 +272,7 @@
     }
     if (!path) return;
     MRDownloadCollectionViewItem *item = (MRDownloadCollectionViewItem *)[self.collectionView itemForIndexPath:path];
-    NSLog(@"progress is %f",state);
+//    NSLog(@"progress is %f",state);
     [item.progressView setProgress:state];
 }
 
@@ -304,6 +315,11 @@
 -(void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender{
     if ([segue.identifier isEqualToString:@"ToDisplay"]){
         DisplayViewController *controller = (DisplayViewController *)segue.destinationViewController;
+        
+//        DisplayViewController *controller = (DisplayViewController *)segue.destinationViewController;
+//        controller.block = selected;
+        
+        
         MRBlock *empty = [blocks objectAtIndex:selectedPath.row];
         NSArray *allDowned = [MRBlock allBlocks];
         MRBlock *loaded;
@@ -314,6 +330,7 @@
             }
         }
         controller.block = loaded;
+        controller.itemsCount = [MRItem allItemsByBlockId:loaded.id];
     }
 }
 

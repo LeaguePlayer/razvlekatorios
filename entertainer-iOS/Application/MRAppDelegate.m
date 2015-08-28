@@ -14,6 +14,7 @@
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
+    
     [MKStoreManager sharedManager];
     [MagicalRecord setupCoreDataStackWithStoreNamed:@"Model.sqlite"];
     [self configureShareKit];

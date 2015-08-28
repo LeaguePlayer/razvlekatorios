@@ -44,13 +44,23 @@
 //        self.nameLabel.font = [UIFont systemFontOfSize:10];
 //        [self.nameLabel setAdjustsFontSizeToFitWidth:NO];
 //        [self.nameLabel setNumberOfLines:2];
-        self.nameLabel = [[UILabel alloc] initWithFrame:CGRectMake(0,0,125,20)];
+        self.nameLabel = [[UILabel alloc] initWithFrame:CGRectMake(0,0,125,35)];
         self.nameLabel.backgroundColor = [UIColor clearColor];
         self.nameLabel.textAlignment = NSTextAlignmentCenter;
         self.nameLabel.textColor = [UIColor blueColor];
-        self.nameLabel.font = [UIFont boldSystemFontOfSize:12];
-        [self.nameLabel setAdjustsFontSizeToFitWidth:YES];
-        [self.nameLabel setNumberOfLines:2];
+        self.nameLabel.font = [UIFont boldSystemFontOfSize:9];
+//        [self.nameLabel setAdjustsFontSizeToFitWidth:YES];
+        [self.nameLabel setNumberOfLines:0];
+        self.nameLabel.lineBreakMode = NSLineBreakByWordWrapping;
+        
+//        self.nameLabel = [[UILabel alloc] initWithFrame:CGRectMake(0,0,125,35)];
+//        self.nameLabel.backgroundColor = [UIColor clearColor];
+//        self.nameLabel.textAlignment = NSTextAlignmentCenter;
+//        self.nameLabel.textColor = [UIColor blueColor];
+//        self.nameLabel.font = [UIFont boldSystemFontOfSize:9];
+//        // Objective-C
+//        self.nameLabel.lineBreakMode = NSLineBreakByWordWrapping;
+//        self.nameLabel.numberOfLines = 0;
         
         //        titleLabel.numberOfLines = 0
         
@@ -61,7 +71,7 @@
         
         self.icon = [[UIImageView alloc] init];
         [self.icon setContentMode:UIViewContentModeScaleAspectFit];
-        [self.icon setFrame:CGRectMake(0, 21, 125, 125)];
+        [self.icon setFrame:CGRectMake(0, 36, 125, 125)];
         [self addSubview:self.icon];
         UIImage *removeImg = [UIImage imageNamed:@"remove"];
         self.removeImage = [[UIImageView alloc] initWithImage:removeImg];

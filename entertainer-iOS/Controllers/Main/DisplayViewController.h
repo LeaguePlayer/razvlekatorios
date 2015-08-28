@@ -16,8 +16,12 @@
     BOOL isFullScreen;
     BOOL isShuffled;
     int currentIndex;
+    
+    NSMutableArray* thumbs;
+    NSMutableArray* thumbsShuffled;
 }
 
+@property (nonatomic) NSInteger itemsCount;
 @property (nonatomic, retain) MRBlock *block;
 @property (nonatomic, retain) MRPhotoViewer *photor;
 @property (nonatomic, retain) IBOutlet UIView *topView;

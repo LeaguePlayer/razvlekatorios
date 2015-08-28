@@ -63,6 +63,7 @@ static MRHTTPClient *_sharedClient;
                 
                 [self.downloader downloadImageWithURL:imageUrl options:nil progress:nil completed:^(UIImage *image, NSData *data, NSError *error, BOOL finished) {
                     block.image = image;
+//                    block.image = data;
                 }];
                 [results addObject:block];
             }
@@ -118,12 +119,13 @@ static MRHTTPClient *_sharedClient;
                 item.id = i;
                 NSURL *imageUrl = [NSURL URLWithString:item.imagePath];
                 [self.downloader downloadImageWithURL:imageUrl options:nil progress:nil completed:^(UIImage *image, NSData *data, NSError *error, BOOL finished) {
-                    item.image = image;
+//                    item.image = image;
+                    item.imageData = data;
                     [results addObject:item];
                     dispatch_queue_t queue = dispatch_get_main_queue();
                     dispatch_async(queue, ^{
                         count++;
-                        NSLog (@"%d == %d",count,max);
+//                        NSLog (@"%d == %d",count,max);
                         if (count == max){
                             block.items = results;
                             success(results);

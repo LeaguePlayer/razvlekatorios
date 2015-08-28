@@ -33,22 +33,31 @@
     item.id = @(block.id);
     item.name = block.name;
     item.slidesInBlock =  @(block.slidesInBlock);
-    NSLog(@"%@",@(block.slidesInBlock));
-    NSLog(@"%i",block.slidesInBlock);
-    NSLog(@"%i",(int)block.slidesInBlock);
-    NSLog(@"%@",item.slidesInBlock);
-//    NSLog(@"%i",[NSNumber numberWithInt:block.slidesInBlock]);
+
     item.sizeBlock = block.sizeBlock;
     item.desc = block.desc;
     item.imagePath = block.imagePath;
     item.image = [MRUtils transformedValue:block.image];
     item.price = block.price;
+    
+
+    
+    int i = 0;
+    ManagedItem *new = nil;
     for (MRItem *lol in block.items){
-        ManagedItem *new = [ManagedItem createFromItem:lol];
+        NSLog(@"%i", i);
+        new = [ManagedItem createFromItem:lol];
         new.block = item;
         [item addItemsObject:new];
+//        new = nil;
+        i++;
     }
+
+    
+    
+    NSLog(@"MRSaveSynchronously");
     [DefaultContext MR_saveWithOptions:MRSaveSynchronously completion:nil];
+    
     return item;
 }
 

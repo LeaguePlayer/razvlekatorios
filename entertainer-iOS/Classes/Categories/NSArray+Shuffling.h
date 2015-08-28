@@ -11,5 +11,6 @@
 @interface NSArray (Shuffling)
 
 +(NSArray *)arrayWithShuffledContentOfArray:(NSArray *)array;
++(NSArray *)arrayWithShuffledIds:(NSInteger)sizeArray;
 
 @end

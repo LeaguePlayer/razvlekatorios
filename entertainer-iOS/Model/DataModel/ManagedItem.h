@@ -17,6 +17,7 @@
 @property (nonatomic, retain) NSString * title;
 @property (nonatomic, retain) NSString * detail;
 @property (nonatomic, retain) id image;
+@property (nonatomic, retain) id thumbImage;
 @property (nonatomic, retain) NSString * imagePath;
 @property (nonatomic, retain) ManagedBlock *block;
 

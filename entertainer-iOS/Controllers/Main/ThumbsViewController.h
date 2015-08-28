@@ -19,8 +19,14 @@
 @end
 
 @interface ThumbsViewController : BaseViewController <SSCollectionViewDataSource,SSCollectionViewDelegate>
+{
+//    NSArray *itemsThumb;
+//    NSMutableArray *items;
+}
 
+@property (nonatomic, retain)  NSMutableArray *thumbs;
 @property (nonatomic, retain) MRBlock *block;
+@property (nonatomic) NSInteger itemsCount;
 @property (nonatomic, retain) SSCollectionView *collectionView;
 @property (nonatomic, retain) id<ThumbViewDelegate> delegate;
 

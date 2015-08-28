@@ -8,6 +8,7 @@
 
 #import <UIKit/UIKit.h>
 #import "MRPhoto.h"
+#import "MRBlock.h"
 
 @class MRPhotoViewer;
 
@@ -30,12 +31,27 @@
 @end
 
 @interface MRPhotoViewer : UIView <UIScrollViewDelegate>{
-        NSArray *items;
+    
         NSArray *titles;
+    NSMutableDictionary *gotItemsFromCD;
+//    NSMutableArray *progressViews;
         NSUInteger itemsCount;
         NSInteger currentIndex;
+        NSInteger currentPart;
+        NSUInteger partsCount;
         CGSize size;
+    NSInteger lastCurrentIndex;
+     NSInteger lastCounter;
+    NSInteger shiftIndex;
+    NSInteger shiftParts;
+    BOOL initedFirst;
+    BOOL IS_LOADING;
+    NSInteger activePart;
+    NSInteger counter;
 }
+@property (nonatomic, retain) NSMutableDictionary *items;
+@property (nonatomic, retain) NSArray *suffleArrayKeys;
+@property (nonatomic, retain) MRBlock *selectedBlock;
 
 @property (nonatomic, retain) id<MRPhotoViewerDelegate> delegate;
 @property (nonatomic, retain) id<MRPhotoViewerDataSource> dataSource;

@@ -8,6 +8,7 @@
 
 #import "ThumbsViewController.h"
 #import "MRItem.h"
+#import "SVProgressHUD.h"
 
 @interface ThumbsViewController ()
 
@@ -28,7 +29,17 @@
 {
     [super viewDidLoad];
 	// Do any additional setup after loading the view.
+//    items = [[NSMutableArray alloc] init];
+//    itemsThumb = self.thumbs;
+//    for (MRItem* item in self.thumbs)
+//    {
+//        [items addObject:item.thumbImage];
+//    }
+//    self.thumbs = nil;
+    NSLog(@"%i",self.block.id);
     [self initCollectionView];
+    
+    [SVProgressHUD dismiss];
 }
 
 -(void)viewWillAppear:(BOOL)animated{
@@ -65,17 +76,38 @@
 }
 
 -(NSUInteger)collectionView:(SSCollectionView *)aCollectionView numberOfItemsInSection:(NSUInteger)section{
-    return self.block.items.count;
+    return self.itemsCount;
 }
 
+- (UICollectionViewCell *)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath {
+    UICollectionViewCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:@"Cell" forIndexPath:indexPath];
+    
+    // Configure the cell
+    NSLog(@"TTT");
+    
+    return cell;
+}
+
+
 -(SSCollectionViewItem *)collectionView:(SSCollectionView *)aCollectionView itemForIndexPath:(NSIndexPath *)indexPath{
+    NSLog(@"HELLLO %i!!", indexPath.row);
     NSString *itemIdentifier = @"collectionItem";
     SSCollectionViewItem *item = [[SSCollectionViewItem alloc] initWithStyle:SSCollectionViewItemStyleImage reuseIdentifier:itemIdentifier];
-    MRItem *blockItem = [self.block.items objectAtIndex:indexPath.row];
-    [item.imageView setImage:blockItem.image];
-    [item.imageView setContentMode:UIViewContentModeScaleAspectFit];
+    
+//    NSLog(@"%@",item.imageView.image);
+    
+    MRItem* model = (MRItem *)[self.thumbs objectAtIndex:indexPath.row];
+    UIImage *image = model.thumbImage;
+    [item.imageView setImage:image];
+//    [item.imageView setContentMode:UIViewContentModeScaleAspectFit];
+    
+    NSLog(@"%@",item.imageView.image);
+    
+    
     return item;
 }
+
+
 
 #pragma mark - collection view delegate methods
 
@@ -109,6 +141,13 @@
 
 - (void)didReceiveMemoryWarning
 {
+//    itemsThumb = nil;
+//    items = nil;
+//    for (MRItem* item in itemsThumb)
+//    {
+//        [items addObject:item.image];
+//    }
+//    itemsThumb = [NSMutableArray arrayWithArray:[MRItem allItemsWithSelectedBlockId:self.block.id]];
     [super didReceiveMemoryWarning];
     // Dispose of any resources that can be recreated.
 }

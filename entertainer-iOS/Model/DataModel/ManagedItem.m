@@ -17,6 +17,7 @@
 @dynamic title;
 @dynamic detail;
 @dynamic image;
+@dynamic thumbImage;
 @dynamic imagePath;
 @dynamic block;
 
@@ -25,13 +26,25 @@
 @implementation ManagedItem (Map)
 
 +(id)createFromItem:(MRItem *)object{
-    ManagedItem *item = [ManagedItem MR_createInContext:DefaultContext];
-    item.id = @(object.id);
-    item.title = object.title;
-    item.detail = object.detail;
-    item.imagePath = object.imagePath;
-    item.image = [MRUtils transformedValue:object.image];
-    return item;
+    @autoreleasepool {
+        ManagedItem *item = [ManagedItem MR_createInContext:DefaultContext];
+        item.id = @(object.id);
+        item.title = object.title;
+        item.detail = object.detail;
+        item.imagePath = object.imagePath;
+        item.image = object.imageData;
+        
+        UIImage *originalImage = [UIImage imageWithData:object.imageData];
+        CGSize destinationSize = CGSizeMake(100, 100);
+        UIGraphicsBeginImageContext(destinationSize);
+        [originalImage drawInRect:CGRectMake(0,0,destinationSize.width,destinationSize.height)];
+        UIImage *newImage = UIGraphicsGetImageFromCurrentImageContext();
+        UIGraphicsEndImageContext();
+        item.thumbImage = newImage;
+        return item;
+    }
+   
+    
 }
 
 @end

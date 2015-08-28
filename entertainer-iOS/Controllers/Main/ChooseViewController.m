@@ -12,6 +12,7 @@
 #import "NSArray+Shuffling.h"
 #import <QuartzCore/QuartzCore.h>
 #import "DisplayViewController.h"
+#import "SVProgressHUD.h"
 
 @interface ChooseViewController ()
 
@@ -39,6 +40,7 @@
     [self initInfoButtonWithTarget:self];
     [self initContent];
     [self initUI];
+    
 }
 
 -(void)viewWillAppear:(BOOL)animated{
@@ -144,10 +146,11 @@
 #pragma mark - SSCollectionViewDelegate
 
 - (CGSize)collectionView:(SSCollectionView *)aCollectionView itemSizeForSection:(NSUInteger)section {
-    return CGSizeMake(125.0f, 145.0f);
+    return CGSizeMake(125.0f, 160.0f);
 }
 
 -(void)collectionView:(SSCollectionView *)aCollectionView didSelectItemAtIndexPath:(NSIndexPath *)indexPath{
+   
     selected = [blocks objectAtIndex:indexPath.row];
     [self performSegueWithIdentifier:@"ToDisplay" sender:self];
 }
@@ -175,9 +178,12 @@
     MRBlock *block = [blocks objectAtIndex:indexPath.row];
   
     
-    NSString *messageAlert = [NSString stringWithFormat:@"Количество слайдов в блоке %i. Размер блока %@.", block.slidesInBlock, block.sizeBlock];
+    NSString *messageAlert = [NSString stringWithFormat:@"Количество слайдов в блоке %i. \nРазмер блока %@.", block.slidesInBlock, block.sizeBlock];
     
     UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Информация о блоке" message:messageAlert delegate:nil cancelButtonTitle:@"Отмена" otherButtonTitles:nil];
+    
+    
+    
     [alert show];
     //    [self showAlert];
 }
@@ -277,8 +283,19 @@
 
 -(void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender{
     if ([segue.identifier isEqualToString:@"ToDisplay"]){
-        DisplayViewController *controller = (DisplayViewController *)segue.destinationViewController;
-        controller.block = selected;
+       
+//        dispatch_async(dispatch_get_main_queue(), ^{
+//                 [SVProgressHUD showWithMaskType:SVProgressHUDMaskTypeGradient];
+//            });
+            DisplayViewController *controller = (DisplayViewController *)segue.destinationViewController;
+            controller.block = selected;
+            controller.itemsCount = [MRItem allItemsByBlockId:selected.id];
+       
+            NSLog(@"%li", (long)controller.itemsCount);
+        
+       
+        
+
     }
 }
 

@@ -92,14 +92,14 @@
         item.sizeBlock = block.sizeBlock;
         item.imagePath = block.imagePath;
         item.image = [MRUtils reverseTransformedValue:block.image];
-        NSMutableArray *items = [NSMutableArray array];
-        for (ManagedItem *lol in block.items){
-            MRItem *new = [[MRItem alloc] initWithManagedObject:lol];
-            [items addObject:new];
-        }
-        NSSortDescriptor *descriptor = [[NSSortDescriptor alloc] initWithKey:@"id" ascending:YES];
-        items =[NSArray arrayWithArray:[items sortedArrayUsingDescriptors:@[descriptor]]];
-        item.items = items;
+//        NSMutableArray *items = [NSMutableArray array];
+//        for (ManagedItem *lol in block.items){
+//            MRItem *new = [[MRItem alloc] initWithManagedObject:lol];
+//            [items addObject:new];
+//        }
+//        NSSortDescriptor *descriptor = [[NSSortDescriptor alloc] initWithKey:@"id" ascending:YES];
+//        items =[NSArray arrayWithArray:[items sortedArrayUsingDescriptors:@[descriptor]]];
+//        item.items = items;
     }
     return item;
 }

@@ -33,13 +33,21 @@
         self.imageView.backgroundColor = [UIColor clearColor];
         self.backgroundColor = [UIColor clearColor];
         self.imageView = nil;
-        self.nameLabel = [[UILabel alloc] initWithFrame:CGRectMake(0,0,125,20)];
+        self.nameLabel = [[UILabel alloc] initWithFrame:CGRectMake(0,0,125,35)];
         self.nameLabel.backgroundColor = [UIColor clearColor];
         self.nameLabel.textAlignment = NSTextAlignmentCenter;
         self.nameLabel.textColor = [UIColor blueColor];
-        self.nameLabel.font = [UIFont boldSystemFontOfSize:12];
-        [self.nameLabel setAdjustsFontSizeToFitWidth:YES];
-        [self.nameLabel setNumberOfLines:2];
+        self.nameLabel.font = [UIFont boldSystemFontOfSize:9];
+        // Objective-C
+        self.nameLabel.lineBreakMode = NSLineBreakByWordWrapping;
+        self.nameLabel.numberOfLines = 0;
+        
+        
+
+        
+//                [self.nameLabel setAdjustsFontSizeToFitWidth:YES];
+
+//        [self.nameLabel  sizeToFit];
         NSLog(@"initWithReuseIdentifier");
 //        titleLabel.numberOfLines = 0
         
@@ -51,7 +59,7 @@
         
         self.icon = [[UIImageView alloc] init];
         [self.icon setContentMode:UIViewContentModeScaleAspectFit];
-        [self.icon setFrame:CGRectMake(0, 21, 125, 125)]; //21
+        [self.icon setFrame:CGRectMake(0, 36, 125, 125)]; //21
         
         UIImage *prBackImg = [UIImage imageNamed:@"bg_price.png"];
         UIImageView *priceBackView = [[UIImageView alloc] initWithImage:prBackImg];
@@ -75,6 +83,7 @@
         frame.size = CGSizeMake(20, 20);
         [self.activityView setFrame:frame];
         [self.activityView startAnimating];
+        [self.activityView setAlpha:0];
         
         [self addSubview:self.nameLabel];
         [self addSubview:self.icon];
