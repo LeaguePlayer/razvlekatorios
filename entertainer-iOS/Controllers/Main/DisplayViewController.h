@@ -11,8 +11,9 @@
 #import "MRBlock.h"
 #import "MRItem.h"
 #import "ThumbsViewController.h"
+#import "SHKShareItemDelegate.h"
 
-@interface DisplayViewController : BaseViewController <MRPhotoViewerDelegate, MRPhotoViewerDataSource, UIActionSheetDelegate, ThumbViewDelegate>{
+@interface DisplayViewController : BaseViewController <MRPhotoViewerDelegate, MRPhotoViewerDataSource, UIActionSheetDelegate, ThumbViewDelegate, SHKShareItemDelegate>{
     BOOL isFullScreen;
     BOOL isShuffled;
     int currentIndex;

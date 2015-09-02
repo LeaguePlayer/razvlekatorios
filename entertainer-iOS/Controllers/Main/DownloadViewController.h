@@ -10,14 +10,14 @@
 #import <SSToolkit/SSCollectionView.h>
 #import "MRDownloadManager.h"
 #import "SDWebImageDownloader.h"
+#import "SDWebImageManager.h"
 #import "MRBlock.h"
 
 @interface DownloadViewController : BaseViewController <SSCollectionViewDataSource,SSCollectionViewDelegate, MRDownloadManagerDelegate, UIAlertViewDelegate>{
     NSArray *blocks;
     NSMutableArray *images;
-    SDWebImageDownloader *imageDownloader;
+    SDWebImageManager *imageDownloader;
     NSIndexPath *selectedPath;
-    
     int countItemsBySelectedBlock;
 }
 

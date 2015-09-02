@@ -33,7 +33,7 @@
 @interface MRPhotoViewer : UIView <UIScrollViewDelegate>{
     
         NSArray *titles;
-    NSMutableDictionary *gotItemsFromCD;
+//    NSMutableDictionary *gotItemsFromCD;
 //    NSMutableArray *progressViews;
         NSUInteger itemsCount;
         NSInteger currentIndex;
@@ -52,6 +52,8 @@
     NSMutableArray *leftScrollHistory;
     NSMutableArray *rightScrollHistory;
 }
+@property (nonatomic, retain) NSMutableDictionary *gotItemsFromCD;
+
 @property (nonatomic, retain) NSMutableDictionary *items;
 @property (nonatomic, retain) NSArray *suffleArrayKeys;
 @property (nonatomic, retain) MRBlock *selectedBlock;

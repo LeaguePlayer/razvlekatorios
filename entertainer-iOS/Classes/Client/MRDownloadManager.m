@@ -91,11 +91,11 @@ static MRDownloadManager *_sharedManager;
         }
     }success:^(NSArray *results) {
         block.items = results;
-        for (id<MRDownloadManagerDelegate> delegate in delegates){
-            if ([delegate respondsToSelector:@selector(downloadCompliteWithObjectId:)]){
-                [delegate downloadCompliteWithObjectId:block.id];
-            }
-        }
+//        for (id<MRDownloadManagerDelegate> delegate in delegates){
+//            if ([delegate respondsToSelector:@selector(downloadCompliteWithObjectId:)]){
+//                [delegate downloadCompliteWithObjectId:block.id];
+//            }
+//        }
         for (int i = 0; i < loadingObjects.count; i++){
             MRBlock *object = [loadingObjects objectAtIndex:i];
             if (object.id == block.id){

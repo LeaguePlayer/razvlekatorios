@@ -8,12 +8,17 @@
 
 #import "DisplayViewController.h"
 #import "UIView+REUIKitAdditions.h"
-#import "SHK.h"
+#import "SHKItem.h"
 #import "SHKFacebook.h"
-#import "SHKVkontakte.h"
 #import "SHKTwitter.h"
+//#import "SHKInstagram.h"
+#import "SHKVkontakte.h"
 #import "SVProgressHUD.h"
 #import "NSArray+Shuffling.h"
+
+#import "SHKActionSheet.h"
+#import "SHKAlertController.h"
+
 
 @interface DisplayViewController ()
 
@@ -72,7 +77,6 @@
     
     
     dispatch_async(dispatch_get_main_queue(), ^{
-//        self.itemsCount = [MRItem allItemsByBlockId:self.block.id];
      thumbs = [NSMutableArray arrayWithArray:[MRItem allItemsWithSelectedBlockId:self.block.id]];
         [SVProgressHUD dismiss];
     });
@@ -241,25 +245,30 @@
 
 #pragma mark - action sheet delegate methods
 
--(void)actionSheet:(UIActionSheet *)actionSheet clickedButtonAtIndex:(NSInteger)buttonIndex{
-    NSLog(@"shared");
-//    MRItem *currentItem = [self.block.items objectAtIndex:currentIndex];
-//    UIImage *image = currentItem.image;
-//    SHKItem *item = [SHKItem image:image title:@"Картинка отправлена через приложение Мобильный развлекатор"];
-//    switch (buttonIndex) {
-//        case 0:
-//            [SHKVkontakte shareItem:item];
-//            break;
-//        case 1:
-//            [SHKFacebook shareItem:item];
-//            break;
-//        case 2:
-//            [SHKTwitter shareItem:item];
-//            break;
-//        default:
-//            break;
-//    }
-}
+//-(void)actionSheet:(UIActionSheet *)actionSheet clickedButtonAtIndex:(NSInteger)buttonIndex{
+//
+//    
+////
+////    switch (buttonIndex) {
+////        case 0:
+//////            [SHKVkontakte shareItem:item];
+////                NSLog(@"shareVK");
+////                [SHKVkontakte shareItem:sharerItem];
+////            break;
+////        case 1:
+////            NSLog(@"shareFB");
+////            
+////            [NSClassFromString([NSString stringWithFormat:@"SHKFacebook"])
+////             performSelector:@selector(shareItem:) withObject:sharerItem];
+////            break;
+////        case 2:
+////            NSLog(@"shareTW");
+////                [SHKTwitter shareItem:sharerItem];
+////            break;
+////        default:
+////            break;
+////    }
+//}
 
 #pragma mark - thumb view delegate methods
 
@@ -277,9 +286,55 @@
     [self performSegueWithIdentifier:@"ToAbout" sender:self];
 }
 
+
 - (IBAction)onShareButtonClick:(id)sender {
-    UIActionSheet *actionSheet = [[UIActionSheet alloc] initWithTitle:@"Поделиться" delegate:self cancelButtonTitle:@"Отмена" destructiveButtonTitle:nil otherButtonTitles:@"ВКонтакте",@"Facebook",@"Twitter",nil];
-    [actionSheet showInView:self.view];
+//    UIActionSheet *actionSheet = [[UIActionSheet alloc] initWithTitle:@"Поделиться" delegate:self cancelButtonTitle:@"Отмена" destructiveButtonTitle:nil otherButtonTitles:@"ВКонтакте",@"Facebook",@"Twitter",nil];
+//    [actionSheet showInView:self.view];
+    
+    // Create the item to share (in this example, a url)
+    //    NSURL *url = [NSURL URLWithString:@"http://getsharekit.com"];
+    //    SHKItem *item = [SHKItem URL:url title:@"ShareKit is Awesome!" contentType:SHKURLContentTypeWebpage];
+    
+    NSLog(@"shared");
+    int shareImageID = (self.photor.suffleArrayKeys) ? [[self.photor.suffleArrayKeys objectAtIndex:currentIndex] integerValue] : currentIndex;
+    MRItem *gotModel = (MRItem *)[self.photor.gotItemsFromCD objectForKey:@(shareImageID)];
+    
+    //    MRItem *currentItem = [self.block.items objectAtIndex:currentIndex];
+    UIImage *image = [UIImage imageWithData:gotModel.imageData];
+    //    UIImageView *b = [[UIImageView alloc] initWithImage:image];
+    //    [self.view addSubview:b];
+    NSString *title = @"Картинка отправлена через приложение Мобильный развлекатор";
+    SHKItem * item = [SHKItem image:image title:title];
+    
+    
+    // Get the ShareKit action sheet
+    //    SHKActionSheet *actionSheet = [SHKActionSheet actionSheetForItem:item];
+    
+    // ShareKit detects top view controller (the one intended to present ShareKit UI) automatically,
+    // but sometimes it may not find one. To be safe, set it explicitly
+    [SHK setRootViewController:self];
+    [SHK setFavorites:@[@"SHKVkontakte",@"SHKiOSFacebook",@"SHKiOSTwitter"] forItem:item];
+//    [SHK set]
+    
+    // Display the action sheet
+    if (NSClassFromString(@"UIAlertController")) {
+        
+        //iOS 8+
+        SHKAlertController *alertController = [SHKAlertController actionSheetForItem:item];
+        alertController.shareDelegate = self;
+        
+        
+        [alertController setModalPresentationStyle:UIModalPresentationPopover];
+        UIPopoverPresentationController *popPresenter = [alertController popoverPresentationController];
+        popPresenter.barButtonItem = self.toolbarItems[1];
+        [self presentViewController:alertController animated:YES completion:nil];
+        
+    } else {
+        
+        //deprecated
+        SHKActionSheet *actionSheet = [SHKActionSheet actionSheetForItem:item];
+        [actionSheet showFromToolbar:self.navigationController.toolbar];
+    }
 }
 
 - (IBAction)onShuffleButtonClick:(id)sender {

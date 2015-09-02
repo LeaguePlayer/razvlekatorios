@@ -41,22 +41,48 @@
     item.price = block.price;
     
 
+    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+        //Do background work
+        
+        int i = 0;
+        ManagedItem *new = nil;
+        for (MRItem *lol in block.items){
+            NSLog(@"%i", i);
+            new = [ManagedItem createFromItem:lol];
+            new.block = item;
+            [item addItemsObject:new];
+            i++;
+        }
+        
+        dispatch_async(dispatch_get_main_queue(), ^{
+            NSLog(@"MRSaveSynchronously");
+            [DefaultContext MR_saveToPersistentStoreWithCompletion:^(BOOL success, NSError *error) {
+                [[NSNotificationCenter defaultCenter] postNotificationName:@"NoticeAfterDownload" object:item.id];
+            }];
+//            [MagicalRecord]
+        });
+    });
     
-    int i = 0;
-    ManagedItem *new = nil;
-    for (MRItem *lol in block.items){
-        NSLog(@"%i", i);
-        new = [ManagedItem createFromItem:lol];
-        new.block = item;
-        [item addItemsObject:new];
-//        new = nil;
-        i++;
-    }
+//    [MagicalRecord saveWithBlock:^(NSManagedObjectContext *localContext) {
+    
+//    } completion:^(BOOL success, NSError *error) {
+//        [[NSNotificationCenter defaultCenter] postNotificationName:@"NoticeAfterDownload" object:item.id];
+//    }];
+//    MR_saveToPersistentStoreWithCompletion
+    
+    
+//    [MagicalRecord saveWithBlock:^(NSManagedObjectContext *localContext) {
+//        //                [DefaultContext MR_saveOnlySelfWithCompletion:nil];
+//       
+//        
+//        
+////        [DefaultContext MR_saveWithOptions:MRSaveSynchronously completion:nil];
+//    }];
+    
 
     
     
-    NSLog(@"MRSaveSynchronously");
-    [DefaultContext MR_saveWithOptions:MRSaveSynchronously completion:nil];
+    
     
     return item;
 }

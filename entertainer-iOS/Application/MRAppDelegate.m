@@ -10,6 +10,12 @@
 #import "SHKConfiguration.h"
 #import "MESHKConfiguration.h"
 
+
+
+#import "SHKFacebook.h"
+
+
+
 @implementation MRAppDelegate
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
@@ -26,24 +32,33 @@
     [SHKConfiguration sharedInstanceWithConfigurator:configurator];
 }
 							
-- (void)applicationWillResignActive:(UIApplication *)application
-{
-}
-
-- (void)applicationDidEnterBackground:(UIApplication *)application
-{
-}
-
-- (void)applicationWillEnterForeground:(UIApplication *)application
-{
-}
-
 - (void)applicationDidBecomeActive:(UIApplication *)application
 {
+    [SHKFacebook handleDidBecomeActive];
+//    [[EvernoteSession sharedSession] handleDidBecomeActive];
 }
 
 - (void)applicationWillTerminate:(UIApplication *)application
 {
+    // Save data if appropriate
+    [SHKFacebook handleWillTerminate];
+}
+
+- (BOOL)application:(UIApplication *)application
+            openURL:(NSURL *)url
+  sourceApplication:(NSString *)sourceApplication
+         annotation:(id)annotation
+{
+    NSString* scheme = [url scheme];
+    
+    NSRange pocketPrefixKeyRange = [(NSString *)SHKCONFIG(pocketConsumerKey) rangeOfString:@"-"];
+    NSRange range = {0, pocketPrefixKeyRange.location - 1};
+    
+    if ([scheme hasPrefix:[NSString stringWithFormat:@"fb%@", SHKCONFIG(facebookAppId)]]) {
+        return [SHKFacebook handleOpenURL:url sourceApplication:sourceApplication];
+    }
+    
+    return YES;
 }
 
 @end

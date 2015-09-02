@@ -26,7 +26,7 @@
 @implementation ManagedItem (Map)
 
 +(id)createFromItem:(MRItem *)object{
-//    @autoreleasepool {
+    @autoreleasepool {
         ManagedItem *item = [ManagedItem MR_createInContext:DefaultContext];
         item.id = @(object.id);
         item.title = object.title;
@@ -36,7 +36,7 @@
         
         
         
-        dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+//        dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
             //Do background work
             UIImage *originalImage = [UIImage imageWithData:object.imageData];
             CGSize destinationSize = CGSizeMake(100, 100);
@@ -44,13 +44,13 @@
             [originalImage drawInRect:CGRectMake(0,0,destinationSize.width,destinationSize.height)];
             UIImage *newImage = UIGraphicsGetImageFromCurrentImageContext();
             UIGraphicsEndImageContext();
-            dispatch_async(dispatch_get_main_queue(), ^{
+//            dispatch_async(dispatch_get_main_queue(), ^{
                 item.thumbImage = newImage;
                 
-            });
-        });
+//            });
+//        });
         return item;
-//    }
+    }
    
     
 }

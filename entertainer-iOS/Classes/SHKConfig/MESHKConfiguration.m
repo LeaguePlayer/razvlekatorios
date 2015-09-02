@@ -285,7 +285,7 @@
 }
 // SHKActionSheet settings
 - (NSNumber*)showActionSheetMoreButton {
-	return [NSNumber numberWithBool:true];// Setting this to true will show More... button in SHKActionSheet, setting to false will leave the button out.
+	return [NSNumber numberWithBool:false];// Setting this to true will show More... button in SHKActionSheet, setting to false will leave the button out.
 }
 
 /*

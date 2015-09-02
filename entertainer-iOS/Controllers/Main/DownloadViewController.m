@@ -38,6 +38,23 @@
     [self initContent];
     [self initCollectionView];
     [self initUI];
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector:@selector(didGetMyNotification:)
+                                                 name:@"NoticeAfterDownload"
+                                               object:nil];
+    
+}
+
+
+- (void)didGetMyNotification:(NSNotification*)notification {
+     NSLog(@"Hello! I FINISH DOWNLAOD");
+    NSNumber *gotObject = (NSNumber *)[notification object];
+//    NSLog(@"%li",(long)[gotObject integerValue]);
+    
+    
+    dispatch_async(dispatch_get_main_queue(), ^{
+        [self downloadCompliteWithObjectId:[gotObject integerValue]];
+    });
 }
 
 -(void)viewWillAppear:(BOOL)animated{
@@ -46,7 +63,7 @@
 }
 
 -(void)initDownloader{
-    imageDownloader = [[SDWebImageDownloader alloc] init];
+    imageDownloader = [[SDWebImageManager alloc] init];
 }
 
 -(void)viewDidAppear:(BOOL)animated{
@@ -174,12 +191,23 @@
     [item.nameLabel setText:block.name];
     
     NSURL *imageUrl = [NSURL URLWithString:block.imagePath];
-    [imageDownloader downloadImageWithURL:imageUrl options:nil progress:nil completed:^(UIImage *image, NSData *data, NSError *error, BOOL finished) {
+//    [imageDownloader downloadImageWithURL:imageUrl options:nil progress:nil completed:^(UIImage *image, NSData *data, NSError *error, BOOL finished) {
+//        dispatch_async(dispatch_get_main_queue(), ^{
+//            [item.icon setImage:image];
+////            [item.activityView setAlpha:0];
+//        });
+//    }];
+    
+    [imageDownloader downloadImageWithURL:imageUrl options:nil progress:nil completed:^(UIImage *image, NSError *error, SDImageCacheType cacheType, BOOL finished, NSURL *imageURL) {
         dispatch_async(dispatch_get_main_queue(), ^{
             [item.icon setImage:image];
-//            [item.activityView setAlpha:0];
+            //            [item.activityView setAlpha:0];
         });
     }];
+//    SDWebImageManager *a = [[SDWebImageManager alloc] init];
+//    [a downloadImageWithURL:<#(NSURL *)#> options:<#(SDWebImageOptions)#> progress:<#^(NSInteger receivedSize, NSInteger expectedSize)progressBlock#> completed:<#^(UIImage *image, NSError *error, SDImageCacheType cacheType, BOOL finished, NSURL *imageURL)completedBlock#>]
+    
+    
     NSString *price;
     if ([block isStored]){
         price = @"Загружено";
@@ -305,7 +333,6 @@
     [UIView animateWithDuration:0.2 animations:^{
         [item.progressView setAlpha:0];
         [item.activityView setAlpha:0];
-//        [item.icon setAlpha:1];
     }];
 }
 
