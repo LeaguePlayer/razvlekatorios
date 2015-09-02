@@ -17,6 +17,8 @@
     MRBlock *selected;
     NSIndexPath *removingPath;
     UITapGestureRecognizer *recognizer;
+    
+    int countItemsBySelectedBlock;
 }
 
 @property (nonatomic) BOOL shaking;

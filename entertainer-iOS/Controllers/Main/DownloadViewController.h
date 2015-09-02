@@ -17,6 +17,8 @@
     NSMutableArray *images;
     SDWebImageDownloader *imageDownloader;
     NSIndexPath *selectedPath;
+    
+    int countItemsBySelectedBlock;
 }
 
 @property (nonatomic,retain) SSCollectionView *collectionView;

@@ -7,13 +7,15 @@
 //
 
 #import "SSCollectionViewItem.h"
+#import "UCZProgressView.h"
 
 @interface MRDownloadCollectionViewItem : SSCollectionViewItem
 
 @property (nonatomic,retain) UILabel *nameLabel;
 @property (nonatomic,retain) UIImageView *icon;
 @property (nonatomic,retain) UILabel *priceLabel;
-@property (nonatomic, retain) UIProgressView *progressView;
+//@property (nonatomic, retain) UIProgressView *progressView;
+@property (nonatomic, retain) UCZProgressView *progressView;
 @property (nonatomic, retain) UIActivityIndicatorView *activityView;
 
 - (id)initWithReuseIdentifier:(NSString *)aReuseIdentifier;

@@ -8,6 +8,7 @@
 
 #import "MRDownloadCollectionViewItem.h"
 
+
 @implementation MRDownloadCollectionViewItem
 
 - (id)initWithFrame:(CGRect)frame
@@ -43,19 +44,13 @@
         self.nameLabel.numberOfLines = 0;
         
         
-
         
-//                [self.nameLabel setAdjustsFontSizeToFitWidth:YES];
+        
 
-//        [self.nameLabel  sizeToFit];
-        NSLog(@"initWithReuseIdentifier");
-//        titleLabel.numberOfLines = 0
         
         self.nameLabel.preferredMaxLayoutWidth = 125;
         
-//        self.nameLabel.lineBreakMode = NSLineBreakByWordWrapping;
-//
-//        titleLabel.sizeToFit()
+
         
         self.icon = [[UIImageView alloc] init];
         [self.icon setContentMode:UIViewContentModeScaleAspectFit];
@@ -63,7 +58,7 @@
         
         UIImage *prBackImg = [UIImage imageNamed:@"bg_price.png"];
         UIImageView *priceBackView = [[UIImageView alloc] initWithImage:prBackImg];
-        CGRect priceFrame = CGRectMake(126 - prBackImg.size.width, self.icon.frame.origin.y, prBackImg.size.width, prBackImg.size.height);
+        CGRect priceFrame = CGRectMake(125 - prBackImg.size.width, self.icon.frame.origin.y, prBackImg.size.width, prBackImg.size.height);
         [priceBackView setFrame:priceFrame];
         
         self.priceLabel = [[UILabel alloc] initWithFrame:priceFrame];
@@ -72,9 +67,15 @@
         [self.priceLabel setBackgroundColor:[UIColor clearColor]];
         [self.priceLabel setTextColor:[UIColor whiteColor]];
         
-        self.progressView = [[UIProgressView alloc] initWithProgressViewStyle:UIProgressViewStyleBar];
-        [self.progressView setProgressTintColor:[UIColor blueColor]];
-        [self.progressView setFrame:CGRectMake(12,125,100,15)];
+        self.progressView = [[UCZProgressView alloc] initWithFrame:self.icon.frame];
+        self.progressView.blurEffect = [UIBlurEffect effectWithStyle:UIBlurEffectStyleExtraLight];
+//        self.progressView.translatesAutoresizingMaskIntoConstraints = NO;
+        self.progressView.radius = 40.0;
+        //        [self.progressView2 setp]
+        
+//        self.progressView = [[UIProgressView alloc] initWithProgressViewStyle:UIProgressViewStyleBar];
+//        [self.progressView setProgressTintColor:[UIColor blueColor]];
+//        [self.progressView setFrame:CGRectMake(12,125,100,15)];
         [self.progressView setAlpha:0];
         
         self.activityView = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleGray];
@@ -84,6 +85,14 @@
         [self.activityView setFrame:frame];
         [self.activityView startAnimating];
         [self.activityView setAlpha:0];
+        
+        
+        
+        [self addSubview:self.progressView];
+        
+//        NSDictionary *views = NSDictionaryOfVariableBindings(_progressView2);
+//        [self addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"V:|-0-[_progressView]-0-|" options:0 metrics:nil views:views]];
+//        [self addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"H:|-0-[_progressView]-0-|" options:0 metrics:nil views:views]];
         
         [self addSubview:self.nameLabel];
         [self addSubview:self.icon];

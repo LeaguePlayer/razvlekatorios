@@ -83,7 +83,7 @@
         self.removeButton = [UIButton buttonWithType:UIButtonTypeCustom];
         CGRect frame = CGRectMake(126 - removeImg.size.width*3, 0, removeImg.size.width*3, removeImg.size.height*3);
         [self.removeButton setFrame:frame];
-        frame = CGRectMake(126 - removeImg.size.width, 21, removeImg.size.width, removeImg.size.height);
+        frame = CGRectMake(126 - removeImg.size.width, 36, removeImg.size.width, removeImg.size.height);
         [self.removeImage setFrame:frame];
         [self.removeImage setHidden:YES];
         [self.removeButton setHidden:YES];
@@ -97,7 +97,7 @@
 //        [self.infoButton setBackgroundColor:[UIColor redColor]];
         CGRect infoFrame = CGRectMake(0, 0, infoImg.size.width*3, infoImg.size.height*3);
         [self.infoButton setFrame:infoFrame];
-        infoFrame = CGRectMake(0, 21, infoImg.size.width, infoImg.size.height);
+        infoFrame = CGRectMake(0, 36, infoImg.size.width, infoImg.size.height);
         [self.infoImage setFrame:infoFrame];
         [self.infoImage setHidden:YES];
         [self.infoButton setHidden:YES];

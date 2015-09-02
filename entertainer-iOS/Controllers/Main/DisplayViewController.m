@@ -70,8 +70,9 @@
 //    [self initTopBar];
     [self initBottomButtons];
     
-    [SVProgressHUD showWithStatus:@"Загружаю блок" maskType:SVProgressHUDMaskTypeGradient];
+    
     dispatch_async(dispatch_get_main_queue(), ^{
+//        self.itemsCount = [MRItem allItemsByBlockId:self.block.id];
      thumbs = [NSMutableArray arrayWithArray:[MRItem allItemsWithSelectedBlockId:self.block.id]];
         [SVProgressHUD dismiss];
     });
@@ -142,6 +143,8 @@
 }
 
 -(void)photoViewerTaped:(MRPhotoViewer *)photoViewer{
+    self.automaticallyAdjustsScrollViewInsets = NO;
+    
     if (!isFullScreen)
         [self enterFullscreen];
     else
@@ -165,6 +168,7 @@
     
     [self disableApp];
     
+    
 //    UIApplication* application = [UIApplication sharedApplication];
 //    if ([application respondsToSelector: @selector(setStatusBarHidden:withAnimation:)]) {
 //        [[UIApplication sharedApplication] setStatusBarHidden: YES withAnimation: UIStatusBarAnimationFade]; // 3.2+
@@ -184,6 +188,8 @@
 //        [self.topView setAlpha:0];
     } completion:^(BOOL finished) {
         [self enableApp];
+        
+//        [self.photor.mainScroll setCenter:CGPointMake(10, 10)];
     }];
     
 }
@@ -315,9 +321,12 @@
     
     
     [self.photor reloadData];
+    [self enterFullscreen];
 }
 
 - (IBAction)onDocumentsButtonClick:(id)sender {
+    self.automaticallyAdjustsScrollViewInsets = YES;
+    
     [SVProgressHUD showWithMaskType:SVProgressHUDMaskTypeGradient];
     dispatch_async(dispatch_get_main_queue(), ^{
         ThumbsViewController *controller = [[ThumbsViewController alloc] init];

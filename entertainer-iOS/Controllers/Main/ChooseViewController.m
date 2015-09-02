@@ -36,11 +36,24 @@
     [super viewDidLoad];
 	// Do any additional setup after loading the view.
     _shaking = NO;
+    countItemsBySelectedBlock = 0;
     [self initBackButton];
     [self initInfoButtonWithTarget:self];
     [self initContent];
     [self initUI];
     
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector:@selector(didGetMyNotification)
+                                                 name:@"MyNotification"
+                                               object:nil];
+    
+}
+
+- (void)didGetMyNotification {
+    NSLog(@"Hello!");
+    blocks = [NSMutableArray arrayWithArray:[MRBlock allBlocks]];
+    [self.collectionView reloadData];
+   
 }
 
 -(void)viewWillAppear:(BOOL)animated{
@@ -150,9 +163,17 @@
 }
 
 -(void)collectionView:(SSCollectionView *)aCollectionView didSelectItemAtIndexPath:(NSIndexPath *)indexPath{
-   
+
     selected = [blocks objectAtIndex:indexPath.row];
-    [self performSegueWithIdentifier:@"ToDisplay" sender:self];
+    [SVProgressHUD showWithStatus:@"Загружаю блок" maskType:SVProgressHUDMaskTypeGradient];
+    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+        //Do background work
+        countItemsBySelectedBlock = [MRItem allItemsByBlockId:selected.id];
+        dispatch_async(dispatch_get_main_queue(), ^{
+            [self performSegueWithIdentifier:@"ToDisplay" sender:self];
+        });
+    });
+    
 }
 
 -(void)removeItem:(UIButton *)sender{
@@ -197,10 +218,29 @@
 
 -(void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex{
     if (buttonIndex == 1){
-        MRBlock *removing = [blocks objectAtIndex:removingPath.row];
-        [removing removeFromDataBase];
-        [blocks removeObject:removing];
-        [self.collectionView reloadData];
+//        [SVProgressHUD showWithMaskType:SVProgressHUDMaskTypeGradient];
+//        dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+//            //Do background work
+//            MRBlock *removing = [blocks objectAtIndex:removingPath.row];
+//            [removing removeFromDataBase];
+//            [blocks removeObject:removing];
+//            dispatch_async(dispatch_get_main_queue(), ^{
+//                [self.collectionView reloadData];
+//                [SVProgressHUD dismiss];
+//            });
+//        });
+//        [SVProgressHUD showWithMaskType:SVProgressHUDMaskTypeGradient];
+//        dispatch_async(dispatch_get_main_queue(), ^{
+        
+            MRBlock *removing = [blocks objectAtIndex:removingPath.row];
+            [removing removeFromDataBase];
+            [blocks removeObject:removing];
+            [self.collectionView reloadData];
+//            [SVProgressHUD dismiss];
+//        });
+        
+        
+        
     }
 }
 
@@ -239,13 +279,23 @@
         return;
     }
     MRBlock *all = [[MRBlock alloc] init];
-    NSMutableArray *items = [NSMutableArray array];
-    for (MRBlock *block in blocks){
-        [items addObjectsFromArray:block.items];
-    }
-    all.items = [NSArray arrayWithShuffledContentOfArray:items];
+//    NSMutableArray *items = [NSMutableArray array];
+//    for (MRBlock *block in blocks){
+//        [items addObjectsFromArray:block.items];
+//    }
+//    = [NSArray arrayWithShuffledContentOfArray:items];
     selected = all;
-    [self performSegueWithIdentifier:@"ToDisplay" sender:self];
+    
+    [SVProgressHUD showWithStatus:@"Загружаю блоки" maskType:SVProgressHUDMaskTypeGradient];
+    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+        //Do background work
+        countItemsBySelectedBlock = [MRItem allItemsByBlockId:selected.id];
+        dispatch_async(dispatch_get_main_queue(), ^{
+            [self performSegueWithIdentifier:@"ToDisplay" sender:self];
+        });
+    });
+    
+    
 }
 
 - (void)viewDidUnload {
@@ -283,15 +333,17 @@
 
 -(void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender{
     if ([segue.identifier isEqualToString:@"ToDisplay"]){
-       
+//       [SVProgressHUD showWithStatus:@"Загружаю блок" maskType:SVProgressHUDMaskTypeGradient];
 //        dispatch_async(dispatch_get_main_queue(), ^{
 //                 [SVProgressHUD showWithMaskType:SVProgressHUDMaskTypeGradient];
 //            });
+        
+        NSLog(@"ToDisplay");
             DisplayViewController *controller = (DisplayViewController *)segue.destinationViewController;
             controller.block = selected;
-            controller.itemsCount = [MRItem allItemsByBlockId:selected.id];
-       
-            NSLog(@"%li", (long)controller.itemsCount);
+            controller.itemsCount = countItemsBySelectedBlock;
+//
+//            NSLog(@"%li", (long)controller.itemsCount);
         
        
         

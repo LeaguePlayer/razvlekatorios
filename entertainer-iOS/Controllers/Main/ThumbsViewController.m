@@ -50,6 +50,9 @@
 
 -(void)initTopBar{
     UIBarButtonItem *item = [[UIBarButtonItem alloc] initWithTitle:@"Отмена" style:UIBarButtonItemStyleDone target:self action:@selector(onCancelButtonClick:)];
+    [item setTitleTextAttributes:[NSDictionary dictionaryWithObjectsAndKeys: [UIColor whiteColor],  NSForegroundColorAttributeName,nil] forState:UIControlStateNormal];
+    
+    
     [self.navigationItem setRightBarButtonItem:item];
     [self.navigationItem setHidesBackButton:YES];
 }
@@ -83,14 +86,14 @@
     UICollectionViewCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:@"Cell" forIndexPath:indexPath];
     
     // Configure the cell
-    NSLog(@"TTT");
+//    NSLog(@"TTT");
     
     return cell;
 }
 
 
 -(SSCollectionViewItem *)collectionView:(SSCollectionView *)aCollectionView itemForIndexPath:(NSIndexPath *)indexPath{
-    NSLog(@"HELLLO %i!!", indexPath.row);
+//    NSLog(@"HELLLO %i!!", indexPath.row);
     NSString *itemIdentifier = @"collectionItem";
     SSCollectionViewItem *item = [[SSCollectionViewItem alloc] initWithStyle:SSCollectionViewItemStyleImage reuseIdentifier:itemIdentifier];
     

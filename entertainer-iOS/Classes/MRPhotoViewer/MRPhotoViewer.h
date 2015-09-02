@@ -48,6 +48,9 @@
     BOOL IS_LOADING;
     NSInteger activePart;
     NSInteger counter;
+    
+    NSMutableArray *leftScrollHistory;
+    NSMutableArray *rightScrollHistory;
 }
 @property (nonatomic, retain) NSMutableDictionary *items;
 @property (nonatomic, retain) NSArray *suffleArrayKeys;

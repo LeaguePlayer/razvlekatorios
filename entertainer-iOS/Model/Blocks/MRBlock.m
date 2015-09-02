@@ -70,6 +70,7 @@
 
 -(void)saveToDataBase{
     [ManagedBlock createFromBlock:self];
+    [[NSNotificationCenter defaultCenter] postNotificationName:@"MyNotification" object:nil];
 }
 
 -(void)removeFromDataBase{

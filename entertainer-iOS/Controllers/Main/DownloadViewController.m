@@ -68,8 +68,8 @@
             CGFloat state = [DownloadManager loadingStateOfObjectWithId:block.id];
             [item.progressView setAlpha:1];
             [item.activityView setAlpha:1];
-            [item.icon setAlpha:0.3];
-            [item.progressView setProgress:state];
+//            [item.icon setAlpha:0.3];
+            [item.progressView setProgress:state animated:YES];
         }
     }
 }
@@ -185,6 +185,13 @@
         price = @"Загружено";
     } else {
         price = block.price.floatValue == 0 ? @"Free" : [NSString stringWithFormat:@"%@",block.price];
+        if ([DownloadManager loadsObjectWithId:block.id]){
+            CGFloat state = [DownloadManager loadingStateOfObjectWithId:block.id];
+            [item.progressView setAlpha:1];
+            [item.activityView setAlpha:1];
+//            [item.icon setAlpha:0.3];
+            [item.progressView setProgress:state animated:YES];
+        }
     }
     [item.priceLabel setText:price];
     [item.priceLabel setAdjustsFontSizeToFitWidth:YES];
@@ -209,8 +216,15 @@
     if ([DownloadManager loadsObjectWithId:block.id])
         return;
     if ([block isStored]){
-        
-        [self performSegueWithIdentifier:@"ToDisplay" sender:self];
+        [SVProgressHUD showWithStatus:@"Загружаю блок" maskType:SVProgressHUDMaskTypeGradient];
+        dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+            //Do background work
+            countItemsBySelectedBlock = [MRItem allItemsByBlockId:block.id];
+            dispatch_async(dispatch_get_main_queue(), ^{
+                [self performSegueWithIdentifier:@"ToDisplay" sender:self];
+            });
+        });
+//        [self performSegueWithIdentifier:@"ToDisplay" sender:self];
         return;
     }
     if ([block.desc isEqualToString:@""]){
@@ -239,7 +253,7 @@
         [UIView animateWithDuration:0.2 animations:^{
             [item.progressView setAlpha:1];
             [item.activityView setAlpha:1];
-            [item.icon setAlpha:0.3];
+//            [item.icon setAlpha:0.3];
         }];
         item.progressView.progress = 0;
         [DownloadManager startLoadingBlock:block];
@@ -272,8 +286,8 @@
     }
     if (!path) return;
     MRDownloadCollectionViewItem *item = (MRDownloadCollectionViewItem *)[self.collectionView itemForIndexPath:path];
-//    NSLog(@"progress is %f",state);
-    [item.progressView setProgress:state];
+    NSLog(@"progress is %f",state);
+    [item.progressView setProgress:state animated:YES];
 }
 
 -(void)downloadCompliteWithObjectId:(int)id{
@@ -291,7 +305,7 @@
     [UIView animateWithDuration:0.2 animations:^{
         [item.progressView setAlpha:0];
         [item.activityView setAlpha:0];
-        [item.icon setAlpha:1];
+//        [item.icon setAlpha:1];
     }];
 }
 
@@ -307,6 +321,7 @@
     MRDownloadCollectionViewItem *item = (MRDownloadCollectionViewItem *)[self.collectionView itemForIndexPath:path];
     [UIView animateWithDuration:0.2 animations:^{
         [item.progressView setAlpha:0];
+        [item.activityView setAlpha:0];
     }];
 }
 
@@ -330,7 +345,8 @@
             }
         }
         controller.block = loaded;
-        controller.itemsCount = [MRItem allItemsByBlockId:loaded.id];
+//        controller.itemsCount = [MRItem allItemsByBlockId:loaded.id];
+        controller.itemsCount = countItemsBySelectedBlock;
     }
 }
 
