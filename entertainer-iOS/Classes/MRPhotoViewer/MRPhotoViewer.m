@@ -9,9 +9,12 @@
 #import "MRPhotoViewer.h"
 #import "MRItem.h"
 #import "SVProgressHUD.h"
+#import "DisplayViewController.h"
 
 @implementation MRPhotoViewer
-
+{
+    BOOL moveAtIndex;
+}
 - (id)initWithFrame:(CGRect)frame
 {
     self = [super initWithFrame:frame];
@@ -19,6 +22,7 @@
         // Initialization code
         size = frame.size;
         itemsCount = 0;
+        moveAtIndex = NO;
         //        self.gotItemsFromCD = [NSArray array];
         [self initGestures];
         self.mainScroll = [[UIScrollView alloc] initWithFrame:self.bounds];
@@ -27,21 +31,22 @@
         [self.mainScroll setPagingEnabled:YES];
         [self.mainScroll setShowsHorizontalScrollIndicator:NO];
         [self.mainScroll setShowsVerticalScrollIndicator:NO];
+//        self.mainScroll.backgroundColor = [UIColor redColor];
         //        progressViews = [[NSMutableArray alloc] init];
         
         leftScrollHistory = [NSMutableArray array];
         rightScrollHistory = [NSMutableArray array];
         
-        self.mainScroll.decelerationRate = UIScrollViewDecelerationRateNormal;
+//        self.mainScroll.decelerationRate = UIScrollViewDecelerationRateNormal;
         [self addSubview:self.mainScroll];
-        NSLog(@"reload data subviews is %i",[[self.mainScroll subviews] count]);
+        ////NSLog(@"reload data subviews is %i",[[self.mainScroll subviews] count]);
         
     }
     return self;
 }
 
 -(void)initGestures{
-    NSLog(@"initGestures");
+    ////NSLog(@"initGestures");
     
     UITapGestureRecognizer *recognizer = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(viewTaped:)];
     [recognizer setNumberOfTapsRequired:1];
@@ -51,7 +56,7 @@
 }
 
 -(void)viewTaped:(id)sender{
-    NSLog(@"viewTaped");
+    ////NSLog(@"viewTaped");
     
     
     if (self.delegate && [self.delegate respondsToSelector:@selector(photoViewerTaped:)]){
@@ -82,10 +87,10 @@
     leftScrollHistory = [NSMutableArray array];
     rightScrollHistory = [NSMutableArray array];
     itemsCount = 0;
-    currentIndex = 0;
+    self.currentIndex = 0;
     lastCurrentIndex = 0;
     shiftIndex = 0;
-    counter = 0;
+    self.counter = 0;
     activePart = 0;
     lastCounter = 0;
     currentPart = 0;
@@ -98,7 +103,7 @@
         itemsCount = [self.dataSource numberOfPhotosInPhotoViewer:self];
         //        if ([self.dataSource respondsToSelector:@selector(photoViewer:imageAtIndex:)]){
         //            CGFloat inset = 0;
-        //            NSLog(@"itemsCount = %i",itemsCount);
+        //            ////NSLog(@"itemsCount = %i",itemsCount);
         
         
         
@@ -118,7 +123,7 @@
         partsCount = floor(itemsCount / 40.f);
         [self loadPart];
         self.gotItemsFromCD = [NSMutableDictionary dictionaryWithDictionary:[self.items objectForKey:@"values"]];
-        NSLog(@"%@",self.gotItemsFromCD);
+        ////NSLog(@"%@",self.gotItemsFromCD);
         self.items = nil;
         
         if(itemsCount > 1)
@@ -128,7 +133,7 @@
             [self retrieveImageDataWithIndexPhoto:1];
         }
         
-        
+        NSLog(@"%f",size.height);
         [self.mainScroll setContentSize:CGSizeMake(size.width*itemsCount, size.height)];
         
         //        }
@@ -138,7 +143,7 @@
 
 -(void)loadPart
 {
-    //    currentIndex = 0;
+    //    self.currentIndex = 0;
     self.items = nil;
     //    self.gotItemsFromCD = nil;
     self.items = [[NSMutableDictionary alloc] init];
@@ -151,19 +156,51 @@
     
 }
 
+- (void)moveImageAtIdPhoto:(int)idPhoto ToIndexPhoto:(int)toIndexPhoto
+{
+    
+    CGFloat inset = toIndexPhoto*size.width;
+    //
+    //    MRItem *atItem = [self.gotItemsFromCD objectForKey:@(atIndexPhoto)];
+    MRPhoto *photo = (MRPhoto *)[self.mainScroll viewWithTag:idPhoto+1000];
+    CGRect frame = photo.frame;
+    frame.origin.x = inset;
+    photo.frame = frame;
+    //
+    //
+    //    UIImage *gotImage =[UIImage imageWithData:atItem.imageData];
+    //
+    //    MRPhoto *photo = [[MRPhoto alloc] initWithFrame:CGRectMake(inset, 0, size.width, size.height)];
+    //    [photo setImage:gotImage];
+    //    photo.tag = atItem.id+1000;
+    //    [self.mainScroll addSubview:photo];
+    //    //    UIView* test = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 320, 500)];
+    //    //    test.backgroundColor = [UIColor redColor];
+    //    //    [self.window addSubview:test];
+    //    ////NSLog(@"subview %i",[self.mainScroll.subviews count]);
+    
+    
+    
+}
+
 - (void)retrieveImageDataWithIndexPhoto:(int)indexPhoto {
+    //NSLog(@"GOT INDEX PHOTO %i",indexPhoto);
     int indexSelect = indexPhoto;
     if(self.suffleArrayKeys)
     {
+//        NSLog(@"in Photor");
+//        NSLog(@"%@",self.suffleArrayKeys);
+        //NSLog(@"sufflearray exist!!!");
         indexSelect = [[self.suffleArrayKeys objectAtIndex:indexPhoto] integerValue];
     }
-    //    NSLog(@"look view ID is %i",indexSelect);
-    MRItem *item = [self.gotItemsFromCD objectForKey:@(indexSelect)];
     
+    MRItem *item = [self.gotItemsFromCD objectForKey:@(indexSelect)];
+    //NSLog(@"indexSelect %i",indexSelect);
+    //NSLog(@"Id image %i",item.id);
     MRPhoto *lastView = (MRPhoto *)[self.mainScroll viewWithTag:item.id+1000];
     if(lastView == nil || ![lastView isKindOfClass:[MRPhoto class]])
     {
-        
+        //NSLog(@"SELECTED INDEX BY RENDER IMAGE %i with Id image %i",indexSelect, item.id);
         
         
         
@@ -174,10 +211,12 @@
         
         //            dispatch_async(dispatch_get_main_queue(), ^{
         UIImage *gotImage =[UIImage imageWithData:item.imageData];
+        NSLog(@"image height %f",gotImage.size.height);
         CGFloat inset = indexPhoto*size.width;
         MRPhoto *photo = [[MRPhoto alloc] initWithFrame:CGRectMake(inset, 0, size.width, size.height)];
         [photo setImage:gotImage];
         photo.tag = item.id+1000;
+        NSLog(@"%f %f",photo.frame.size.width, photo.frame.size.height);
         [self.mainScroll addSubview:photo];
         //            });
         //        });
@@ -191,55 +230,55 @@
 #pragma mark - scroll view delegate methods
 
 //-(void)scrollViewDidScroll:(UIScrollView *)scrollView{
-//    //    NSLog(@"scrollViewDidScroll");
+//    //    ////NSLog(@"scrollViewDidScroll");
 //
 //    CGPoint point = scrollView.contentOffset;
 //    int index = floor((point.x - size.width / 2) / size.width) + 1;
 //
 //    index = (index-(currentPart*40));
 //    //    index = (index<0) ? index+1 : index;
-//    if (index == currentIndex) return;
-//    NSLog(@"currentIndex is %i",(currentIndex+(currentPart*40)));
-//    //     NSLog(@"was_index is %i",was_index);
-//    NSLog(@"index is %i",index);
+//    if (index == self.currentIndex) return;
+//    ////NSLog(@"self.currentIndex is %i",(self.currentIndex+(currentPart*40)));
+//    //     ////NSLog(@"was_index is %i",was_index);
+//    ////NSLog(@"index is %i",index);
 //
-//    lastCurrentIndex = currentIndex;
-//    currentIndex = index;
+//    lastCurrentIndex = self.currentIndex;
+//    self.currentIndex = index;
 //    [self sayDelegateIndexChanged];
 //}
 
 -(void)scrollViewDidEndScrollingAnimation:(UIScrollView *)scrollView
 {
-    NSLog(@"IS_LOADING NO");
+    ////NSLog(@"self.IS_LOADING NO");
 }
 
 -(void)scrollViewDidScroll:(UIScrollView *)scrollView{
     
     //    [self performSelector:@selector(scrollViewDidEndScrollingAnimation:) withObject:nil afterDelay:0.1];
-    //    NSLog(@"scrollViewDidLoad");
-    if(IS_LOADING) return;
+    //    ////NSLog(@"scrollViewDidLoad");
+    if(self.IS_LOADING) return;
     [self scrollAction];
     //    CGPoint point = scrollView.contentOffset;
-    //    //    NSLog(@"X IS %f",point.x);
+    //    //    ////NSLog(@"X IS %f",point.x);
     //    int index = floor((point.x - size.width / 2) / size.width) +1;
     //
     //    index = (index-(currentPart*40));
-    //    NSLog(@"index = %i",index);
+    //    ////NSLog(@"index = %i",index);
     //    if(lastCurrentIndex-(currentPart*40) < index)
     //    {
-    //        NSLog(@"vpered!!");
+    //        ////NSLog(@"vpered!!");
     //        if((index)==40)
     //        {
-    //            NSLog(@"scrollvisable");
+    //            ////NSLog(@"scrollvisable");
     //            [self.mainScroll setScrollEnabled:NO];
     //        }
     //    }
     //    else if(lastCurrentIndex-(currentPart*40) > index)
     //    {
-    //        NSLog(@"nazad!!");
+    //        ////NSLog(@"nazad!!");
     //        if((index)==0)
     //        {
-    //            NSLog(@"scrollvisable");
+    //            ////NSLog(@"scrollvisable");
     //            [self.mainScroll setScrollEnabled:NO];
     //        }
     //    }
@@ -253,7 +292,9 @@
 
 -(void)scrollAction
 {
-    //    NSLog(@"subivews i")
+//    NSLog(@"scrollAction");
+//    if(self.FROM_SHUFFLE) return;
+    //    ////NSLog(@"subivews i")
     CGPoint point = self.mainScroll.contentOffset;
     int index = floor((point.x - size.width / 2) / size.width) +1;
     
@@ -261,7 +302,7 @@
     
     index = (index-(activePart*40));
     
-    if (index == currentIndex) return;
+    if (index == self.currentIndex) return;
     
     
     //    if(index <= 0)
@@ -274,17 +315,17 @@
     //        shiftIndex = index-40;
     //        index = 40;
     //    }
-    lastCurrentIndex = currentIndex;
-    currentIndex = index;
+    lastCurrentIndex = self.currentIndex;
+    self.currentIndex = index;
     
     [self sayDelegateIndexChanged];
 }
 
 -(void)scrollViewDidEndDragging:(UIScrollView *)scrollView willDecelerate:(BOOL)decelerate
 {
-    //    NSLog(@"scrollViewDidEndDragging");
+    //    ////NSLog(@"scrollViewDidEndDragging");
     //    int plus_k_part = (int)ceil((float)shiftIndex/40);
-    //    NSLog(@"plus_k_part %f",ceil((float)shiftIndex/40));
+    //    ////NSLog(@"plus_k_part %f",ceil((float)shiftIndex/40));
     
 }
 
@@ -304,12 +345,22 @@
 //}
 
 -(void)moveAtIndex:(NSUInteger)index animated:(BOOL)animated{
-    NSLog(@"moveAtIndex");
+    ////NSLog(@"moveAtIndex");
+    moveAtIndex = YES;
     
-    if((currentIndex+(activePart*40)) > index)
-        counter = index + 1;
-    else if((currentIndex+(activePart*40)) < index)
-        counter = index - 1;
+    if((self.currentIndex+(activePart*40)) > index)
+    {
+        self.counter = index + 1;
+        self.currentIndex--;
+    }
+    else if((self.currentIndex+(activePart*40)) < index)
+    {
+        self.counter = index - 1;
+        self.currentIndex++;
+    }
+    
+    
+    activePart = (int)floor((float)self.counter/40.f);
     
     CGFloat offset = index * size.width;
     CGPoint point = CGPointMake(offset, 0);
@@ -321,18 +372,33 @@
         [self.mainScroll setContentOffset:point];
     }
     
-    lastCurrentIndex = currentIndex;
-    currentIndex = index;
+    lastCurrentIndex = self.currentIndex;
+//    self.currentIndex = index;
     
-    //    counter = index;
+    
+    
+
     shiftIndex = index;
-    //    [self sayDelegateIndexChanged];
+    
+    NSString* titleLoader = (self.FROM_SHUFFLE) ? @"Перемешиваю" : @"Загрузка";
+
+    if (self.delegate && [self.delegate respondsToSelector:@selector(showLoader:)])
+        [(DisplayViewController*)self.delegate showLoader:titleLoader];
     
 }
 
+-(void)moveAtIndexStatic:(NSUInteger)index andIdPhoto:(NSUInteger)idPhoto animated:(BOOL)animated{
+    ////NSLog(@"moveAtIndex");
+    [self moveImageAtIdPhoto:idPhoto ToIndexPhoto:index];
+    [self moveAtIndex:index animated:animated];
+    
+}
+
+
+
 -(void)sayDelegateIndexChanged{
     if (self.delegate && [self.delegate respondsToSelector:@selector(photoViewer:positionChangedAtIndex:)]){
-        [self.delegate photoViewer:self positionChangedAtIndex:currentIndex];
+        [self.delegate photoViewer:self positionChangedAtIndex:self.currentIndex];
         
         
         
@@ -340,33 +406,75 @@
         
         
         //        BOOL SCROLL_TO_RIGHT = NO;
-        //        NSLog(@"%i > %i",(currentIndex+(activePart*40)), counter);
-        if((currentIndex+(activePart*40)) > counter)
-        {
-            //            NSLog(@"NEXT LISTAEM");
-            shiftIndex = counter - lastCounter;
-            
-            lastCounter = counter;
-            counter++;
-            
-            activePart = (int)floor((float)counter/40.f);
-            [self makeNextSlide];
-            //            SCROLL_TO_RIGHT = YES;
-        }
-        else if((currentIndex+(activePart*40)) < counter)
-        {
-            //            NSLog(@"PREV LISTAEM");
-            
-            
-            lastCounter = counter;
-            counter--;
-            
-            activePart = (int)floor((float)counter/40.f);
-            [self makePrevSlide];
-        }
-        NSLog(@"subviews is %lu", (unsigned long)[[self.mainScroll subviews] count]);
-        NSLog(@"counter is %li",counter);
-        [self retrieveImageDataWithIndexPhoto:counter];
+        //        ////NSLog(@"%i > %i",(self.currentIndex+(activePart*40)), self.counter);
+        
+        
+            if((self.currentIndex+(activePart*40)) > self.counter)
+            {
+                            NSLog(@"NEXT LISTAEM");
+                shiftIndex = self.counter - lastCounter;
+                
+                lastCounter = self.counter;
+                self.counter++;
+//                NSLog(@"counter ADDED + 1");
+                
+                activePart = (int)floor((float)self.counter/40.f);
+                
+                
+                [self makeNextSlide];
+                //            SCROLL_TO_RIGHT = YES;
+            }
+            else if((self.currentIndex+(activePart*40)) < self.counter)
+            {
+                            NSLog(@"PREV LISTAEM");
+                
+                
+                lastCounter = self.counter;
+                self.counter--;
+//                NSLog(@"counter REMOVED - 1");
+                
+                activePart = (int)floor((float)self.counter/40.f);
+                
+                
+                [self makePrevSlide];
+            }
+//            else
+//            {
+//                dispatch_async(dispatch_get_main_queue(), ^{
+//                    if(moveAtIndex)
+//                    {
+//                        if (self.delegate && [self.delegate respondsToSelector:@selector(hideLoader)])
+//                            [(DisplayViewController*)self.delegate hideLoader];
+//                        
+//                        moveAtIndex = NO;
+//                    }
+//                    
+//                });
+//            }
+        
+        
+        
+        
+        
+        ////NSLog(@"subviews is %lu", (unsigned long)[[self.mainScroll subviews] count]);
+        ////NSLog(@"self.counter is %li",self.counter);
+        
+        //        if(!self.FROM_SHUFFLE)
+//        if(self.FROM_SHUFFLE)
+//        {
+////            currentPart = (int)ceil(((float)self.counter+15.f+1.f)/40.f)-1;
+////            
+////            [self loadPart];
+//            self.FROM_SHUFFLE = NO;
+//        }
+//        else
+//        if(!self.FROM_SHUFFLE)
+            [self retrieveImageDataWithIndexPhoto:self.counter];
+//        else
+//        {
+//            self.FROM_SHUFFLE = NO;
+//        }
+        
         
         
     }
@@ -374,14 +482,14 @@
 
 -(void)makeNextSlide{
     
-    //    int n = (currentIndex==40) ? 0 : currentIndex;
-    int next_index = counter+15;
-    if( (next_index) >= ((currentPart+1)*40) )
+    //    int n = (self.currentIndex==40) ? 0 : self.currentIndex;
+    int next_index = self.counter+15;
+    if( (next_index) >= ((currentPart+1)*40) || self.FROM_SHUFFLE )
     {
-        //        NSLog(@"%i >= %li", next_index, ((currentPart+1)*40));
+        //        ////NSLog(@"%i >= %li", next_index, ((currentPart+1)*40));
         if((currentPart+1) <= partsCount)
         {
-            
+            NSLog(@"i will load data");
             //            shiftIndex = shiftIndex +15;
             //            int plus_k_part = (int)ceil((float)shiftIndex/40);
             //            if(plus_k_part==0) currentPart= activePart+1;
@@ -397,7 +505,7 @@
             //
             //            currentPart+=plus_k_part;
             
-            currentPart = (int)ceil(((float)counter+15.f+1.f)/40.f)-1;
+            currentPart = (int)ceil(((float)self.counter+15.f+1.f)/40.f)-1;
             
             
             dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
@@ -407,30 +515,75 @@
                 [self loadPart];
                 dispatch_async(dispatch_get_main_queue(), ^{
                     //                    NSMutableDictionary *gotResult
-                    NSLog(@"%li == %li",(long)[[self.items objectForKey:@"returnPart"] integerValue], (long)currentPart );
+                    ////NSLog(@"%li == %li",(long)[[self.items objectForKey:@"returnPart"] integerValue], (long)currentPart );
                     if([[self.items objectForKey:@"returnPart"] integerValue] == currentPart)
                     {
                         self.gotItemsFromCD = nil;
                         self.gotItemsFromCD = [NSMutableDictionary dictionaryWithDictionary:[self.items objectForKey:@"values"]];
                         self.items = nil;
-                        //                        NSLog(@"%@",self.gotItemsFromCD);
-                        IS_LOADING = NO;
+                        //                        ////NSLog(@"%@",self.gotItemsFromCD);
+                        self.IS_LOADING = NO;
                         shiftIndex = 0;
                         
-                        [self.mainScroll.subviews makeObjectsPerformSelector: @selector(removeFromSuperview)];
-                        leftScrollHistory = [NSMutableArray array];
-                        rightScrollHistory = [NSMutableArray array];
+                        if(self.FROM_SHUFFLE)
+                            self.FROM_SHUFFLE = NO;
+                        else
+                        {
+                            [self.mainScroll.subviews makeObjectsPerformSelector: @selector(removeFromSuperview)];
+                            leftScrollHistory = [NSMutableArray array];
+                            rightScrollHistory = [NSMutableArray array];
+                        }
+                        
+                        
+                        
+                        
                         [self prepareLoadRightImage];
                         [self prepareLoadLeftImage];
                         [self sayDelegateIndexChanged];
+                        
+//                        if(moveAtIndex)
+//                        {
+                            if (self.delegate && [self.delegate respondsToSelector:@selector(hideLoader)])
+                                [(DisplayViewController*)self.delegate hideLoader];
+                            moveAtIndex = NO;
+//                        }
+                        
+                        [self retrieveImageDataWithIndexPhoto:self.counter];
                     }
                     
                 });
             });
             
         }
+        else
+        {
+//            NSLog(@"no load data  just hide");
+            dispatch_async(dispatch_get_main_queue(), ^{
+                
+                if (self.delegate && [self.delegate respondsToSelector:@selector(hideLoader)])
+                    [(DisplayViewController*)self.delegate hideLoader];
+                
+                moveAtIndex = NO;
+                [self retrieveImageDataWithIndexPhoto:self.counter];
+                
+                
+            });
+        }
     }
-    
+    else
+    {
+        NSLog(@"no load data  just hide");
+        dispatch_async(dispatch_get_main_queue(), ^{
+
+                if (self.delegate && [self.delegate respondsToSelector:@selector(hideLoader)])
+                    [(DisplayViewController*)self.delegate hideLoader];
+                
+                 moveAtIndex = NO;
+                [self retrieveImageDataWithIndexPhoto:self.counter];
+
+        
+        });
+    }
     
     
     
@@ -442,34 +595,34 @@
     
     
     
-    int current_id_remove_view = (self.suffleArrayKeys) ? [[self.suffleArrayKeys objectAtIndex:counter] integerValue] : counter;
+    int current_id_remove_view = (self.suffleArrayKeys) ? [[self.suffleArrayKeys objectAtIndex:self.counter] integerValue] : self.counter;
     [rightScrollHistory removeObject:@(current_id_remove_view)];
     
     if([leftScrollHistory count] > 0)
     {
         int id_remove_view = [leftScrollHistory[0] integerValue];
-        NSLog(@"remove id %i",id_remove_view);
+        ////NSLog(@"remove id %i",id_remove_view);
         MRPhoto* view = (MRPhoto *)[self.mainScroll viewWithTag:id_remove_view+1000];
         [view removeFromSuperview];
         [leftScrollHistory removeObjectAtIndex:0];
         //        [rightScrollHistory removeObject:leftScrollHistory[0]];
     }
     
-    int id_item_prev = (self.suffleArrayKeys) ? [[self.suffleArrayKeys objectAtIndex:counter-1] integerValue] : counter-1;
+    int id_item_prev = (self.suffleArrayKeys) ? [[self.suffleArrayKeys objectAtIndex:self.counter-1] integerValue] : self.counter-1;
     [leftScrollHistory addObject:@(id_item_prev)];
     
-    NSLog(@"left");
-    NSLog(@"%@",leftScrollHistory);
-    NSLog(@"right");
-    NSLog(@"%@",rightScrollHistory);
+    ////NSLog(@"left");
+    ////NSLog(@"%@",leftScrollHistory);
+    ////NSLog(@"right");
+    ////NSLog(@"%@",rightScrollHistory);
 }
 
 -(void)prepareLoadRightImage
 {
-    int next_slide = counter + 1;
+    int next_slide = self.counter + 1;
     if( next_slide < itemsCount )
     {
-        int id_item_next = (self.suffleArrayKeys) ? [[self.suffleArrayKeys objectAtIndex:counter+1] integerValue] : counter+1;
+        int id_item_next = (self.suffleArrayKeys) ? [[self.suffleArrayKeys objectAtIndex:self.counter+1] integerValue] : self.counter+1;
         [rightScrollHistory addObject:@(id_item_next)];
         
         [self retrieveImageDataWithIndexPhoto:next_slide];
@@ -478,10 +631,10 @@
 
 -(void)prepareLoadLeftImage
 {
-    int next_slide = counter-1;
+    int next_slide = self.counter-1;
     if( next_slide >= 0 )
     {
-        int id_item_prev = (self.suffleArrayKeys) ? [[self.suffleArrayKeys objectAtIndex:counter-1] integerValue] : counter-1;
+        int id_item_prev = (self.suffleArrayKeys) ? [[self.suffleArrayKeys objectAtIndex:self.counter-1] integerValue] : self.counter-1;
         [leftScrollHistory addObject:@(id_item_prev)];
         
         [self retrieveImageDataWithIndexPhoto:next_slide];
@@ -491,14 +644,14 @@
 -(void)makePrevSlide{
     
     
-    int next_index = counter-15;
-    if( next_index <= (currentPart*40)-15 )
+    int next_index = self.counter-15;
+    if( next_index <= (currentPart*40)-15 || self.FROM_SHUFFLE )
     {
-        NSLog(@"%i >= %li", next_index, (currentPart*40)-15);
-        if(currentPart > 0)
-        {
-            
-            currentPart = (int)ceil( ( fabsf((float)counter-15.f-1.f) ) / 40.f )-1;
+        ////NSLog(@"%i >= %li", next_index, (currentPart*40)-15);
+//        if(currentPart > 0)
+//        {
+        
+            currentPart = (int)ceil( ( fabsf((float)self.counter-15.f-1.f) ) / 40.f )-1;
             
             
             dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
@@ -507,29 +660,58 @@
                 
                 [self loadPart];
                 dispatch_async(dispatch_get_main_queue(), ^{
-                    NSLog(@"%li == %li",(long)[[self.items objectForKey:@"returnPart"] integerValue], (long)currentPart );
+                    ////NSLog(@"%li == %li",(long)[[self.items objectForKey:@"returnPart"] integerValue], (long)currentPart );
                     if([[self.items objectForKey:@"returnPart"] integerValue] == currentPart)
                     {
                         self.gotItemsFromCD = nil;
                         self.gotItemsFromCD = [NSMutableDictionary dictionaryWithDictionary:[self.items objectForKey:@"values"]];
                         self.items = nil;
-                        //                        NSLog(@"%@",self.gotItemsFromCD);
-                        IS_LOADING = NO;
+                        //                        ////NSLog(@"%@",self.gotItemsFromCD);
+                        self.IS_LOADING = NO;
                         shiftIndex = 0;
                         
-                        [self.mainScroll.subviews makeObjectsPerformSelector: @selector(removeFromSuperview)];
-                        leftScrollHistory = [NSMutableArray array];
-                        rightScrollHistory = [NSMutableArray array];
+                        if(self.FROM_SHUFFLE)
+                            self.FROM_SHUFFLE = NO;
+                        else
+                        {
+                            [self.mainScroll.subviews makeObjectsPerformSelector: @selector(removeFromSuperview)];
+                            leftScrollHistory = [NSMutableArray array];
+                            rightScrollHistory = [NSMutableArray array];
+                        }
+                        
+                        
                         [self prepareLoadRightImage];
                         [self prepareLoadLeftImage];
                         [self sayDelegateIndexChanged];
+                        
+//                        if(moveAtIndex)
+//                        {
+                            if (self.delegate && [self.delegate respondsToSelector:@selector(hideLoader)])
+                                [(DisplayViewController*)self.delegate hideLoader];
+                             moveAtIndex = NO;
+//                        }
+                        
+                       [self retrieveImageDataWithIndexPhoto:self.counter];
                     }
                 });
             });
             
-        }
+//        }
     }
-    
+    else
+    {
+        dispatch_async(dispatch_get_main_queue(), ^{
+//            if(moveAtIndex)
+//            {
+                if (self.delegate && [self.delegate respondsToSelector:@selector(hideLoader)])
+                    [(DisplayViewController*)self.delegate hideLoader];
+                moveAtIndex = NO;
+                [self retrieveImageDataWithIndexPhoto:self.counter];
+//            }
+            
+        });
+        
+    }
     
     
     
@@ -539,27 +721,27 @@
     
     
     
-    int current_id_remove_view = (self.suffleArrayKeys) ? [[self.suffleArrayKeys objectAtIndex:counter] integerValue] : counter;
+    int current_id_remove_view = (self.suffleArrayKeys) ? [[self.suffleArrayKeys objectAtIndex:self.counter] integerValue] : self.counter;
     [leftScrollHistory removeObject:@(current_id_remove_view)];
     
     if([rightScrollHistory count] > 0)
     {
         id last_object = [rightScrollHistory lastObject];
         int id_remove_view = [last_object integerValue];
-        NSLog(@"remove id %i",id_remove_view);
+        ////NSLog(@"remove id %i",id_remove_view);
         MRPhoto* view = (MRPhoto *)[self.mainScroll viewWithTag:id_remove_view+1000];
         [view removeFromSuperview];
         [leftScrollHistory removeObject:last_object];
         [rightScrollHistory removeObject:last_object];
     }
     
-    int id_item_next = (self.suffleArrayKeys) ? [[self.suffleArrayKeys objectAtIndex:counter+1] integerValue] : counter+1;
+    int id_item_next = (self.suffleArrayKeys) ? [[self.suffleArrayKeys objectAtIndex:self.counter+1] integerValue] : self.counter+1;
     [rightScrollHistory addObject:@(id_item_next)];
     
-    NSLog(@"left");
-    NSLog(@"%@",leftScrollHistory);
-    NSLog(@"right");
-    NSLog(@"%@",rightScrollHistory);
+    ////NSLog(@"left");
+    ////NSLog(@"%@",leftScrollHistory);
+    ////NSLog(@"right");
+    ////NSLog(@"%@",rightScrollHistory);
     
 }
 

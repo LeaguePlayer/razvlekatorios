@@ -36,4 +36,7 @@
 - (IBAction)onShuffleButtonClick:(id)sender;
 - (IBAction)onDocumentsButtonClick:(id)sender;
 
+-(void)showLoader:(NSString*)titleLoader;
+-(void)hideLoader;
+
 @end

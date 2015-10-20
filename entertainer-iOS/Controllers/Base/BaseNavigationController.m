@@ -39,12 +39,21 @@
 //    [self.navigationBar setBackgroundColor:[UIColor redColor]];
     
     UINavigationBar *navigationBar = self.navigationBar;
+    UIImage *topBar = nil;
     
-    [navigationBar setBackgroundImage:[UIImage imageNamed:@"2v_topbar"]
+    if ( UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad )
+        topBar = [[UIImage imageNamed:@"3v_topbar"]
+                       resizableImageWithCapInsets:UIEdgeInsetsMake(0, 0, 0, 0) resizingMode:UIImageResizingModeStretch];
+    else
+        topBar = [UIImage imageNamed:@"2v_topbar"];
+    
+    [navigationBar setBackgroundImage:topBar
                        forBarPosition:UIBarPositionAny
                            barMetrics:UIBarMetricsDefault];
     
-    [navigationBar setShadowImage:[UIImage new]];
+    
+    
+//    [navigationBar setShadowImage:[UIImage new]];
     
 }
 

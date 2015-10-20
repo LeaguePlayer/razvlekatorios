@@ -36,7 +36,7 @@
 //        [items addObject:item.thumbImage];
 //    }
 //    self.thumbs = nil;
-    NSLog(@"%i",self.block.id);
+//    NSLog(@"%i",self.block.id);
     [self initCollectionView];
     
     [SVProgressHUD dismiss];
@@ -104,7 +104,7 @@
     [item.imageView setImage:image];
 //    [item.imageView setContentMode:UIViewContentModeScaleAspectFit];
     
-    NSLog(@"%@",item.imageView.image);
+//    NSLog(@"%@",item.imageView.image);
     
     
     return item;

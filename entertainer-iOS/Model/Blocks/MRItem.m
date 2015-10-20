@@ -90,7 +90,7 @@
     else
     {
         NSMutableArray *ids_array_sorted = [[NSMutableArray alloc] init];
-        for(int i = 0; i<500; i++)
+        for(int i = offset; i<(limit+offset); i++)
         {
             [ids_array_sorted addObject:@(i)];
         }
@@ -98,10 +98,10 @@
 //        [request setFetchOffset:offset];
 //        predicate = [NSPredicate predicateWithFormat: @"%K == %i", @"block.id", idBlock];
         
-        limit  = ((limit + offset) >= ([ids_array_sorted count]-1)) ? (([ids_array_sorted count])-offset) : limit;
+//        limit  = ((limit + offset) >= ([ids_array_sorted count]-1)) ? (([ids_array_sorted count])-offset) : limit;
         
-        NSArray *itemsForView = [ids_array_sorted subarrayWithRange: NSMakeRange( offset, limit )];
-        predicate = [NSPredicate predicateWithFormat: @"%K == %i && id in %@", @"block.id", idBlock, itemsForView];
+//        NSArray *itemsForView = [ids_array_sorted subarrayWithRange: NSMakeRange( offset, limit )];
+        predicate = [NSPredicate predicateWithFormat: @"%K == %i && id in %@", @"block.id", idBlock, ids_array_sorted];
     }
     
         

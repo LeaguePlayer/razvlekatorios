@@ -36,7 +36,7 @@
 //    NSMutableDictionary *gotItemsFromCD;
 //    NSMutableArray *progressViews;
         NSUInteger itemsCount;
-        NSInteger currentIndex;
+       
         NSInteger currentPart;
         NSUInteger partsCount;
         CGSize size;
@@ -45,15 +45,18 @@
     NSInteger shiftIndex;
     NSInteger shiftParts;
     BOOL initedFirst;
-    BOOL IS_LOADING;
+    
     NSInteger activePart;
-    NSInteger counter;
+    
     
     NSMutableArray *leftScrollHistory;
     NSMutableArray *rightScrollHistory;
 }
 @property (nonatomic, retain) NSMutableDictionary *gotItemsFromCD;
-
+@property (nonatomic) NSInteger counter;
+@property (nonatomic) NSInteger currentIndex;
+@property (nonatomic) BOOL IS_LOADING;
+@property (nonatomic) BOOL FROM_SHUFFLE;
 @property (nonatomic, retain) NSMutableDictionary *items;
 @property (nonatomic, retain) NSArray *suffleArrayKeys;
 @property (nonatomic, retain) MRBlock *selectedBlock;
@@ -63,5 +66,7 @@
 @property (nonatomic, retain) UIScrollView *mainScroll;
 -(void)reloadData;
 -(void)moveAtIndex:(NSUInteger)index animated:(BOOL)animated;
+- (void)moveImageAtIndex:(int)atIndexPhoto ToIndexPhoto:(int)toIndexPhoto;
+-(void)moveAtIndexStatic:(NSUInteger)index andIdPhoto:(NSUInteger)idPhoto animated:(BOOL)animated;
 
 @end

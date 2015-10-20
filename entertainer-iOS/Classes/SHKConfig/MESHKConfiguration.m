@@ -288,6 +288,10 @@
 	return [NSNumber numberWithBool:false];// Setting this to true will show More... button in SHKActionSheet, setting to false will leave the button out.
 }
 
+- (NSNumber *)instagramOnly {
+    return [NSNumber numberWithBool:YES];
+}
+
 /*
  Favorite Sharers
  ----------------

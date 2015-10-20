@@ -1,0 +1,30 @@
+{
+  "DVTSourceControlWorkspaceBlueprintPrimaryRemoteRepositoryKey" : "99C149A04E25AB1F8D437C6FD98FFAB29A1F1A51",
+  "DVTSourceControlWorkspaceBlueprintWorkingCopyRepositoryLocationsKey" : {
+
+  },
+  "DVTSourceControlWorkspaceBlueprintWorkingCopyStatesKey" : {
+    "323A352D-F69B-4CB0-9276-2FB5A052F772" : 0,
+    "99C149A04E25AB1F8D437C6FD98FFAB29A1F1A51" : 0
+  },
+  "DVTSourceControlWorkspaceBlueprintIdentifierKey" : "59C5B3C0-346C-4FE3-A7DE-51E13B7A569A",
+  "DVTSourceControlWorkspaceBlueprintWorkingCopyPathsKey" : {
+    "323A352D-F69B-4CB0-9276-2FB5A052F772" : "razvlekatorios",
+    "99C149A04E25AB1F8D437C6FD98FFAB29A1F1A51" : "razvlekator"
+  },
+  "DVTSourceControlWorkspaceBlueprintNameKey" : "entertainer-iOS",
+  "DVTSourceControlWorkspaceBlueprintVersion" : 204,
+  "DVTSourceControlWorkspaceBlueprintRelativePathToProjectKey" : "entertainer-iOS.xcworkspace",
+  "DVTSourceControlWorkspaceBlueprintRemoteRepositoriesKey" : [
+    {
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryURLKey" : "https:\/\/github.com\/LeaguePlayer\/razvlekatorios.git",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositorySystemKey" : "com.apple.dt.Xcode.sourcecontrol.Git",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryIdentifierKey" : "323A352D-F69B-4CB0-9276-2FB5A052F772"
+    },
+    {
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryURLKey" : "github.com:LeaguePlayer\/razvlekatorios.git",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositorySystemKey" : "com.apple.dt.Xcode.sourcecontrol.Git",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryIdentifierKey" : "99C149A04E25AB1F8D437C6FD98FFAB29A1F1A51"
+    }
+  ]
+}

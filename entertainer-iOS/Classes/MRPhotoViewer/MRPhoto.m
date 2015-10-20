@@ -104,6 +104,7 @@
 
 - (void)handleDoubleTap:(UIGestureRecognizer *)gestureRecognizer {
     // double tap zooms in
+    NSLog(@"%f",self.frame.size.height);
     float newScale = [self zoomScale] * ZOOM_STEP;
     CGRect zoomRect = [self zoomRectForScale:newScale withCenter:[gestureRecognizer locationInView:gestureRecognizer.view]];
     [self zoomToRect:zoomRect animated:YES];
@@ -111,6 +112,7 @@
 
 - (void)handleTwoFingerTap:(UIGestureRecognizer *)gestureRecognizer {
     // two-finger tap zooms out
+    NSLog(@"%f",self.frame.size.height);
     float newScale = [self zoomScale] / ZOOM_STEP;
     CGRect zoomRect = [self zoomRectForScale:newScale withCenter:[gestureRecognizer locationInView:gestureRecognizer.view]];
     [self zoomToRect:zoomRect animated:YES];

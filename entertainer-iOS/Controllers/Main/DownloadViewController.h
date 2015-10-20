@@ -12,6 +12,7 @@
 #import "SDWebImageDownloader.h"
 #import "SDWebImageManager.h"
 #import "MRBlock.h"
+#import "Reachability.h"
 
 @interface DownloadViewController : BaseViewController <SSCollectionViewDataSource,SSCollectionViewDelegate, MRDownloadManagerDelegate, UIAlertViewDelegate>{
     NSArray *blocks;
@@ -19,6 +20,9 @@
     SDWebImageManager *imageDownloader;
     NSIndexPath *selectedPath;
     int countItemsBySelectedBlock;
+    Reachability *internetReachableFoo;
+    
+    UIView* backgroundNoInternet;
 }
 
 @property (nonatomic,retain) SSCollectionView *collectionView;

@@ -16,25 +16,25 @@
 #define COCOAPODS_POD_AVAILABLE_Bolts
 #define COCOAPODS_VERSION_MAJOR_Bolts 1
 #define COCOAPODS_VERSION_MINOR_Bolts 2
-#define COCOAPODS_VERSION_PATCH_Bolts 1
+#define COCOAPODS_VERSION_PATCH_Bolts 2
 
 // Bolts/AppLinks
 #define COCOAPODS_POD_AVAILABLE_Bolts_AppLinks
 #define COCOAPODS_VERSION_MAJOR_Bolts_AppLinks 1
 #define COCOAPODS_VERSION_MINOR_Bolts_AppLinks 2
-#define COCOAPODS_VERSION_PATCH_Bolts_AppLinks 1
+#define COCOAPODS_VERSION_PATCH_Bolts_AppLinks 2
 
 // Bolts/Tasks
 #define COCOAPODS_POD_AVAILABLE_Bolts_Tasks
 #define COCOAPODS_VERSION_MAJOR_Bolts_Tasks 1
 #define COCOAPODS_VERSION_MINOR_Bolts_Tasks 2
-#define COCOAPODS_VERSION_PATCH_Bolts_Tasks 1
+#define COCOAPODS_VERSION_PATCH_Bolts_Tasks 2
 
 // Facebook-iOS-SDK
 #define COCOAPODS_POD_AVAILABLE_Facebook_iOS_SDK
 #define COCOAPODS_VERSION_MAJOR_Facebook_iOS_SDK 3
-#define COCOAPODS_VERSION_MINOR_Facebook_iOS_SDK 23
-#define COCOAPODS_VERSION_PATCH_Facebook_iOS_SDK 2
+#define COCOAPODS_VERSION_MINOR_Facebook_iOS_SDK 24
+#define COCOAPODS_VERSION_PATCH_Facebook_iOS_SDK 0
 
 // MKStoreKit
 #define COCOAPODS_POD_AVAILABLE_MKStoreKit
@@ -113,6 +113,12 @@
 #define COCOAPODS_VERSION_MAJOR_ShareKit_Facebook 4
 #define COCOAPODS_VERSION_MINOR_ShareKit_Facebook 0
 #define COCOAPODS_VERSION_PATCH_ShareKit_Facebook 4
+
+// ShareKit/Instagram
+#define COCOAPODS_POD_AVAILABLE_ShareKit_Instagram
+#define COCOAPODS_VERSION_MAJOR_ShareKit_Instagram 4
+#define COCOAPODS_VERSION_MINOR_ShareKit_Instagram 0
+#define COCOAPODS_VERSION_PATCH_ShareKit_Instagram 4
 
 // ShareKit/Reachability
 #define COCOAPODS_POD_AVAILABLE_ShareKit_Reachability

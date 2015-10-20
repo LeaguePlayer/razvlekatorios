@@ -26,7 +26,7 @@
 
 @implementation DisplayViewController
 {
-     BOOL _statusBarHidden;
+    BOOL _statusBarHidden;
 }
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
@@ -41,7 +41,7 @@
 -(void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
     [[UIApplication sharedApplication] setStatusBarStyle:UIStatusBarStyleBlackTranslucent];
-//    [self.navigationController setNavigationBarHidden:YES animated:YES];
+    //    [self.navigationController setNavigationBarHidden:YES animated:YES];
     [self.navigationController setNavigationBarHidden:NO animated:NO];
 }
 
@@ -57,9 +57,9 @@
 
 - (void)viewDidLoad{
     [super viewDidLoad];
-//    [UIViewController setNeedsStatusBarAppearanceUpdate];
+    //    [UIViewController setNeedsStatusBarAppearanceUpdate];
     [self setNeedsStatusBarAppearanceUpdate];
-	// Do any additional setup after loading the view.
+    // Do any additional setup after loading the view.
     isFullScreen = NO;
     currentIndex = 0;
     isShuffled = NO;
@@ -69,19 +69,19 @@
     [self.navigationController.navigationBar
      setTitleTextAttributes:@{NSForegroundColorAttributeName : [UIColor whiteColor]}];
     
-//    [self setWantsFullScreenLayout:YES];
+    //    [self setWantsFullScreenLayout:YES];
     [self initViewPositions];
     [self initPhotoViewer];
-//    [self initTopBar];
+    //    [self initTopBar];
     [self initBottomButtons];
     
     
     dispatch_async(dispatch_get_main_queue(), ^{
-     thumbs = [NSMutableArray arrayWithArray:[MRItem allItemsWithSelectedBlockId:self.block.id]];
+        thumbs = [NSMutableArray arrayWithArray:[MRItem allItemsWithSelectedBlockId:self.block.id]];
         [SVProgressHUD dismiss];
     });
     
-//    [SVProgressHUD dismiss];
+    //    [SVProgressHUD dismiss];
 }
 
 -(void)initBottomButtons{
@@ -118,8 +118,8 @@
 
 - (void)didReceiveMemoryWarning
 {
-//    [self.photor relo]
-//    self.photor.items = nil;
+    //    [self.photor relo]
+    //    self.photor.items = nil;
     [super didReceiveMemoryWarning];
     // Dispose of any resources that can be recreated.
 }
@@ -127,13 +127,13 @@
 #pragma mark - photo viewer data source methods
 
 -(NSUInteger)numberOfPhotosInPhotoViewer:(MRPhotoViewer *)photoViewer{
-//    NSLog(@"all counts is %lu",(unsigned long)self.block.items.count);
+    //    ////NSLog(@"all counts is %lu",(unsigned long)self.block.items.count);
     return self.itemsCount;
 }
 
 //-(UIImage *)photoViewer:(MRPhotoViewer *)photoViewer imageAtIndex:(NSUInteger)index{
 //    MRItem *item = [self.block.items objectAtIndex:index];
-////    NSLog(@"%@",item.image);
+////    ////NSLog(@"%@",item.image);
 //    return item.image;
 //}
 
@@ -162,7 +162,7 @@
 - (void)showStatusBar:(BOOL)show {
     [UIView animateWithDuration:0.3 animations:^{
         _statusBarHidden = !show;
-     
+        
         [self setNeedsStatusBarAppearanceUpdate];
     }];
 }
@@ -173,53 +173,53 @@
     [self disableApp];
     
     
-//    UIApplication* application = [UIApplication sharedApplication];
-//    if ([application respondsToSelector: @selector(setStatusBarHidden:withAnimation:)]) {
-//        [[UIApplication sharedApplication] setStatusBarHidden: YES withAnimation: UIStatusBarAnimationFade]; // 3.2+
-//    } else {
-//#pragma GCC diagnostic ignored "-Wdeprecated-declarations"
-//        [[UIApplication sharedApplication] setStatusBarHidden: YES animated:YES]; // 2.0 - 3.2
-//#pragma GCC diagnostic warning "-Wdeprecated-declarations"
-//    }
+    //    UIApplication* application = [UIApplication sharedApplication];
+    //    if ([application respondsToSelector: @selector(setStatusBarHidden:withAnimation:)]) {
+    //        [[UIApplication sharedApplication] setStatusBarHidden: YES withAnimation: UIStatusBarAnimationFade]; // 3.2+
+    //    } else {
+    //#pragma GCC diagnostic ignored "-Wdeprecated-declarations"
+    //        [[UIApplication sharedApplication] setStatusBarHidden: YES animated:YES]; // 2.0 - 3.2
+    //#pragma GCC diagnostic warning "-Wdeprecated-declarations"
+    //    }
     [self showStatusBar:NO];
     
     [self.navigationController setNavigationBarHidden:YES animated:YES];
     
     [UIView animateWithDuration:0.3 animations:^{
         self.bottomView.y = self.view.height+10;
-//        self.topView.y = - self.topView.height;
+        //        self.topView.y = - self.topView.height;
         [self.bottomView setAlpha:0];
-//        [self.topView setAlpha:0];
+        //        [self.topView setAlpha:0];
     } completion:^(BOOL finished) {
         [self enableApp];
         
-//        [self.photor.mainScroll setCenter:CGPointMake(10, 10)];
+        //        [self.photor.mainScroll setCenter:CGPointMake(10, 10)];
     }];
     
 }
 
 - (void)exitFullscreen
 {
-	isFullScreen = NO;
+    isFullScreen = NO;
     
-	[self disableApp];
+    [self disableApp];
     
-//	UIApplication* application = [UIApplication sharedApplication];
-//	if ([application respondsToSelector: @selector(setStatusBarHidden:withAnimation:)]) {
-//		[[UIApplication sharedApplication] setStatusBarHidden:NO withAnimation:UIStatusBarAnimationFade]; // 3.2+
-//	} else {
-//#pragma GCC diagnostic ignored "-Wdeprecated-declarations"
-//		[[UIApplication sharedApplication] setStatusBarHidden:NO animated:NO]; // 2.0 - 3.2
-//#pragma GCC diagnostic warning "-Wdeprecated-declarations"
-//	}
+    //  UIApplication* application = [UIApplication sharedApplication];
+    //  if ([application respondsToSelector: @selector(setStatusBarHidden:withAnimation:)]) {
+    //      [[UIApplication sharedApplication] setStatusBarHidden:NO withAnimation:UIStatusBarAnimationFade]; // 3.2+
+    //  } else {
+    //#pragma GCC diagnostic ignored "-Wdeprecated-declarations"
+    //      [[UIApplication sharedApplication] setStatusBarHidden:NO animated:NO]; // 2.0 - 3.2
+    //#pragma GCC diagnostic warning "-Wdeprecated-declarations"
+    //  }
     
     [self.navigationController setNavigationBarHidden:NO animated:YES];
     [self showStatusBar:YES];
     [UIView animateWithDuration:0.3 animations:^{
         self.bottomView.y = self.view.height - self.bottomView.height;
-//        self.topView.y = 21;
+        //        self.topView.y = 21;
         [self.bottomView setAlpha:1];
-//        [self.topView setAlpha:1];
+        //        [self.topView setAlpha:1];
     } completion:^(BOOL finished) {
         [self enableApp];
     }];
@@ -227,13 +227,13 @@
 
 - (void)enableApp
 {
-	[[UIApplication sharedApplication] endIgnoringInteractionEvents];
+    [[UIApplication sharedApplication] endIgnoringInteractionEvents];
 }
 
 
 - (void)disableApp
 {
-	[[UIApplication sharedApplication] beginIgnoringInteractionEvents];
+    [[UIApplication sharedApplication] beginIgnoringInteractionEvents];
 }
 
 - (void)viewDidUnload {
@@ -247,22 +247,22 @@
 
 //-(void)actionSheet:(UIActionSheet *)actionSheet clickedButtonAtIndex:(NSInteger)buttonIndex{
 //
-//    
+//
 ////
 ////    switch (buttonIndex) {
 ////        case 0:
 //////            [SHKVkontakte shareItem:item];
-////                NSLog(@"shareVK");
+////                ////NSLog(@"shareVK");
 ////                [SHKVkontakte shareItem:sharerItem];
 ////            break;
 ////        case 1:
-////            NSLog(@"shareFB");
-////            
+////            ////NSLog(@"shareFB");
+////
 ////            [NSClassFromString([NSString stringWithFormat:@"SHKFacebook"])
 ////             performSelector:@selector(shareItem:) withObject:sharerItem];
 ////            break;
 ////        case 2:
-////            NSLog(@"shareTW");
+////            ////NSLog(@"shareTW");
 ////                [SHKTwitter shareItem:sharerItem];
 ////            break;
 ////        default:
@@ -273,6 +273,7 @@
 #pragma mark - thumb view delegate methods
 
 -(void)thumbViewItemDidSelectAtIndex:(NSUInteger)index{
+//    self.photor.currentIndex = -100;
     [self.photor moveAtIndex:index animated:NO];
 }
 
@@ -286,16 +287,26 @@
     [self performSegueWithIdentifier:@"ToAbout" sender:self];
 }
 
+-(void)showLoader:(NSString*)titleLoader
+{
+//     [SVProgressHUD showWithMaskType:SVProgressHUDMaskTypeGradient];
+    [SVProgressHUD showWithStatus:titleLoader maskType:SVProgressHUDMaskTypeGradient];
+}
+
+-(void)hideLoader
+{
+    [SVProgressHUD dismiss];
+}
 
 - (IBAction)onShareButtonClick:(id)sender {
-//    UIActionSheet *actionSheet = [[UIActionSheet alloc] initWithTitle:@"Поделиться" delegate:self cancelButtonTitle:@"Отмена" destructiveButtonTitle:nil otherButtonTitles:@"ВКонтакте",@"Facebook",@"Twitter",nil];
-//    [actionSheet showInView:self.view];
+    //    UIActionSheet *actionSheet = [[UIActionSheet alloc] initWithTitle:@"Поделиться" delegate:self cancelButtonTitle:@"Отмена" destructiveButtonTitle:nil otherButtonTitles:@"ВКонтакте",@"Facebook",@"Twitter",nil];
+    //    [actionSheet showInView:self.view];
     
     // Create the item to share (in this example, a url)
     //    NSURL *url = [NSURL URLWithString:@"http://getsharekit.com"];
     //    SHKItem *item = [SHKItem URL:url title:@"ShareKit is Awesome!" contentType:SHKURLContentTypeWebpage];
     
-    NSLog(@"shared");
+    ////NSLog(@"shared");
     int shareImageID = (self.photor.suffleArrayKeys) ? [[self.photor.suffleArrayKeys objectAtIndex:currentIndex] integerValue] : currentIndex;
     MRItem *gotModel = (MRItem *)[self.photor.gotItemsFromCD objectForKey:@(shareImageID)];
     
@@ -313,20 +324,74 @@
     // ShareKit detects top view controller (the one intended to present ShareKit UI) automatically,
     // but sometimes it may not find one. To be safe, set it explicitly
     [SHK setRootViewController:self];
-    [SHK setFavorites:@[@"SHKVkontakte",@"SHKiOSFacebook",@"SHKiOSTwitter"] forItem:item];
-//    [SHK set]
+    [SHK setFavorites:@[@"SHKVkontakte",@"SHKiOSFacebook",@"SHKiOSTwitter", @"SHKInstagram"] forItem:item];
+    //    [SHK set]
     
     // Display the action sheet
     if (NSClassFromString(@"UIAlertController")) {
         
         //iOS 8+
         SHKAlertController *alertController = [SHKAlertController actionSheetForItem:item];
+        alertController.title = @"Поделиться";
         alertController.shareDelegate = self;
+        
+        for(id btn in [alertController actions])
+        {
+            if([btn isKindOfClass:[UIAlertAction class]])
+            {
+                UIAlertAction *gotButton = (UIAlertAction *)btn;
+                
+                
+                if([gotButton.title isEqualToString:@"Vkontakte"])
+                {
+                    UIImage *accessoryImage = [UIImage imageNamed:@"i_vk"];
+                    [gotButton setValue:accessoryImage forKey:@"image"];
+                }
+                else if([gotButton.title isEqualToString:@"Facebook"])
+                {
+                    UIImage *accessoryImage = [UIImage imageNamed:@"i_fb"];
+                    [gotButton setValue:accessoryImage forKey:@"image"];
+                }
+                else if([gotButton.title isEqualToString:@"Instagram"])
+                {
+                    UIImage *accessoryImage = [UIImage imageNamed:@"i_insta"];
+                    [gotButton setValue:accessoryImage forKey:@"image"];
+                }
+                else if([gotButton.title isEqualToString:@"Twitter"])
+                {
+                    UIImage *accessoryImage = [UIImage imageNamed:@"i_tw"];
+                    [gotButton setValue:accessoryImage forKey:@"image"];
+                    
+                }
+            }
+        }
+        
+        //        UIActionSheet * action = [[UIActionSheet alloc]
+        //                                  initWithTitle:@"Title"
+        //                                  delegate:self
+        //                                  cancelButtonTitle:@"Cancel"
+        //                                  destructiveButtonTitle:nil
+        //                                  otherButtonTitles:@"",nil];
+        
         
         
         [alertController setModalPresentationStyle:UIModalPresentationPopover];
         UIPopoverPresentationController *popPresenter = [alertController popoverPresentationController];
         popPresenter.barButtonItem = self.toolbarItems[1];
+        
+        if ( UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad )
+        {
+            alertController.popoverPresentationController.sourceView = self.view;
+            
+            alertController.popoverPresentationController.sourceRect = CGRectMake(55, self.view.bounds.size.height -alertController.popoverPresentationController.frameOfPresentedViewInContainerView.size.height - 40.f, 1.0, 1.0);
+            alertController.popoverPresentationController.permittedArrowDirections = UIPopoverArrowDirectionAny;
+            //            alertController.popoverPresentationController.
+        }
+        
+        // this is the center of the screen currently but it can be any point in the view
+        
+        //        self.presentViewController(shareMenu, animated: true, completion: nil);
+        
         [self presentViewController:alertController animated:YES completion:nil];
         
     } else {
@@ -340,43 +405,85 @@
 - (IBAction)onShuffleButtonClick:(id)sender {
     isShuffled = !isShuffled;
     [self.shuffleButton setSelected:isShuffled];
-//    self.tit
+    //    self.tit
+    //    NSInteger indexToMove;
     if (isShuffled)
     {
-        self.photor.suffleArrayKeys = [NSArray arrayWithShuffledIds:[thumbs count]];
-        [self setTitle:@"Случайный порядок"];
         
-       
-        NSMutableArray* new_thumbs = [[NSMutableArray alloc] init];
-        for(id index in self.photor.suffleArrayKeys)
-        {
-            [new_thumbs addObject:[thumbs objectAtIndex:[index integerValue]]];
-        }
-//         thumbs = nil;
-        thumbsShuffled = [NSMutableArray arrayWithArray:new_thumbs];
-        new_thumbs = nil;
+        
+        //        dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+        //Do background work
+        self.photor.suffleArrayKeys = [NSArray arrayWithShuffledIds:[thumbs count]];
+        dispatch_async(dispatch_get_main_queue(), ^{
+            [self setTitle:@"Случайный порядок"];
+            NSMutableArray* new_thumbs = [[NSMutableArray alloc] init];
+            for(id index in self.photor.suffleArrayKeys)
+            {
+                [new_thumbs addObject:[thumbs objectAtIndex:[index integerValue]]];
+                //            //NSLog(@"finished!");
+            }
+            //        [new_thumbs exchangeObjectAtIndex:self.photor.counter withObjectAtIndex:0];
+            
+            
+            thumbsShuffled = [NSMutableArray arrayWithArray:new_thumbs];
+            MRItem *tmpObject = (MRItem*)[thumbs objectAtIndex:self.photor.counter];
+            //        indexToMove = [thumbsShuffled indexOfObject:[thumbs objectAtIndex:self.photor.currentIndex]];
+            
+//            NSLog(@"in Display");
+//            NSLog(@"%@",self.photor.suffleArrayKeys);
+//            NSInteger indexToMove = [[self.photor.suffleArrayKeys objectAtIndex:self.photor.counter] integerValue];
+            NSInteger indexToMove = [self.photor.suffleArrayKeys indexOfObject:@(self.photor.counter)];
+            new_thumbs = nil;
+            //NSLog(@"ON");
+            self.photor.FROM_SHUFFLE = YES;
+            self.photor.currentIndex = -100;
+            //        [self.photor moveImageAtIndex:self.photor.currentIndex ToIndexPhoto:indexToMove];
+            NSLog(@"tmpObject.id is %li",(long)tmpObject.id);
+            NSLog(@"counter is %li",(long)self.photor.counter);
+            NSLog(@"indexToMove is %li",(long)indexToMove);
+            
+            //        [self.photor moveAtIndexStatic:indexToMove animated:NO];
+            [self.photor moveAtIndexStatic:indexToMove andIdPhoto:tmpObject.id animated:NO];
+//            [self.photor moveAtIndex:indexToMove animated:NO];
+        });
+        //        });
+        
+        
     }
     else
     {
+        ////NSLog(@"%@",thumbs);
+        //        self.photor.counter = self.photor.counter-1;
+        //        indexToMove = [thumbsShuffled indexOfObject:[thumbs objectAtIndex:self.photor.counter]];
+        
+        //        //NSLog(@"%@",self.photor.suffleArrayKeys);
+//                int indexToMove = [self.photor.suffleArrayKeys indexOfObject:@((self.photor.counter-1))];
+        int indexToMove = [[self.photor.suffleArrayKeys objectAtIndex:self.photor.counter] integerValue];
+        self.photor.currentIndex = -100;
+        //        MRItem *tmpObject = [thumbsShuffled objectAtIndex:indexToMove];
+        //        indexToMove = self.photor.counter;
+        //        //NSLog(@"tmpObject.id is %li",(long)tmpObject.id);
+        NSLog(@"counter is %li",(long)self.photor.counter);
+                NSLog(@"indexToMove is %li",(long)indexToMove);
+        //NSLog(@"OFF");
         [self setTitle:@""];
         self.photor.suffleArrayKeys = nil;
         thumbsShuffled = nil;
-//        NSMutableArray* new_thumbs = [[NSMutableArray alloc] init];
-//        for(int index = 0; index<500; index++)
-//        {
-//            [new_thumbs addObject:[thumbs objectAtIndex:index]];
-//        }
-//        thumbs = nil;
-//        thumbs = [NSMutableArray arrayWithArray:new_thumbs];
-//        new_thumbs = nil;
-    }
+        self.photor.FROM_SHUFFLE = YES;
+        [self.photor moveAtIndexStatic:indexToMove andIdPhoto:indexToMove animated:NO];
         
+        
+        //        [self.photor moveImageAtIndex:self.photor.currentIndex ToIndexPhoto:indexToMove];
+        
+        
+        
+    }
+    //NSLog(@"subviews : %lu",(unsigned long)[[self.photor.mainScroll subviews] count]);
     [self.block setShuffled:!self.block.shuffled];
     
     
     
-    [self.photor reloadData];
-    [self enterFullscreen];
+    
 }
 
 - (IBAction)onDocumentsButtonClick:(id)sender {
@@ -387,11 +494,11 @@
         ThumbsViewController *controller = [[ThumbsViewController alloc] init];
         controller.block = self.block;
         controller.itemsCount = [thumbs count];
-//        if(self.photor.suffleArrayKeys)
-//        {
-//            controller.thumbs = thumbs;
-//        }
-//        else
+        //        if(self.photor.suffleArrayKeys)
+        //        {
+        //            controller.thumbs = thumbs;
+        //        }
+        //        else
         controller.thumbs = (thumbsShuffled) ? thumbsShuffled : thumbs;
         [controller setDelegate:self];
         [UIView  beginAnimations:nil context:NULL];
@@ -401,7 +508,7 @@
         [UIView setAnimationTransition:UIViewAnimationTransitionFlipFromRight forView:self.navigationController.view cache:NO];
         [UIView commitAnimations];
     });
-   
+    
     
     
 }

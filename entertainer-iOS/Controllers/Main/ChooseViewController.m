@@ -13,6 +13,8 @@
 #import <QuartzCore/QuartzCore.h>
 #import "DisplayViewController.h"
 #import "SVProgressHUD.h"
+#import "MREmptyLabel.h"
+
 
 @interface ChooseViewController ()
 
@@ -42,6 +44,7 @@
     [self initContent];
     [self initUI];
     
+    
     [[NSNotificationCenter defaultCenter] addObserver:self
                                              selector:@selector(didGetMyNotification)
                                                  name:@"MyNotification"
@@ -53,6 +56,10 @@
     NSLog(@"Hello!");
     blocks = [NSMutableArray arrayWithArray:[MRBlock allBlocks]];
     [self.collectionView reloadData];
+    if(blocks.count == 0)
+        [self initEmptyView];
+    else
+        [self hideEmptyView];
    
 }
 
@@ -67,6 +74,51 @@
 
 -(void)initContent{
     blocks = [NSMutableArray arrayWithArray:[MRBlock allBlocks]];
+}
+
+-(void)initEmptyView
+{
+    CGRect screenRect = [[UIScreen mainScreen] bounds];
+    CGFloat screenWidth = screenRect.size.width;
+    CGFloat screenHeight = screenRect.size.height;
+    float topPadding = 0;
+    float spacingBetweenObjects = 16;
+    
+    UIView* background = [[UIView alloc] init];
+    background.backgroundColor = [UIColor clearColor];
+    
+    UIView* emptyView = [[UIView alloc] initWithFrame:CGRectMake(20, 150, screenWidth-40, 260)];
+//    emptyView.backgroundColor = [UIColor redColor];
+    
+    float height = ( UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad ) ? 48*1.4f : 48;
+    
+    MREmptyLabel* topLabel = [[MREmptyLabel alloc] initWithFrame:CGRectMake(0, topPadding, emptyView.frame.size.width, height)];
+    [topLabel setText:@"У вас пока не загружено ни\nодного развлекатора."];
+    [emptyView addSubview:topLabel];
+    topPadding += topLabel.frame.size.height + spacingBetweenObjects;
+    
+    UIImageView* badSmile = [[UIImageView alloc] initWithFrame:CGRectMake((emptyView.frame.size.width/2)-(47/2), topPadding, 47, 47)];
+    [badSmile setImage:[UIImage imageNamed:@"bad_smile"]];
+    [emptyView addSubview:badSmile];
+    topPadding += badSmile.frame.size.height + spacingBetweenObjects;
+    
+    MREmptyLabel* bottomLabel = [[MREmptyLabel alloc] initWithFrame:CGRectMake(0, topPadding, emptyView.frame.size.width, 90)];
+    [bottomLabel setText:@"Для загрузки развлекаторов перейдите во вкладку \"Загрузить новые\" с главного экрана"];
+    [emptyView addSubview:bottomLabel];
+    topPadding += bottomLabel.frame.size.height;
+    
+    CGRect frame = emptyView.frame;
+    frame.size.height = topPadding;
+    frame.origin.y = (screenHeight/2)-(frame.size.height/2);
+    emptyView.frame = frame;
+    
+    [background addSubview:emptyView];
+    [self.collectionView setBackgroundView:background];
+    
+}
+-(void)hideEmptyView
+{
+    [self.collectionView setBackgroundView:nil];
 }
 
 -(void)initUI{
@@ -85,6 +137,11 @@
     [self.view insertSubview:self.collectionView atIndex:0];
     recognizer = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(collectionViewTouched:)];
     self.collectionView.userInteractionEnabled = YES;
+    
+    if(blocks.count == 0)
+        [self initEmptyView];
+    else
+        [self hideEmptyView];
 }
 
 -(void)collectionViewTouched:(UITapGestureRecognizer *)sender{
@@ -159,7 +216,10 @@
 #pragma mark - SSCollectionViewDelegate
 
 - (CGSize)collectionView:(SSCollectionView *)aCollectionView itemSizeForSection:(NSUInteger)section {
-    return CGSizeMake(125.0f, 160.0f);
+    if ( UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad )
+        return CGSizeMake(175.0f, 224.0f);
+    else
+        return CGSizeMake(125.0f, 160.0f);
 }
 
 -(void)collectionView:(SSCollectionView *)aCollectionView didSelectItemAtIndexPath:(NSIndexPath *)indexPath{
@@ -236,6 +296,11 @@
             [removing removeFromDataBase];
             [blocks removeObject:removing];
             [self.collectionView reloadData];
+        
+            if(blocks.count == 0)
+                [self initEmptyView];
+            else
+                [self hideEmptyView];
 //            [SVProgressHUD dismiss];
 //        });
         

@@ -11,6 +11,9 @@
 #import "MRBlock.h"
 #import "MRHTTPClient.h"
 #import "DisplayViewController.h"
+#import "MRAppDelegate.h"
+#import "MRNoInternetLabel.h"
+#import <QuartzCore/QuartzCore.h>
 
 @interface DownloadViewController ()
 
@@ -29,11 +32,22 @@
 
 - (void)viewDidLoad
 {
+    
+    if([self testInternetConnection])
+        [self loadAll];
+    else
+         [self showNoInternet];
+    
+    [self initBackButton];
+}
+
+-(void)loadAll
+{
     DefaultContext;
     [super viewDidLoad];
-	// Do any additional setup after loading the view.
+    // Do any additional setup after loading the view.
     [self initDownloader];
-    [self initBackButton];
+    
     [self initInfoButtonWithTarget:self];
     [self initContent];
     [self initCollectionView];
@@ -42,7 +56,128 @@
                                              selector:@selector(didGetMyNotification:)
                                                  name:@"NoticeAfterDownload"
                                                object:nil];
+
+}
+
+-(void)showNoInternet
+{
+    CGRect screenRect = [[UIScreen mainScreen] bounds];
+    CGFloat screenWidth = screenRect.size.width;
+    CGFloat screenHeight = screenRect.size.height;
+    MRAppDelegate *appDelegate = (MRAppDelegate *)[[UIApplication sharedApplication] delegate];
+
     
+    backgroundNoInternet = [[UIView alloc] initWithFrame:CGRectMake(0, 0, screenWidth, screenHeight)];
+    backgroundNoInternet.backgroundColor = [UIColor colorWithRed:0.067 green:0.067 blue:0.067 alpha:0.8f];
+    [backgroundNoInternet setAlpha:0.f];
+    
+    float topPadding = 40;
+    float spacingBetweenObjects = 16;
+    
+  
+    
+    UIView* whiteView = [[UIView alloc] initWithFrame:CGRectMake(20, 150, screenWidth-40, 260)];
+        whiteView.backgroundColor = [UIColor whiteColor];
+    
+
+    
+    UIImageView* badSmile = [[UIImageView alloc] initWithFrame:CGRectMake((whiteView.frame.size.width/2)-(73/2), topPadding, 73, 59)];
+    [badSmile setImage:[UIImage imageNamed:@"no_internet"]];
+    [whiteView addSubview:badSmile];
+    topPadding += badSmile.frame.size.height + spacingBetweenObjects;
+    
+    MRNoInternetLabel* bottomLabel = [[MRNoInternetLabel alloc] initWithFrame:CGRectMake(0, topPadding, whiteView.frame.size.width, 80)];
+    [bottomLabel setText:@"Извините, нет соединения с интернетом, чтобы выбрать и загрузить новые развлекаторы"];
+    [whiteView addSubview:bottomLabel];
+    topPadding += bottomLabel.frame.size.height + spacingBetweenObjects;
+    
+    UIButton *agreeButton = [UIButton buttonWithType:UIButtonTypeCustom];
+    agreeButton.frame = CGRectMake((whiteView.frame.size.width/2)-(179/2), topPadding, 179, 48);
+    agreeButton.backgroundColor = [UIColor colorWithRed:0.024 green:0.604 blue:0.953 alpha:1];
+    [whiteView addSubview:agreeButton];
+    
+    [agreeButton setTitle:@"Закрыть" forState:UIControlStateNormal];
+    [agreeButton setContentEdgeInsets:UIEdgeInsetsMake(0, 4, 0, 4)];
+    agreeButton.layer.cornerRadius = 5;
+    agreeButton.layer.masksToBounds = YES;
+    [agreeButton addTarget:self action:@selector(agreeWithNoInternet) forControlEvents:UIControlEventTouchUpInside];
+    
+    topPadding += agreeButton.frame.size.height;
+    
+    
+    
+    CGRect frame = whiteView.frame;
+    frame.size.height = topPadding+40;
+    frame.origin.y = (screenHeight/2)-(frame.size.height/2);
+    whiteView.frame = frame;
+    
+    whiteView.layer.cornerRadius = 20;
+    whiteView.layer.masksToBounds = YES;
+    
+    [backgroundNoInternet addSubview:whiteView];
+    [[appDelegate window] addSubview:backgroundNoInternet];
+    
+    [UIView animateWithDuration:0.5 animations:^{
+        [backgroundNoInternet setAlpha:1.0f];
+    }];
+}
+
+-(void)agreeWithNoInternet
+{
+    [UIView animateWithDuration:0.5 animations:^{
+         [backgroundNoInternet setAlpha:0.f];
+    } completion:^(BOOL finished) {
+        if(backgroundNoInternet)
+        {
+            [backgroundNoInternet removeFromSuperview];
+            backgroundNoInternet = nil;
+        }
+        [self.navigationController popToRootViewControllerAnimated:YES];
+    }];
+    
+}
+
+- (BOOL)testInternetConnection
+{
+//    internetReachableFoo = [Reachability reachabilityWithHostname:@"www.google.com"];
+    
+    Reachability *reachability = [Reachability reachabilityForInternetConnection];
+    NetworkStatus internetStatus = [reachability currentReachabilityStatus];
+    if (internetStatus != NotReachable) {
+        //my web-dependent code
+        return true;
+    }
+    else {
+        //there-is-no-connection warning
+        NSLog(@"ERROR!");
+       
+        return false;
+//        [self.navigationController popToRootViewControllerAnimated:YES];
+    }
+//
+//    // Internet is reachable
+//    internetReachableFoo.reachableBlock = ^(Reachability*reach)
+//    {
+//        // Update the UI on the main thread
+//        dispatch_async(dispatch_get_main_queue(), ^{
+//            NSLog(@"Yayyy, we have the interwebs!");
+//            [self loadAll];
+//        });
+//    };
+//    
+//    // Internet is not reachable
+//    internetReachableFoo.unreachableBlock = ^(Reachability*reach)
+//    {
+//        // Update the UI on the main thread
+//        dispatch_async(dispatch_get_main_queue(), ^{
+//            NSLog(@"Someone broke the internet :(");
+//            [self.navigationController popViewControllerAnimated:YES];
+//        });
+//    };
+//    
+//    [internetReachableFoo startNotifier];
+  
+
 }
 
 
@@ -120,6 +255,7 @@
         
     } failure:^(int statusCode, NSArray *errors, NSError *commonError) {
         [SVProgressHUD dismiss];
+        [self showNoInternet];
     }];
 }
 
@@ -141,8 +277,8 @@
 
 -(void)initTitle{
     UILabel *label = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, 140, 48)];
-    label.numberOfLines = 1;
-    [label setFont:[UIFont systemFontOfSize:17.0f]];
+    label.numberOfLines = 2;
+    [label setFont:[UIFont systemFontOfSize:16.0f]];
     [label setText:@"Загрузить развлекаторы"];
     [label setBackgroundColor:[UIColor clearColor]];
     [label setTextAlignment:NSTextAlignmentCenter];
@@ -230,6 +366,9 @@
 #pragma mark - SSCollectionViewDelegate
 
 - (CGSize)collectionView:(SSCollectionView *)aCollectionView itemSizeForSection:(NSUInteger)section {
+    if ( UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad )
+    return CGSizeMake(175.0f, 224.0f);
+        else
     return CGSizeMake(125.0f, 160.0f);
 }
 
@@ -238,6 +377,13 @@
 //    MRDownloadCollectionViewItem *item =[aCollectionView itemForIndexPath:indexPath];
     
 //    return;
+    if(![self testInternetConnection])
+    {
+        [self showNoInternet];
+        return;
+    }
+    
+    
     MRBlock *block = [blocks objectAtIndex:indexPath.row];
     NSString *information = block.desc;
     selectedPath = indexPath;

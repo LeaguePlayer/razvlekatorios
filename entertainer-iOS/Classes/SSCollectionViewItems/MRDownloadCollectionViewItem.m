@@ -34,11 +34,11 @@
         self.imageView.backgroundColor = [UIColor clearColor];
         self.backgroundColor = [UIColor clearColor];
         self.imageView = nil;
-        self.nameLabel = [[UILabel alloc] initWithFrame:CGRectMake(0,0,125,35)];
+        self.nameLabel = ( UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad ) ? [[UILabel alloc] initWithFrame:CGRectMake(0,0,125*1.4f,35*1.4f)] : [[UILabel alloc] initWithFrame:CGRectMake(0,0,125,35)];
         self.nameLabel.backgroundColor = [UIColor clearColor];
         self.nameLabel.textAlignment = NSTextAlignmentCenter;
         self.nameLabel.textColor = [UIColor blueColor];
-        self.nameLabel.font = [UIFont boldSystemFontOfSize:9];
+        self.nameLabel.font = ( UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad ) ? [UIFont boldSystemFontOfSize:13] : [UIFont boldSystemFontOfSize:9];
         // Objective-C
         self.nameLabel.lineBreakMode = NSLineBreakByWordWrapping;
         self.nameLabel.numberOfLines = 0;
@@ -54,16 +54,24 @@
         
         self.icon = [[UIImageView alloc] init];
         [self.icon setContentMode:UIViewContentModeScaleAspectFit];
-        [self.icon setFrame:CGRectMake(0, 36, 125, 125)]; //21
+        if ( UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad )
+            [self.icon setFrame:CGRectMake(0, 36*1.4f, 125*1.4f, 125*1.4f)]; //21
+        else
+            [self.icon setFrame:CGRectMake(0, 36, 125, 125)]; //21
         
         UIImage *prBackImg = [UIImage imageNamed:@"bg_price.png"];
-        UIImageView *priceBackView = [[UIImageView alloc] initWithImage:prBackImg];
-        CGRect priceFrame = CGRectMake(125 - prBackImg.size.width, self.icon.frame.origin.y, prBackImg.size.width, prBackImg.size.height);
+        UIView *priceBackView = [[UIImageView alloc] init];
+        CGRect priceFrame = ( UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad ) ? CGRectMake((125*1.4f) - (prBackImg.size.width*1.4f), self.icon.frame.origin.y, (prBackImg.size.width*1.4f), prBackImg.size.height)
+        : CGRectMake(125 - prBackImg.size.width, self.icon.frame.origin.y, prBackImg.size.width, prBackImg.size.height);
         [priceBackView setFrame:priceFrame];
+        priceBackView.backgroundColor = [UIColor colorWithRed:0.027 green:0.631 blue:1 alpha:1];
         
         self.priceLabel = [[UILabel alloc] initWithFrame:priceFrame];
         [self.priceLabel setTextAlignment:NSTextAlignmentCenter];
-        [self.priceLabel setFont:[UIFont systemFontOfSize:14]];
+        if ( UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad )
+            [self.priceLabel setFont:[UIFont systemFontOfSize:20]];
+        else
+            [self.priceLabel setFont:[UIFont systemFontOfSize:14]];
         [self.priceLabel setBackgroundColor:[UIColor clearColor]];
         [self.priceLabel setTextColor:[UIColor whiteColor]];
         

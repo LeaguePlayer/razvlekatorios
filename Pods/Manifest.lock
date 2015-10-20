@@ -1,13 +1,13 @@
 PODS:
   - AFNetworking (1.3.2)
-  - Bolts (1.2.1):
-    - Bolts/AppLinks (= 1.2.1)
-    - Bolts/Tasks (= 1.2.1)
-  - Bolts/AppLinks (1.2.1):
+  - Bolts (1.2.2):
+    - Bolts/AppLinks (= 1.2.2)
+    - Bolts/Tasks (= 1.2.2)
+  - Bolts/AppLinks (1.2.2):
     - Bolts/Tasks
-  - Bolts/Tasks (1.2.1)
-  - Facebook-iOS-SDK (3.23.2):
-    - Bolts (~> 1.0)
+  - Bolts/Tasks (1.2.2)
+  - Facebook-iOS-SDK (3.24.0):
+    - Bolts (~> 1.2)
   - MagicalRecord (2.1):
     - MagicalRecord/Core (= 2.1)
   - MagicalRecord/Core (2.1)
@@ -28,6 +28,8 @@ PODS:
   - ShareKit/Facebook (4.0.4):
     - Facebook-iOS-SDK (~> 3.2)
     - ShareKit/Core
+  - ShareKit/Instagram (4.0.4):
+    - ShareKit/Core
   - ShareKit/Reachability (4.0.4)
   - ShareKit/Twitter (4.0.4):
     - ShareKit/Core
@@ -47,6 +49,7 @@ DEPENDENCIES:
   - Reachability
   - SDWebImage
   - ShareKit/Facebook
+  - ShareKit/Instagram
   - ShareKit/Twitter
   - ShareKit/Vkontakte
   - SSToolkit (from `https://github.com/soffes/sstoolkit.git`, commit `1403f02cb98f8357f4b8e43c59d9c69d608d7bed`)
@@ -65,8 +68,8 @@ CHECKOUT OPTIONS:
 
 SPEC CHECKSUMS:
   AFNetworking: 9168af1ebe62092499df4398ecb5e7b885e6a250
-  Bolts: 7686a5cb204d1ac54cee26f12d9b7622db3f80d1
-  Facebook-iOS-SDK: cd87f0b2f0c1d9574b44e8fa2baacc275524bac3
+  Bolts: 20a2bd788273360cb1e31530dc19b8544eef2544
+  Facebook-iOS-SDK: cb209af2e67e3a5d323f966c22e4e482e819405e
   MagicalRecord: f03ffa9c9b90eeb8d4f1b37bedcba8b7226d7a55
   MKStoreKit: 748617e5f87ad1e0d3f075155047945248eccefc
   PKMultipartInputStream: 1fb466fac9347857e3477e4dfc6fcc62fea7a944

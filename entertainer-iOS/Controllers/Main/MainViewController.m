@@ -22,23 +22,30 @@
     [self initNavBar];
     UIDeviceHardware *device = [[UIDeviceHardware alloc] init];
     NSString *platformString = [device platformString];
-
     NSString *imageNameBg = @"";
-    if(
+    
+    if ( UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad )
+    {
+        imageNameBg = @"2048";
+    }
+    else
+    {
+        //iphone
+        if(
            [platformString isEqualToString:@"iPhone 5 (GSM)"] ||
            [platformString isEqualToString:@"iPhone 5 (GSM+CDMA)"] ||
            [platformString isEqualToString:@"iPhone 5c (GSM)"] ||
            [platformString isEqualToString:@"iPhone 5c (GSM+CDMA)"] ||
            [platformString isEqualToString:@"iPhone 5s (GSM)"] ||
            [platformString isEqualToString:@"iPhone 5s (GSM+CDMA)"]
-       )
-        imageNameBg = @"5s";
-    else if(
-            [platformString isEqualToString:@"iPhone 1G"] ||
-            [platformString isEqualToString:@"iPhone 3G"] ||
-            [platformString isEqualToString:@"iPhone 3GS"]
-
-        )
+           )
+            imageNameBg = @"5s";
+        else if(
+                [platformString isEqualToString:@"iPhone 1G"] ||
+                [platformString isEqualToString:@"iPhone 3G"] ||
+                [platformString isEqualToString:@"iPhone 3GS"]
+                
+                )
             imageNameBg = @"320";
         else if(
                 [platformString isEqualToString:@"iPhone 4"] ||
@@ -56,9 +63,13 @@
                 [platformString isEqualToString:@"iPhone 6"]
                 
                 )
-        imageNameBg = @"6";
-    else
-        imageNameBg = @"5s";
+            imageNameBg = @"6";
+        else
+            imageNameBg = @"5s";
+    }
+
+    
+    
     
     UIGraphicsBeginImageContext(self.view.frame.size);
     [[UIImage imageNamed:imageNameBg] drawInRect:self.view.bounds];
