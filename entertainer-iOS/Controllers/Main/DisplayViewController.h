@@ -20,6 +20,8 @@
     
     NSMutableArray* thumbs;
     NSMutableArray* thumbsShuffled;
+    
+    
 }
 
 @property (nonatomic) NSInteger itemsCount;

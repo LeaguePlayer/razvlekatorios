@@ -22,7 +22,7 @@
 
 +(NSArray *)itemsMock;
 +(NSMutableDictionary *)partItems:(NSInteger)currentPart andSelectedBlockId:(NSInteger)idBlock andShuffleArray:(NSArray*)shuffleArray;
-+(NSArray *)allItemsWithSelectedBlockId:(NSInteger)idBlock;
++(NSArray *)allItemsWithSelectedBlockId:(NSInteger)idBlock withCount:(NSInteger)itemsCount;
 +(int)allItemsByBlockId:(NSInteger)idBlock;
 -(id)initWithManagedObject:(ManagedItem *)object;
 -(id)initWithManagedObjectWithoutConvertDataToImage:(ManagedItem *)object;

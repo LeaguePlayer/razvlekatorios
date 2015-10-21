@@ -54,7 +54,7 @@
         item.imagePath = object.imagePath;
         item.imageData = object.image;
         item.thumbImage = object.thumbImage;
-//        item.image = [MRUtils reverseTransformedValue:object.image];
+        //        item.image = [MRUtils reverseTransformedValue:object.image];
     }
     return item;
 }
@@ -67,8 +67,8 @@
     NSEntityDescription *entitydesc = [NSEntityDescription entityForName:@"ManagedItem" inManagedObjectContext:DefaultContext];
     NSFetchRequest *request = [[NSFetchRequest alloc]init];
     [request setEntity:entitydesc];
-    int limit = 40+30;
-    int offset = (((currentPart*40)-30)>0) ? ((currentPart*40)-30) : 0;
+    int limit = 20+14;
+    int offset = (((currentPart*20)-14)>0) ? ((currentPart*20)-14) : 0;
     
     
     NSSortDescriptor *descriptor = [[NSSortDescriptor alloc] initWithKey:@"id" ascending:YES];
@@ -78,14 +78,14 @@
     if(shuffleArray)
     {
         limit  = ((limit + offset) >= ([shuffleArray count]-1)) ? (([shuffleArray count])-offset) : limit;
-
+        
         NSArray *itemsForView = [shuffleArray subarrayWithRange: NSMakeRange( offset, limit )];
         
         predicate = (idBlock == 0) ?
         [NSPredicate predicateWithFormat: @"id in %@", itemsForView] :
         [NSPredicate predicateWithFormat: @"%K == %i && id in %@", @"block.id", idBlock, itemsForView];
         
-//        predicate = ;
+
     }
     else
     {
@@ -94,20 +94,14 @@
         {
             [ids_array_sorted addObject:@(i)];
         }
-//        [request setFetchLimit:limit];
-//        [request setFetchOffset:offset];
-//        predicate = [NSPredicate predicateWithFormat: @"%K == %i", @"block.id", idBlock];
-        
-//        limit  = ((limit + offset) >= ([ids_array_sorted count]-1)) ? (([ids_array_sorted count])-offset) : limit;
-        
-//        NSArray *itemsForView = [ids_array_sorted subarrayWithRange: NSMakeRange( offset, limit )];
+
         predicate = [NSPredicate predicateWithFormat: @"%K == %i && id in %@", @"block.id", idBlock, ids_array_sorted];
     }
     
-        
     
     
-
+    
+    
     [request setPredicate:predicate];
     
     NSError *error;
@@ -121,29 +115,17 @@
     }
     else {
         
-//        integer =[NSArray arrayWithArray:[integer sortedArrayUsingDescriptors:@[descriptor]]];
-        
-        
-//        if(shuffleArray)
-//        {
-//            ready = [[NSMutableArray alloc ] init];
-//            for (id index in shuffleArray){
-//                @autoreleasepool {
-//                    [ready addObject:[integer objectAtIndex:[index integerValue]]];
-//                }
-//            }
-//        }
-//        else
-            ready = [NSMutableArray arrayWithArray:integer];
 
+        ready = [NSMutableArray arrayWithArray:integer];
         
-
+        
+        
         
         for (ManagedItem *object in ready) {
             @autoreleasepool {
                 MRItem *obj = [[MRItem alloc] initWithManagedObjectWithoutConvertDataToImage:object];
                 [results setObject:obj forKey:@(obj.id)];
-//                [results addObject:obj];
+                //                [results addObject:obj];
             }
             
         }
@@ -154,24 +136,49 @@
 }
 
 
-+(NSArray *)allItemsWithSelectedBlockId:(NSInteger)idBlock
++(NSArray *)allItemsWithSelectedBlockId:(NSInteger)idBlock withCount:(NSInteger)itemsCount
 {
-    NSArray *favourites = (idBlock == 0) ?
-        [ManagedItem MR_findAll] :
-        [ManagedItem MR_findAllWithPredicate:[NSPredicate predicateWithFormat: @"%K == %i", @"block.id", idBlock]];
+//    NSMutableArray *ids_array_sorted = [[NSMutableArray alloc] init];
+//    for(int i = 0; i<98; i++)
+//    {
+//        [ids_array_sorted addObject:@(i)];
+//    }
     
-    NSSortDescriptor *descriptor = [[NSSortDescriptor alloc] initWithKey:@"id" ascending:YES];
-    favourites =[NSArray arrayWithArray:[favourites sortedArrayUsingDescriptors:@[descriptor]]];
-    
+   
     NSMutableArray *results = [NSMutableArray array];
+    NSMutableArray *ids_array_sorted = [[NSMutableArray alloc] init];
     
- 
-    for (ManagedItem *item in favourites){
-        @autoreleasepool {
-            MRItem *obj = [[MRItem alloc] initWithManagedObjectWithoutConvertDataToImage:item];
-            NSLog(@"obj id is %i",obj.id);
-            [results addObject:obj];
+    double cycle = floor(itemsCount/10);
+    
+    for(int z = 0; z<=cycle;z++)
+    {
+        int max_cycle_value = MIN(10*(z+1),itemsCount);
+        for(int i = z*10; i<max_cycle_value; i++)
+        {
+            NSLog(@"%i",i);
+            [ids_array_sorted addObject:@(i)];
         }
+
+        
+        NSPredicate *predicate = [NSPredicate predicateWithFormat: @"%K == %i && id in %@", @"block.id", idBlock, ids_array_sorted];
+
+        
+        NSArray *favourites = [ManagedItem MR_findAllWithPredicate:predicate];
+        
+        NSSortDescriptor *descriptor = [[NSSortDescriptor alloc] initWithKey:@"id" ascending:YES];
+        favourites =[NSArray arrayWithArray:[favourites sortedArrayUsingDescriptors:@[descriptor]]];
+        
+        for (ManagedItem *item in favourites){
+            @autoreleasepool {
+                MRItem *obj = [[MRItem alloc] initWithManagedObjectWithoutConvertDataToImage:item];
+                NSLog(@"obj id is %i",obj.id);
+                [results addObject:obj];
+            }
+        }
+        ids_array_sorted = nil;
+        ids_array_sorted = [[NSMutableArray alloc] init];
+        favourites= nil;
+
     }
     
     return results;
@@ -181,12 +188,29 @@
 
 +(int)allItemsByBlockId:(NSInteger)idBlock
 {
-    NSArray *favourites = (idBlock == 0) ?
-    [ManagedItem MR_findAll] :
-    [ManagedItem MR_findAllWithPredicate:[NSPredicate predicateWithFormat: @"%K == %i", @"block.id", idBlock]];
-//    NSArray *favourites = [ManagedItem MR_findAllWithPredicate:[NSPredicate predicateWithFormat: @"%K == %i", @"block.id", idBlock]];
-    NSLog(@"%lu",(unsigned long)[favourites count]);
-    return [favourites count];
+//    return 10;
+//    NSArray *favourites = (idBlock == 0) ?
+//    [ManagedItem MR_findAll] :
+//    [ManagedItem MR_findAllWithPredicate:[NSPredicate predicateWithFormat: @"%K == %i", @"block.id", idBlock]];
+//    //    NSArray *favourites = [ManagedItem MR_findAllWithPredicate:[NSPredicate predicateWithFormat: @"%K == %i", @"block.id", idBlock]];
+//    NSLog(@"%lu",(unsigned long)[favourites count]);
+    
+    
+    // assuming NSManagedObjectContext *moc
+    
+    NSFetchRequest *request = [[NSFetchRequest alloc] init];
+    [request setEntity:[NSEntityDescription entityForName:@"ManagedItem" inManagedObjectContext:DefaultContext]];
+    [request setPredicate:[NSPredicate predicateWithFormat: @"%K == %i", @"block.id", idBlock]];
+    
+    [request setIncludesSubentities:NO]; //Omit subentities. Default is YES (i.e. include subentities)
+    
+    NSError *err;
+    NSUInteger count = [DefaultContext countForFetchRequest:request error:&err];
+    if(count == NSNotFound) {
+        //Handle error
+    }
+    
+    return count;
 }
 
 

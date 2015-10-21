@@ -77,7 +77,7 @@
     
     
     dispatch_async(dispatch_get_main_queue(), ^{
-        thumbs = [NSMutableArray arrayWithArray:[MRItem allItemsWithSelectedBlockId:self.block.id]];
+//        thumbs = [NSMutableArray arrayWithArray:[MRItem allItemsWithSelectedBlockId:self.block.id]];
         [SVProgressHUD dismiss];
     });
     
@@ -279,9 +279,17 @@
 
 #pragma mark - actions
 
--(IBAction)onBackButtonClick:(id)sender{
-    [self.navigationController popViewControllerAnimated:YES];
+-(void)leftItemClick:(id)sender
+{
+    self.photor.gotItemsFromCD = nil;
+    self.photor.suffleArrayKeys = nil;
+    [super leftItemClick:sender];
 }
+
+//-(IBAction)onBackButtonClick:(id)sender{
+//    
+//    [self.navigationController popViewControllerAnimated:YES];
+//}
 
 -(IBAction)onInfoButtonClick:(id)sender{
     [self performSegueWithIdentifier:@"ToAbout" sender:self];
@@ -407,25 +415,35 @@
     [self.shuffleButton setSelected:isShuffled];
     //    self.tit
     //    NSInteger indexToMove;
+    if(!thumbs)
+        thumbs = [NSMutableArray arrayWithArray:[MRItem allItemsWithSelectedBlockId:self.block.id withCount:self.itemsCount]];
+    
     if (isShuffled)
     {
         
         
         //        dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
         //Do background work
-        self.photor.suffleArrayKeys = [NSArray arrayWithShuffledIds:[thumbs count]];
+//        if(thumbs)
+            self.photor.suffleArrayKeys = [NSArray arrayWithShuffledIds:self.itemsCount];
+        
         dispatch_async(dispatch_get_main_queue(), ^{
             [self setTitle:@"Случайный порядок"];
-            NSMutableArray* new_thumbs = [[NSMutableArray alloc] init];
-            for(id index in self.photor.suffleArrayKeys)
+            
+            if(thumbs)
             {
-                [new_thumbs addObject:[thumbs objectAtIndex:[index integerValue]]];
-                //            //NSLog(@"finished!");
+                NSMutableArray* new_thumbs = [[NSMutableArray alloc] init];
+                for(id index in self.photor.suffleArrayKeys)
+                {
+                    [new_thumbs addObject:[thumbs objectAtIndex:[index integerValue]]];
+                }
+                thumbsShuffled = [NSMutableArray arrayWithArray:new_thumbs];
+                new_thumbs = nil;
             }
-            //        [new_thumbs exchangeObjectAtIndex:self.photor.counter withObjectAtIndex:0];
+//            thumbs = [NSMutableArray arrayWithArray:[MRItem allItemsWithSelectedBlockId:self.block.id]];
             
             
-            thumbsShuffled = [NSMutableArray arrayWithArray:new_thumbs];
+            
             MRItem *tmpObject = (MRItem*)[thumbs objectAtIndex:self.photor.counter];
             //        indexToMove = [thumbsShuffled indexOfObject:[thumbs objectAtIndex:self.photor.currentIndex]];
             
@@ -433,7 +451,7 @@
 //            NSLog(@"%@",self.photor.suffleArrayKeys);
 //            NSInteger indexToMove = [[self.photor.suffleArrayKeys objectAtIndex:self.photor.counter] integerValue];
             NSInteger indexToMove = [self.photor.suffleArrayKeys indexOfObject:@(self.photor.counter)];
-            new_thumbs = nil;
+            
             //NSLog(@"ON");
             self.photor.FROM_SHUFFLE = YES;
             self.photor.currentIndex = -100;
@@ -442,30 +460,23 @@
             NSLog(@"counter is %li",(long)self.photor.counter);
             NSLog(@"indexToMove is %li",(long)indexToMove);
             
-            //        [self.photor moveAtIndexStatic:indexToMove animated:NO];
+
             [self.photor moveAtIndexStatic:indexToMove andIdPhoto:tmpObject.id animated:NO];
-//            [self.photor moveAtIndex:indexToMove animated:NO];
+
         });
-        //        });
+
         
         
     }
     else
     {
-        ////NSLog(@"%@",thumbs);
-        //        self.photor.counter = self.photor.counter-1;
-        //        indexToMove = [thumbsShuffled indexOfObject:[thumbs objectAtIndex:self.photor.counter]];
-        
-        //        //NSLog(@"%@",self.photor.suffleArrayKeys);
-//                int indexToMove = [self.photor.suffleArrayKeys indexOfObject:@((self.photor.counter-1))];
+
         int indexToMove = [[self.photor.suffleArrayKeys objectAtIndex:self.photor.counter] integerValue];
         self.photor.currentIndex = -100;
-        //        MRItem *tmpObject = [thumbsShuffled objectAtIndex:indexToMove];
-        //        indexToMove = self.photor.counter;
-        //        //NSLog(@"tmpObject.id is %li",(long)tmpObject.id);
+
         NSLog(@"counter is %li",(long)self.photor.counter);
                 NSLog(@"indexToMove is %li",(long)indexToMove);
-        //NSLog(@"OFF");
+
         [self setTitle:@""];
         self.photor.suffleArrayKeys = nil;
         thumbsShuffled = nil;

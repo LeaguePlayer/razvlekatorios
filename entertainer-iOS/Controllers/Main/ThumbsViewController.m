@@ -9,6 +9,7 @@
 #import "ThumbsViewController.h"
 #import "MRItem.h"
 #import "SVProgressHUD.h"
+#import "DisplayViewController.h"
 
 @interface ThumbsViewController ()
 
@@ -39,6 +40,8 @@
 //    NSLog(@"%i",self.block.id);
     [self initCollectionView];
     
+    
+    
     [SVProgressHUD dismiss];
 }
 
@@ -46,6 +49,20 @@
     [self initTopBar];
     [super viewWillAppear:animated];
     [self.navigationController setNavigationBarHidden:NO animated:YES];
+    
+//    if(!self.thumbs)
+//    {
+//         self.thumbs = [NSMutableArray arrayWithArray:[MRItem allItemsWithSelectedBlockId:self.block.id]];
+//        
+//        
+//        [self.collectionView reloadData];
+////        dispatch_async(dispatch_get_main_queue(), ^{
+////           
+////            
+//////            [SVProgressHUD dismiss];
+////        });
+//        
+//    }
 }
 
 -(void)initTopBar{
@@ -79,7 +96,7 @@
 }
 
 -(NSUInteger)collectionView:(SSCollectionView *)aCollectionView numberOfItemsInSection:(NSUInteger)section{
-    return self.itemsCount;
+    return [self.thumbs count];
 }
 
 - (UICollectionViewCell *)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath {
