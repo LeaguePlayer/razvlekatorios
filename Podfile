@@ -1,7 +1,7 @@
 platform :ios, '8.0'
 
 pod 'SSToolkit', :git => 'https://github.com/soffes/sstoolkit.git', :commit => '1403f02cb98f8357f4b8e43c59d9c69d608d7bed'
-pod 'AFNetworking', '1.3.2'
+pod 'AFNetworking'
 pod 'SVProgressHUD'
 pod 'UCZProgressView'
 pod 'Reachability'

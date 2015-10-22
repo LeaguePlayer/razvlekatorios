@@ -293,6 +293,7 @@
 //        dispatch_async(dispatch_get_main_queue(), ^{
         
             MRBlock *removing = [blocks objectAtIndex:removingPath.row];
+        
             [removing removeFromDataBase];
             [blocks removeObject:removing];
             [self.collectionView reloadData];

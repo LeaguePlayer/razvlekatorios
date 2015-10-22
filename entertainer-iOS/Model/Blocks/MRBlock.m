@@ -75,11 +75,58 @@
 
 -(void)removeFromDataBase{
     NSArray *favourites = [ManagedBlock MR_findByAttribute:@"id" withValue:@(self.id)];
+
+    
+    
+    
     if (favourites.count > 0){
-        for (ManagedBlock *block in favourites){
-            [block MR_deleteEntity];
+        
+        int itemsCount = [MRItem allItemsByBlockId:self.id];
+      
+        NSMutableArray *results = [NSMutableArray array];
+        NSMutableArray *ids_array_sorted = [[NSMutableArray alloc] init];
+        
+        double cycle = floor(itemsCount/10);
+        
+        for(int z = 0; z<=cycle;z++)
+        {
+            int max_cycle_value = MIN(10*(z+1),itemsCount);
+            for(int i = z*10; i<max_cycle_value; i++)
+            {
+                NSLog(@"%i",i);
+                [ids_array_sorted addObject:@(i)];
+            }
+            
+            
+            NSPredicate *predicate = [NSPredicate predicateWithFormat: @"%K == %i && id in %@", @"block.id", self.id, ids_array_sorted];
+            
+            
+            [ManagedItem MR_deleteAllMatchingPredicate:predicate];
+            
+            [DefaultContext MR_saveToPersistentStoreAndWait];
+
+            ids_array_sorted = nil;
+            ids_array_sorted = [[NSMutableArray alloc] init];
+            favourites= nil;
+            predicate = nil;
+            
         }
-        [DefaultContext MR_saveWithOptions:MRSaveSynchronously completion:nil];
+        
+        NSPredicate *predicate = [NSPredicate predicateWithFormat: @"id == %i", self.id];
+        [ManagedBlock MR_deleteAllMatchingPredicate:predicate];
+        [DefaultContext MR_saveToPersistentStoreAndWait];
+
+        
+//        for (ManagedBlock *block in favourites){
+//            @autoreleasepool {
+//                [block MR_deleteEntity];
+//                [block MR_deleteAllMatchingPredicate:<#(NSPredicate *)#>]
+//            }
+//            
+//        }
+//        [DefaultContext MR_saveWithOptions:MRSaveSynchronously completion:nil];
+//        [DefaultContext MR_saveToPersistentStoreAndWait];
+       
     }
 }
 
@@ -92,6 +139,7 @@
         item.slidesInBlock = block.slidesInBlock.intValue;
         item.sizeBlock = block.sizeBlock;
         item.imagePath = block.imagePath;
+        NSLog(@"MRBlock");
         item.image = [MRUtils reverseTransformedValue:block.image];
 //        NSMutableArray *items = [NSMutableArray array];
 //        for (ManagedItem *lol in block.items){

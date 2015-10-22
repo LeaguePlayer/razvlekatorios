@@ -11,6 +11,7 @@
 #import "SVProgressHUD.h"
 #import "MRBlock.h"
 #import "SDWebImageDownloader.h"
+#import "SDWebImageManager.h"
 #import "UIDeviceHardware.h"
 
 typedef void (^MRHTTPClientSuccessResults)(NSArray *results);
@@ -19,6 +20,7 @@ typedef void (^MRHTTPClientFailure)(int statusCode, NSArray *errors, NSError *co
 @interface MRHTTPClient : AFHTTPClient
 
 @property (nonatomic,retain) SDWebImageDownloader *downloader;
+@property (nonatomic,retain) SDWebImageManager *manager;
 +(id)sharedClient;
 
 -(NSArray *)allBlockSynchroniusly;

@@ -11,7 +11,7 @@
 #import "SHKItem.h"
 #import "SHKFacebook.h"
 #import "SHKTwitter.h"
-//#import "SHKInstagram.h"
+#import "SHKInstagram.h"
 #import "SHKVkontakte.h"
 #import "SVProgressHUD.h"
 #import "NSArray+Shuffling.h"
@@ -319,7 +319,14 @@
     MRItem *gotModel = (MRItem *)[self.photor.gotItemsFromCD objectForKey:@(shareImageID)];
     
     //    MRItem *currentItem = [self.block.items objectAtIndex:currentIndex];
-    UIImage *image = [UIImage imageWithData:gotModel.imageData];
+    
+    NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
+    NSString *documentsPath = [paths objectAtIndex:0]; //Get the docs directory
+    NSString *filePath = [documentsPath stringByAppendingPathComponent:gotModel.title]; //Add the file name
+    NSData *pngData = [NSData dataWithContentsOfFile:filePath];
+    UIImage *image = [UIImage imageWithData:pngData];
+    
+//    UIImage *image = [UIImage imageWithData:gotModel.imageData];
     //    UIImageView *b = [[UIImageView alloc] initWithImage:image];
     //    [self.view addSubview:b];
     NSString *title = @"Картинка отправлена через приложение Мобильный развлекатор";
@@ -416,7 +423,16 @@
     //    self.tit
     //    NSInteger indexToMove;
     if(!thumbs)
-        thumbs = [NSMutableArray arrayWithArray:[MRItem allItemsWithSelectedBlockId:self.block.id withCount:self.itemsCount]];
+    {
+        [SVProgressHUD showWithStatus:@"Загрузка" maskType:SVProgressHUDMaskTypeGradient];
+        dispatch_async(dispatch_get_main_queue(), ^{
+            
+            thumbs = [NSMutableArray arrayWithArray:[MRItem allItemsWithSelectedBlockId:self.block.id withCount:self.itemsCount]];
+        });
+        
+        
+    }
+    
     
     if (isShuffled)
     {
@@ -499,6 +515,18 @@
 
 - (IBAction)onDocumentsButtonClick:(id)sender {
     self.automaticallyAdjustsScrollViewInsets = YES;
+    
+    if(!thumbs)
+    {
+        [SVProgressHUD showWithStatus:@"Загрузка" maskType:SVProgressHUDMaskTypeGradient];
+        dispatch_async(dispatch_get_main_queue(), ^{
+            
+            thumbs = [NSMutableArray arrayWithArray:[MRItem allItemsWithSelectedBlockId:self.block.id withCount:self.itemsCount]];
+        });
+        
+        
+    }
+    
     
     [SVProgressHUD showWithMaskType:SVProgressHUDMaskTypeGradient];
     dispatch_async(dispatch_get_main_queue(), ^{

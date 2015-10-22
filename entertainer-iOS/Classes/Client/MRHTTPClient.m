@@ -32,6 +32,7 @@ static MRHTTPClient *_sharedClient;
         [self registerHTTPOperationClass:[AFJSONRequestOperation class]];
         [self setDefaultHeader:@"Accept" value:@"application/json"];
         self.downloader = [[SDWebImageDownloader alloc] init];
+        self.manager = [[SDWebImageManager alloc] init];
     }
     return self;
 }
@@ -43,9 +44,9 @@ static MRHTTPClient *_sharedClient;
 }
 
 -(void)allBlocksWithSuccess:(MRHTTPClientSuccessResults)success failure:(MRHTTPClientFailure)failure{
-//    [self platformString];
+    //    [self platformString];
     UIDeviceHardware *device = [[UIDeviceHardware alloc] init];
-//    NSLog(@"%@",[device platformString]);
+    //    NSLog(@"%@",[device platformString]);
     NSString *urlString = [NSString stringWithFormat:@"/api/allblocks/device/%@", [device platformString]];
     urlString = [urlString stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
     NSLog(@"%@",urlString);
@@ -61,9 +62,15 @@ static MRHTTPClient *_sharedClient;
                 __block MRBlock *block = [MRBlock objectWithDict:dict];
                 NSURL *imageUrl = [NSURL URLWithString:block.imagePath];
                 
+                
+                //                [self.downloader downloadImageWithURL:imageUrl options:nil progress:nil completed:^(UIImage *image, NSError *error, SDImageCacheType cacheType, BOOL finished, NSURL *imageURL) {
+                //                    block.image = image;
+                //
+                //                }];
+                
                 [self.downloader downloadImageWithURL:imageUrl options:nil progress:nil completed:^(UIImage *image, NSData *data, NSError *error, BOOL finished) {
                     block.image = image;
-//                    block.image = data;
+                    
                 }];
                 [results addObject:block];
             }
@@ -102,6 +109,7 @@ static MRHTTPClient *_sharedClient;
 
 -(void)blockItemsWithBlock:(MRBlock *)block progress:(void(^)(CGFloat state))progress success:(MRHTTPClientSuccessResults)success failure:(MRHTTPClientFailure)failure{
     UIDeviceHardware *device = [[UIDeviceHardware alloc] init];
+    
     NSString *urlString = [NSString stringWithFormat:@"/api/getblock/%d?device=%@",block.id,[device platformString]];
     urlString = [urlString stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
     NSURLRequest *request = [self requestWithMethod:@"GET" path:urlString parameters:nil];
@@ -113,29 +121,78 @@ static MRHTTPClient *_sharedClient;
             __block NSMutableArray *results = [NSMutableArray array];
             __block NSInteger count = 0;
             int max = imagesArray.count;
+            
+
             for (int i = 0; i < imagesArray.count; i++){
-                NSDictionary *dict = [imagesArray objectAtIndex:i];
-                __block MRItem *item = [MRItem objectWithDict:dict];
-                item.id = i;
-                NSURL *imageUrl = [NSURL URLWithString:item.imagePath];
-                [self.downloader downloadImageWithURL:imageUrl options:nil progress:nil completed:^(UIImage *image, NSData *data, NSError *error, BOOL finished) {
-//                    item.image = image;
-                    item.imageData = data;
-                    [results addObject:item];
-                    dispatch_queue_t queue = dispatch_get_main_queue();
-                    dispatch_async(queue, ^{
-                        count++;
-//                        NSLog (@"%d == %d",count,max);
-                        if (count == max){
-                            block.items = results;
-                            success(results);
-                            [block saveToDataBase];
-                        } else {
-                            CGFloat prog = (float)count/(float)max;
-                            progress(prog);
-                        }
-                    });
-                }];
+                @autoreleasepool {
+                    NSDictionary *dict = [imagesArray objectAtIndex:i];
+                     MRItem *item = [MRItem objectWithDict:dict];
+                    item.id = i;
+                    NSURL *imageUrl = [NSURL URLWithString:item.imagePath];
+                    
+//                    [self.manager downloadImageWithURL:imageUrl options:nil progress:nil completed:^(UIImage *image, NSError *error, SDImageCacheType cacheType, BOOL finished, NSURL *imageURL) {
+//                        @autoreleasepool {
+//                        NSData *imageData = UIImagePNGRepresentation(image);
+//                        item.imageData = imageData;
+//                            
+////                            NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
+////                            NSString *documentsPath = [paths objectAtIndex:0]; //Get the docs directory
+////                            NSString *filePath = [documentsPath stringByAppendingPathComponent:@"image.png"]; //Add the file name
+////                            [imageData writeToFile:filePath atomically:YES]; //Write the file
+//                            
+//                            
+//                            
+//                            [results addObject:item];
+//
+//                                count++;
+//                                //                        NSLog (@"%d == %d",count,max);
+//                                if (count == max){
+//                                    block.items = results;
+//                                    success(results);
+//                                    [block saveToDataBase];
+//                                } else {
+//                                    CGFloat prog = (float)count/(float)max;
+//                                    progress(prog);
+//                                }
+//
+//                        }
+//                        
+//                    }];
+                    
+                                        [self.downloader downloadImageWithURL:imageUrl options:nil progress:nil completed:^(UIImage *image, NSData *data, NSError *error, BOOL finished) {
+                                             NSLog(@"%i",count);
+//                                            @autoreleasepool {
+//                                                //                    item.image = image;
+//                                                item.imageData = data;
+                                            NSLog(@"%@",error);
+                                            if(!error)
+                                            {
+                                                NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
+                                                NSString *documentsPath = [paths objectAtIndex:0]; //Get the docs directory
+                                                NSString *filePath = [documentsPath stringByAppendingPathComponent:item.name]; //Add the file name
+                                                [data writeToFile:filePath atomically:YES]; //Write the file
+                                                
+                                                
+                                                [results addObject:item];
+                                            }
+                                           
+
+                                                    count++;
+//
+                                                    if (count == max){
+                                                        block.items = results;
+                                                        success(results);
+                                                        [block saveToDataBase];
+                                                    } else {
+                                                        CGFloat prog = (float)count/(float)max;
+                                                        progress(prog);
+                                                    }
+                                        }];
+                }
+//            }
+                
+                
+                
             }
         } else {
             failure(response.statusCode,@[],nil);

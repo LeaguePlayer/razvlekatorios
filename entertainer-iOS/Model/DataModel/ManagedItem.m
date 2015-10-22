@@ -29,26 +29,37 @@
     @autoreleasepool {
         ManagedItem *item = [ManagedItem MR_createInContext:DefaultContext];
         item.id = @(object.id);
-        item.title = object.title;
+        item.title = object.name;
         item.detail = object.detail;
         item.imagePath = object.imagePath;
-        item.image = object.imageData;
+//        item.image = object.imageData;
         
         
         
-//        dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
-            //Do background work
-            UIImage *originalImage = [UIImage imageWithData:object.imageData];
+
+        @autoreleasepool {
+            NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
+            NSString *documentsPath = [paths objectAtIndex:0]; //Get the docs directory
+            NSString *filePath = [documentsPath stringByAppendingPathComponent:item.title]; //Add the file name
+            NSData *pngData = [NSData dataWithContentsOfFile:filePath];
+//            UIImage *image = [UIImage imageWithData:pngData];
+            
+            
+            UIImage *originalImage = [UIImage imageWithData:pngData];
             CGSize destinationSize = CGSizeMake(100, 100);
             UIGraphicsBeginImageContext(destinationSize);
             [originalImage drawInRect:CGRectMake(0,0,destinationSize.width,destinationSize.height)];
             UIImage *newImage = UIGraphicsGetImageFromCurrentImageContext();
             UIGraphicsEndImageContext();
-//            dispatch_async(dispatch_get_main_queue(), ^{
-                item.thumbImage = newImage;
-                
-//            });
-//        });
+            item.thumbImage = newImage;
+        }
+        
+//        NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
+//        NSString *documentsPath = [paths objectAtIndex:0]; //Get the docs directory
+//        NSString *filePath = [documentsPath stringByAppendingPathComponent:@"image.png"]; //Add the file name
+//        [pngData writeToFile:filePath atomically:YES]; //Write the file
+        
+
         return item;
     }
    

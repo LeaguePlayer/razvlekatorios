@@ -289,10 +289,10 @@
 
 - (void)didReceiveMemoryWarning
 {
-    blocks = nil;
-    images = nil;
-    imageDownloader = nil;
-    selectedPath = nil;
+//    blocks = nil;
+//    images = nil;
+//    imageDownloader = nil;
+//    selectedPath = nil;
     [super didReceiveMemoryWarning];
     // Dispose of any resources that can be recreated.
 }

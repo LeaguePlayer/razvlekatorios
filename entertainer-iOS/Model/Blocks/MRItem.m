@@ -18,7 +18,8 @@
         self.imagePath = @"";
         self.title = @"";
         self.detail = @"";
-        self.image = [[UIImage alloc] init];
+        self.name = @"";
+//        self.image = [[UIImage alloc] init];
         self.thumbImage = [[UIImage alloc] init];
     }
     return self;
@@ -28,6 +29,7 @@
     MRItem *item = [[MRItem alloc] init];
     if (item){
         item.imagePath = [dict objectForKey:@"display"];
+        item.name = [dict objectForKey:@"name"];
         
     }
     return item;
@@ -40,7 +42,8 @@
         item.title = object.title;
         item.detail = object.detail;
         item.imagePath = object.imagePath;
-        item.image = [MRUtils reverseTransformedValue:object.image];
+        NSLog(@"MRItem");
+//        item.image = [MRUtils reverseTransformedValue:object.image];
     }
     return item;
 }
@@ -59,7 +62,7 @@
     return item;
 }
 
-+(NSMutableDictionary *)partItems:(NSInteger)currentPart andSelectedBlockId:(NSInteger)idBlock andShuffleArray:(NSArray*)shuffleArray
++(NSMutableDictionary *)partItems:(NSInteger)currentPart andSelectedBlockId:(NSInteger)idBlock andShuffleArray:(NSArray*)shuffleArray andCountItems:(NSInteger)countItems
 {
     NSLog(@"partItems with %i !!!!!!",currentPart);
     NSMutableArray *ready;
@@ -75,61 +78,78 @@
     request.sortDescriptors = @[descriptor];
     
     NSPredicate *predicate = nil;
-    if(shuffleArray)
-    {
-        limit  = ((limit + offset) >= ([shuffleArray count]-1)) ? (([shuffleArray count])-offset) : limit;
-        
-        NSArray *itemsForView = [shuffleArray subarrayWithRange: NSMakeRange( offset, limit )];
-        
-        predicate = (idBlock == 0) ?
-        [NSPredicate predicateWithFormat: @"id in %@", itemsForView] :
-        [NSPredicate predicateWithFormat: @"%K == %i && id in %@", @"block.id", idBlock, itemsForView];
-        
-
-    }
-    else
-    {
-        NSMutableArray *ids_array_sorted = [[NSMutableArray alloc] init];
-        for(int i = offset; i<(limit+offset); i++)
+    
+    
+   
+    
+    
+//    int max_cycle_value = MIN((limit+offset),countItems);
+//    for(int z = offset; z<max_cycle_value; z++)
+//    {
+//        NSLog(@"IN HERE %i",z);
+    
+        if(shuffleArray)
         {
-            [ids_array_sorted addObject:@(i)];
-        }
-
-        predicate = [NSPredicate predicateWithFormat: @"%K == %i && id in %@", @"block.id", idBlock, ids_array_sorted];
-    }
-    
-    
-    
-    
-    
-    [request setPredicate:predicate];
-    
-    NSError *error;
-    NSArray *integer = [DefaultContext executeFetchRequest:request error:&error];
-    
-    NSLog(@"error");
-    NSLog(@"%@",error);
-    
-    if(integer.count <= 0){
-        NSLog(@"%@",@"No records found");
-    }
-    else {
-        
-
-        ready = [NSMutableArray arrayWithArray:integer];
-        
-        
-        
-        
-        for (ManagedItem *object in ready) {
-            @autoreleasepool {
-                MRItem *obj = [[MRItem alloc] initWithManagedObjectWithoutConvertDataToImage:object];
-                [results setObject:obj forKey:@(obj.id)];
-                //                [results addObject:obj];
-            }
+            limit  = ((limit + offset) >= ([shuffleArray count]-1)) ? (([shuffleArray count])-offset) : limit;
+            
+            NSArray *itemsForView = [shuffleArray subarrayWithRange: NSMakeRange( offset, limit )];
+//            NSArray *itemsForView = [shuffleArray subarrayWithRange: NSMakeRange( z, 1 )];
+//            NSArray *itemsForView = [shuffleArray objectAtIndex:z];
+            
+//            NSLog(@"%i",itemsForView.count);
+            predicate = (idBlock == 0) ?
+            [NSPredicate predicateWithFormat: @"id in %@", itemsForView] :
+            [NSPredicate predicateWithFormat: @"%K == %i && id in %@", @"block.id", idBlock, itemsForView];
+            
             
         }
-    }
+        else
+        {
+            NSMutableArray *ids_array_sorted = [[NSMutableArray alloc] init];
+            for(int i = offset; i<(limit+offset); i++)
+            {
+                [ids_array_sorted addObject:@(i)];
+            }
+            
+            predicate = [NSPredicate predicateWithFormat: @"%K == %i && id in %@", @"block.id", idBlock, ids_array_sorted];
+        }
+        
+        
+        [request setPredicate:predicate];
+        
+        NSError *error;
+        NSArray *integer = [DefaultContext executeFetchRequest:request error:&error];
+        
+        NSLog(@"error");
+        NSLog(@"%@",error);
+        
+        if(integer.count <= 0){
+            NSLog(@"%@",@"No records found");
+        }
+        else {
+            
+            
+            ready = [NSMutableArray arrayWithArray:integer];
+            
+            
+            
+            
+            for (ManagedItem *object in ready) {
+                @autoreleasepool {
+                    MRItem *obj = [[MRItem alloc] initWithManagedObjectWithoutConvertDataToImage:object];
+                    [results setObject:obj forKey:@(obj.id)];
+                    //                [results addObject:obj];
+                }
+                
+            }
+            ready = nil;
+            integer = nil;
+//            integer = [[NSArray alloc] init];
+        }
+//    }
+    
+    
+    
     
     return [NSMutableDictionary dictionaryWithObjects:@[@(currentPart), results] forKeys:@[@"returnPart",@"values"]];
     
@@ -178,7 +198,7 @@
         ids_array_sorted = nil;
         ids_array_sorted = [[NSMutableArray alloc] init];
         favourites= nil;
-
+       
     }
     
     return results;

@@ -149,7 +149,7 @@
     self.items = [[NSMutableDictionary alloc] init];
     
     
-    self.items = [NSMutableDictionary dictionaryWithDictionary:[MRItem partItems:currentPart andSelectedBlockId:self.selectedBlock.id andShuffleArray:self.suffleArrayKeys]];
+    self.items = [NSMutableDictionary dictionaryWithDictionary:[MRItem partItems:currentPart andSelectedBlockId:self.selectedBlock.id andShuffleArray:self.suffleArrayKeys andCountItems:itemsCount]];
     
     
     
@@ -200,18 +200,21 @@
     MRPhoto *lastView = (MRPhoto *)[self.mainScroll viewWithTag:item.id+1000];
     if(lastView == nil || ![lastView isKindOfClass:[MRPhoto class]])
     {
-        //NSLog(@"SELECTED INDEX BY RENDER IMAGE %i with Id image %i",indexSelect, item.id);
+        NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
+        NSString *documentsPath = [paths objectAtIndex:0]; //Get the docs directory
+        NSString *filePath = [documentsPath stringByAppendingPathComponent:item.title]; //Add the file name
+        
+        NSData *pngData = [NSData dataWithContentsOfFile:filePath];
+        UIImage *gotImage = [UIImage imageWithData:pngData];
         
         
         
-        //        dispatch_queue_t queue = dispatch_get_global_queue(0, 0);
-        //        dispatch_async(queue, ^(void) {
-        
-        
-        
-        //            dispatch_async(dispatch_get_main_queue(), ^{
-        UIImage *gotImage =[UIImage imageWithData:item.imageData];
+//        UIImage *gotImage =[UIImage imageWithData:item.imageData];
         NSLog(@"image height %f",gotImage.size.height);
+        
+        
+        
+        
         CGFloat inset = indexPhoto*size.width;
         MRPhoto *photo = [[MRPhoto alloc] initWithFrame:CGRectMake(inset, 0, size.width, size.height)];
         [photo setImage:gotImage];
@@ -735,8 +738,12 @@
         [rightScrollHistory removeObject:last_object];
     }
     
-    int id_item_next = (self.suffleArrayKeys) ? [[self.suffleArrayKeys objectAtIndex:self.counter+1] integerValue] : self.counter+1;
-    [rightScrollHistory addObject:@(id_item_next)];
+    if(self.counter+1 <= self.suffleArrayKeys.count)
+    {
+        int id_item_next = (self.suffleArrayKeys) ? [[self.suffleArrayKeys objectAtIndex:self.counter+1] integerValue] : self.counter+1;
+        [rightScrollHistory addObject:@(id_item_next)];
+    }
+    
     
     ////NSLog(@"left");
     ////NSLog(@"%@",leftScrollHistory);

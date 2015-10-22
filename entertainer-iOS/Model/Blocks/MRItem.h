@@ -14,6 +14,7 @@
 
 @property (nonatomic) int id;
 @property (nonatomic,retain) NSString *imagePath;
+@property (nonatomic,retain) NSString *name;
 @property (nonatomic,retain) UIImage *image;
 @property (nonatomic,retain) UIImage *thumbImage;
 @property (nonatomic,retain) NSData *imageData;
@@ -21,7 +22,7 @@
 @property (nonatomic,retain) NSString *detail;
 
 +(NSArray *)itemsMock;
-+(NSMutableDictionary *)partItems:(NSInteger)currentPart andSelectedBlockId:(NSInteger)idBlock andShuffleArray:(NSArray*)shuffleArray;
++(NSMutableDictionary *)partItems:(NSInteger)currentPart andSelectedBlockId:(NSInteger)idBlock andShuffleArray:(NSArray*)shuffleArray andCountItems:(NSInteger)countItems;
 +(NSArray *)allItemsWithSelectedBlockId:(NSInteger)idBlock withCount:(NSInteger)itemsCount;
 +(int)allItemsByBlockId:(NSInteger)idBlock;
 -(id)initWithManagedObject:(ManagedItem *)object;
